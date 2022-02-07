@@ -13,10 +13,10 @@ import shutil
 from aiida.orm import Computer, Code
 from aiida.common.exceptions import NotExistent
 
-LOCALHOST_NAME = 'localhost-test'
+LOCALHOST_NAME = 'localhost'
 
 executables = {
-    'gromacs': 'diff',
+    'gromacs': 'gmx',
 }
 
 
@@ -54,7 +54,7 @@ def get_computer(name=LOCALHOST_NAME, workdir=None):
 
         computer = Computer(
             label=name,
-            description='localhost computer set up by aiida_diff tests',
+            description='localhost computer set up by gromacs plugin',
             hostname=name,
             workdir=workdir,
             transport_type='local',

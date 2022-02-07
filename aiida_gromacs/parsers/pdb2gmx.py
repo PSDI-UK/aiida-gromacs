@@ -10,10 +10,10 @@ from aiida.plugins import CalculationFactory
 from aiida.common import exceptions
 from aiida.orm import SinglefileData
 
-DiffCalculation = CalculationFactory('gromacs')
+Pdb2gmxCalculation = CalculationFactory('gromacs.pdb2gmx')
 
 
-class DiffParser(Parser):
+class Pdb2gmxParser(Parser):
     """
     Parser class for parsing output of calculation.
     """
@@ -22,14 +22,14 @@ class DiffParser(Parser):
         """
         Initialize Parser instance
 
-        Checks that the ProcessNode being passed was produced by a DiffCalculation.
+        Checks that the ProcessNode being passed was produced by a Pdb2gmxCalculation.
 
         :param node: ProcessNode of calculation
         :param type node: :class:`aiida.orm.ProcessNode`
         """
         super().__init__(node)
-        if not issubclass(node.process_class, DiffCalculation):
-            raise exceptions.ParsingError('Can only parse DiffCalculation')
+        if not issubclass(node.process_class, Pdb2gmxCalculation):
+            raise exceptions.ParsingError('Can only parse Pdb2gmxCalculation')
 
     def parse(self, **kwargs):
         """
@@ -37,21 +37,26 @@ class DiffParser(Parser):
 
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
-        output_filename = self.node.get_option('output_filename')
+        outputs = ['stdout', 'outputfile', 'topfile', 'itpfile']
 
         # Check that folder content is as expected
         files_retrieved = self.retrieved.list_object_names()
-        files_expected = [output_filename]
+        files_expected = [self.node.get_option('output_filename'),
+                          self.node.inputs.outputfile.value,
+                          self.node.inputs.topfile.value,
+                          self.node.inputs.itpfile.value]
+
         # Note: set(A) <= set(B) checks whether A is a subset of B
         if not set(files_expected) <= set(files_retrieved):
             self.logger.error("Found files '{}', expected to find '{}'".format(
                 files_retrieved, files_expected))
             return self.exit_codes.ERROR_MISSING_OUTPUT_FILES
 
-        # add output file
-        self.logger.info("Parsing '{}'".format(output_filename))
-        with self.retrieved.open(output_filename, 'rb') as handle:
-            output_node = SinglefileData(file=handle)
-        self.out('gromacs', output_node)
+        # add outputs
+        for index, thing in enumerate(files_expected):
+            self.logger.info("Parsing '{}'".format(thing))
+            with self.retrieved.open(thing, 'rb') as handle:
+                output_node = SinglefileData(file=handle)
+            self.out(outputs[index], output_node)
 
         return ExitCode(0)

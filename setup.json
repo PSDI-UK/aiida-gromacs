@@ -13,16 +13,16 @@
         "Development Status :: 3 - Alpha",
         "Framework :: AiiDA"
     ],
-    "version": "0.0.1",
+    "version": "0.0.6",
     "entry_points": {
         "aiida.data": [
-            "gromacs = aiida_gromacs.data:DiffParameters"
+            "gromacs.pdb2gmx = aiida_gromacs.data.pdb2gmx:Pdb2gmxParameters"
         ],
         "aiida.calculations": [
-            "gromacs = aiida_gromacs.calculations:DiffCalculation"
+            "gromacs.pdb2gmx = aiida_gromacs.calculations.pdb2gmx:Pdb2gmxCalculation"
         ],
         "aiida.parsers": [
-            "gromacs = aiida_gromacs.parsers:DiffParser"
+            "gromacs.pdb2gmx = aiida_gromacs.parsers.pdb2gmx:Pdb2gmxParser"
         ],
         "aiida.cmdline.data": [
             "gromacs = aiida_gromacs.cli:data_cli"
