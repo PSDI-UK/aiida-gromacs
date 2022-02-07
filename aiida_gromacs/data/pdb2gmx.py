@@ -13,7 +13,10 @@ from aiida.orm import Dict
 # A subset of diff's command line options
 cmdline_options = {
     Required('water', default='spce'): str,
-    Required('ff', default='oplsaa'): str
+    Required('ff', default='oplsaa'): str,
+    Required('o', default='conf.gro'): str,
+    Required('p', default='topol.top'): str,
+    Required('i', default='posre.itp'): str,
 }
 
 
@@ -55,7 +58,7 @@ class Pdb2gmxParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         return Pdb2gmxParameters.schema(parameters_dict)
 
-    def cmdline_params(self, pdbfile, outputfile):
+    def cmdline_params(self, pdbfile):
         """Synthesize command line parameters.
 
         e.g. [ '--ignore-case', 'filename1', 'filename2']
@@ -69,7 +72,7 @@ class Pdb2gmxParameters(Dict):  # pylint: disable=too-many-ancestors
         parameters = []
 
         parameters.append('pdb2gmx')
-        parameters.extend(['-f', pdbfile, '-o', outputfile])
+        parameters.extend(['-f', pdbfile])
 
         parm_dict = self.get_dict()
 

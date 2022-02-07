@@ -25,20 +25,20 @@ def test_run(gromacs_code):
     # Prepare input parameters
     Pdb2gmxParameters = DataFactory('gromacs.pdb2gmx')
     parameters = Pdb2gmxParameters({'ff': 'oplsaa',
-                                    'water': 'spce'
+                                    'water': 'spce',
+                                    'o': '1AKI_forcfield.gro',
+                                    'p': '1AKI_topology.top',
+                                    'i': '1AKI_restraints.itp'
                                     })
 
     SinglefileData = DataFactory('singlefile')
-    Str = DataFactory('str')
     pdbfile = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), '1AKI_clean.pdb'))
-    outputfile = Str('1AKI_processed.gro')
 
     # set up calculation
     inputs = {
         'code': gromacs_code,
         'parameters': parameters,
         'pdbfile': pdbfile,
-        'outputfile': outputfile,
         'metadata': {
             'description': 'pdb2gmx job submission with the aiida_gromacs plugin',
         },

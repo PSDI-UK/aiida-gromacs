@@ -35,10 +35,6 @@ class Pdb2gmxCalculation(CalcJob):
         spec.input('pdbfile', valid_type=orm.SinglefileData, help='Input structure (pdb).')
         spec.input('parameters', valid_type=Pdb2gmxParameters, help='Command line parameters for gmx pdb2gmx')
 
-        spec.input('outputfile', valid_type=orm.Str, required=False, default=lambda: orm.Str('conf.gro'), help='Output forcefield compliant file (conf.gro)')
-        spec.input('topfile', valid_type=orm.Str, required=False, default=lambda: orm.Str('topol.top'), help='Output (topol.top)')
-        spec.input('itpfile', valid_type=orm.Str, required=False, default=lambda: orm.Str('posre.itp'), help='Output (posre.itp)')
-
         spec.output('stdout', valid_type=orm.SinglefileData, help='stdout')
         spec.output('outputfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file (conf.gro)')
         spec.output('topfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file (conf.gro)')
@@ -56,8 +52,7 @@ class Pdb2gmxCalculation(CalcJob):
         """
         codeinfo = datastructures.CodeInfo()
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(
-            pdbfile=self.inputs.pdbfile.filename, 
-            outputfile=self.inputs.outputfile.value)
+            pdbfile=self.inputs.pdbfile.filename)
         codeinfo.code_uuid = self.inputs.code.uuid
         codeinfo.stdout_name = self.metadata.options.output_filename
         codeinfo.withmpi = self.inputs.metadata.options.withmpi
@@ -69,8 +64,8 @@ class Pdb2gmxCalculation(CalcJob):
             (self.inputs.pdbfile.uuid, self.inputs.pdbfile.filename, self.inputs.pdbfile.filename),
         ]
         calcinfo.retrieve_list = [self.metadata.options.output_filename,
-                                  self.inputs.outputfile.value,
-                                  self.inputs.topfile.value,
-                                  self.inputs.itpfile.value]
+                                  self.inputs.parameters['o'],
+                                  self.inputs.parameters['p'],
+                                  self.inputs.parameters['i']]
 
         return calcinfo
