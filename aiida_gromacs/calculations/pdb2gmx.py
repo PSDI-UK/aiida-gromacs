@@ -32,13 +32,13 @@ class Pdb2gmxCalculation(CalcJob):
         }
         spec.inputs['metadata']['options']['parser_name'].default = 'gromacs.pdb2gmx'
         spec.input('metadata.options.output_filename', valid_type=str, default='aiida.out')
-        spec.input('pdbfile', valid_type=orm.SinglefileData, help='Input structure (pdb).')
+        spec.input('pdbfile', valid_type=orm.SinglefileData, help='Input structure.')
         spec.input('parameters', valid_type=Pdb2gmxParameters, help='Command line parameters for gmx pdb2gmx')
 
         spec.output('stdout', valid_type=orm.SinglefileData, help='stdout')
-        spec.output('outputfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file (conf.gro)')
-        spec.output('topfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file (conf.gro)')
-        spec.output('itpfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file (conf.gro)')
+        spec.output('outputfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file.')
+        spec.output('topfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file.')
+        spec.output('itpfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file.')
 
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 

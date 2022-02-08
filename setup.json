@@ -13,16 +13,22 @@
         "Development Status :: 3 - Alpha",
         "Framework :: AiiDA"
     ],
-    "version": "0.0.6",
+    "version": "0.0.7",
     "entry_points": {
         "aiida.data": [
-            "gromacs.pdb2gmx = aiida_gromacs.data.pdb2gmx:Pdb2gmxParameters"
+            "gromacs.pdb2gmx = aiida_gromacs.data.pdb2gmx:Pdb2gmxParameters",
+            "gromacs.editconf = aiida_gromacs.data.editconf:EditconfParameters",
+            "gromacs.solvate = aiida_gromacs.data.solvate:SolvateParameters"
         ],
         "aiida.calculations": [
-            "gromacs.pdb2gmx = aiida_gromacs.calculations.pdb2gmx:Pdb2gmxCalculation"
+            "gromacs.pdb2gmx = aiida_gromacs.calculations.pdb2gmx:Pdb2gmxCalculation",
+            "gromacs.editconf = aiida_gromacs.calculations.editconf:EditconfCalculation",
+            "gromacs.solvate = aiida_gromacs.calculations.solvate:SolvateCalculation"
         ],
         "aiida.parsers": [
-            "gromacs.pdb2gmx = aiida_gromacs.parsers.pdb2gmx:Pdb2gmxParser"
+            "gromacs.pdb2gmx = aiida_gromacs.parsers.pdb2gmx:Pdb2gmxParser",
+            "gromacs.editconf = aiida_gromacs.parsers.editconf:EditconfParser",
+            "gromacs.solvate = aiida_gromacs.parsers.solvate:SolvateParser"
         ],
         "aiida.cmdline.data": [
             "gromacs = aiida_gromacs.cli:data_cli"

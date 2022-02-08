@@ -12,15 +12,14 @@ from aiida.orm import Dict
 
 # A subset of diff's command line options
 cmdline_options = {
-    Required('water', default='spce'): str,
-    Required('ff', default='oplsaa'): str,
-    Required('o', default='conf.gro'): str,
-    Required('p', default='topol.top'): str,
-    Required('i', default='posre.itp'): str,
+    Required('o', default='newbox.gro'): str,
+    Optional('center', default='0 0 0'): str,
+    Optional('d'): str,
+    Optional('bt'): str,
 }
 
 
-class Pdb2gmxParameters(Dict):  # pylint: disable=too-many-ancestors
+class EditconfParameters(Dict):  # pylint: disable=too-many-ancestors
     """
     Command line options for diff.
 
@@ -36,7 +35,7 @@ class Pdb2gmxParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         Constructor for the data class
 
-        Usage: ``Pdb2gmxParameters(dict{'ignore-case': True})``
+        Usage: ``EditconfParameters(dict{'ignore-case': True})``
 
         :param parameters_dict: dictionary with commandline parameters
         :param type parameters_dict: dict
@@ -50,27 +49,27 @@ class Pdb2gmxParameters(Dict):  # pylint: disable=too-many-ancestors
 
         Uses the voluptuous package for validation. Find out about allowed keys using::
 
-            print(Pdb2gmxParameters).schema.schema
+            print(EditconfParameters).schema.schema
 
         :param parameters_dict: dictionary with commandline parameters
         :param type parameters_dict: dict
         :returns: validated dictionary
         """
-        return Pdb2gmxParameters.schema(parameters_dict)
+        return EditconfParameters.schema(parameters_dict)
 
-    def cmdline_params(self, pdbfile):
+    def cmdline_params(self, grofile):
         """Synthesize command line parameters.
 
         e.g. [ '--ignore-case', 'filename1', 'filename2']
 
-        :param pdbfile: Name of input pdb file
-        :param type pdbfile: str
+        :param grofile: Name of input gro file
+        :param type grofile: str
 
         """
         parameters = []
 
-        parameters.append('pdb2gmx')
-        parameters.extend(['-f', pdbfile])
+        parameters.append('editconf')
+        parameters.extend(['-f', grofile])
 
         parm_dict = self.get_dict()
 

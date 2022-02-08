@@ -12,15 +12,13 @@ from aiida.orm import Dict
 
 # A subset of diff's command line options
 cmdline_options = {
-    Required('water', default='spce'): str,
-    Required('ff', default='oplsaa'): str,
-    Required('o', default='conf.gro'): str,
+    Required('cs', default='spc216.gro'): str,
+    Required('o', default='solvated.gro'): str,
     Required('p', default='topol.top'): str,
-    Required('i', default='posre.itp'): str,
 }
 
 
-class Pdb2gmxParameters(Dict):  # pylint: disable=too-many-ancestors
+class SolvateParameters(Dict):  # pylint: disable=too-many-ancestors
     """
     Command line options for diff.
 
@@ -36,7 +34,7 @@ class Pdb2gmxParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         Constructor for the data class
 
-        Usage: ``Pdb2gmxParameters(dict{'ignore-case': True})``
+        Usage: ``SolvateParameters(dict{'ignore-case': True})``
 
         :param parameters_dict: dictionary with commandline parameters
         :param type parameters_dict: dict
@@ -50,27 +48,27 @@ class Pdb2gmxParameters(Dict):  # pylint: disable=too-many-ancestors
 
         Uses the voluptuous package for validation. Find out about allowed keys using::
 
-            print(Pdb2gmxParameters).schema.schema
+            print(SolvateParameters).schema.schema
 
         :param parameters_dict: dictionary with commandline parameters
         :param type parameters_dict: dict
         :returns: validated dictionary
         """
-        return Pdb2gmxParameters.schema(parameters_dict)
+        return SolvateParameters.schema(parameters_dict)
 
-    def cmdline_params(self, pdbfile):
+    def cmdline_params(self, grofile):
         """Synthesize command line parameters.
 
         e.g. [ '--ignore-case', 'filename1', 'filename2']
 
-        :param pdbfile: Name of input pdb file
-        :param type pdbfile: str
+        :param grofile: Name of input gro file
+        :param type grofile: str
 
         """
         parameters = []
 
-        parameters.append('pdb2gmx')
-        parameters.extend(['-f', pdbfile])
+        parameters.append('solvate')
+        parameters.extend(['-cp', grofile])
 
         parm_dict = self.get_dict()
 
