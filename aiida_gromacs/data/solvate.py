@@ -14,7 +14,6 @@ from aiida.orm import Dict
 cmdline_options = {
     Required('cs', default='spc216.gro'): str,
     Required('o', default='solvated.gro'): str,
-    Required('p', default='topol.top'): str,
 }
 
 
@@ -56,7 +55,7 @@ class SolvateParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         return SolvateParameters.schema(parameters_dict)
 
-    def cmdline_params(self, grofile):
+    def cmdline_params(self, grofile, topfile):
         """Synthesize command line parameters.
 
         e.g. [ '--ignore-case', 'filename1', 'filename2']
@@ -69,6 +68,7 @@ class SolvateParameters(Dict):  # pylint: disable=too-many-ancestors
 
         parameters.append('solvate')
         parameters.extend(['-cp', grofile])
+        parameters.extend(['-p', topfile])
 
         parm_dict = self.get_dict()
 

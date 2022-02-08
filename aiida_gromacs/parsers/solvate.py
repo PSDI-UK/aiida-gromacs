@@ -37,13 +37,13 @@ class SolvateParser(Parser):
 
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
-        outputs = ['stdout', 'outputfile', 'topfile', 'itpfile']
+        outputs = ['stdout', 'outputfile', 'topfile']
 
         # Check that folder content is as expected
         files_retrieved = self.retrieved.list_object_names()
         files_expected = [self.node.get_option('output_filename'),
                           self.node.inputs.parameters['o'],
-                          self.node.inputs.parameters['p']]
+                          self.node.inputs.topfile.filename]
 
         # Note: set(A) <= set(B) checks whether A is a subset of B
         if not set(files_expected) <= set(files_retrieved):

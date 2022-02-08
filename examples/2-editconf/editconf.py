@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Run a test calculation on localhost.
 
-Usage: ./solvate.py
+Usage: ./editconf.py
 """
 from os import path
 import click
@@ -12,7 +12,7 @@ from aiida_gromacs import helpers
 
 
 def test_run(gromacs_code):
-    """Run solvate calculation on the localhost computer.
+    """Run editconf calculation on the localhost computer.
 
     Uses test helpers to create AiiDA Code on the fly.
     """
@@ -23,14 +23,15 @@ def test_run(gromacs_code):
                                         computer=computer)
 
     # Prepare input parameters
-    SolvateParameters = DataFactory('gromacs.solvate')
-    parameters = SolvateParameters({'cs': 'spc216.gro',
-                                    'o': '1AKI_solvated.gro',
-                                    'p': '1AKI_topology.top',
+    Pdb2gmxParameters = DataFactory('gromacs.editconf')
+    parameters = Pdb2gmxParameters({'center': '0',
+                                    'd': '1.0',
+                                    'bt': 'cubic',
+                                    'o': '1AKI_newbox.gro'
                                     })
 
     SinglefileData = DataFactory('singlefile')
-    grofile = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), '1AKI_newbox.gro'))
+    grofile = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), '1AKI_forcefield.gro'))
 
     # set up calculation
     inputs = {
@@ -45,7 +46,7 @@ def test_run(gromacs_code):
     # Note: in order to submit your calculation to the aiida daemon, do:
     # from aiida.engine import submit
     # future = submit(CalculationFactory('gromacs'), **inputs)
-    result = engine.run(CalculationFactory('gromacs.solvate'), **inputs)
+    result = engine.run(CalculationFactory('gromacs.editconf'), **inputs)
 
 
 @click.command()
@@ -54,11 +55,11 @@ def test_run(gromacs_code):
 def cli(code):
     """Run example.
 
-    Example usage: $ ./solvate.py --code gmx@localhost
+    Example usage: $ ./editconf.py --code gmx@localhost
 
-    Alternative (creates gmx@localhost code): $ ./solvate.py
+    Alternative (creates gmx@localhost code): $ ./editconf.py
 
-    Help: $ ./solvate.py --help
+    Help: $ ./editconf.py --help
     """
     test_run(code)
 

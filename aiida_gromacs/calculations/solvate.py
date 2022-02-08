@@ -33,6 +33,7 @@ class SolvateCalculation(CalcJob):
         spec.inputs['metadata']['options']['parser_name'].default = 'gromacs.solvate'
         spec.input('metadata.options.output_filename', valid_type=str, default='aiida.out')
         spec.input('grofile', valid_type=orm.SinglefileData, help='Input structure')
+        spec.input('topfile', valid_type=orm.SinglefileData, help='Input topology')
         spec.input('parameters', valid_type=SolvateParameters, help='Command line parameters for gmx solvate.')
 
         spec.output('stdout', valid_type=orm.SinglefileData, help='stdout')
@@ -51,7 +52,8 @@ class SolvateCalculation(CalcJob):
         """
         codeinfo = datastructures.CodeInfo()
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(
-            grofile=self.inputs.grofile.filename)
+            grofile=self.inputs.grofile.filename,
+            topfile=self.inputs.topfile.filename)
         codeinfo.code_uuid = self.inputs.code.uuid
         codeinfo.stdout_name = self.metadata.options.output_filename
         codeinfo.withmpi = self.inputs.metadata.options.withmpi
@@ -60,10 +62,10 @@ class SolvateCalculation(CalcJob):
         calcinfo = datastructures.CalcInfo()
         calcinfo.codes_info = [codeinfo]
         calcinfo.local_copy_list = [
-            (self.inputs.grofile.uuid, self.inputs.grofile.filename, self.inputs.grofile.filename),
+            (self.inputs.grofile.uuid, self.inputs.grofile.filename, self.inputs.grofile.filename), (self.inputs.topfile.uuid, self.inputs.topfile.filename, self.inputs.topfile.filename),
         ]
         calcinfo.retrieve_list = [self.metadata.options.output_filename,
                                   self.inputs.parameters['o'],
-                                  self.inputs.parameters['p']]
+                                  self.inputs.topfile.filename]
 
         return calcinfo

@@ -37,7 +37,7 @@ class EditconfParser(Parser):
 
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
-        outputs = ['stdout', 'outputfile', 'topfile', 'itpfile']
+        outputs = ['stdout', 'outputfile']
 
         # Check that folder content is as expected
         files_retrieved = self.retrieved.list_object_names()
