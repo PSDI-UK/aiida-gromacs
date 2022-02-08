@@ -16,7 +16,7 @@ class EditconfCalculation(CalcJob):
     """
     AiiDA calculation plugin wrapping the 'gmx editconf' executable.
 
-    AiiDA plugin wrapper for converting PDB files to GRO files.
+    AiiDA plugin wrapper for adding a simulation box to structure file.
     """
 
     @classmethod
