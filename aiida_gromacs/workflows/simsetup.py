@@ -1,5 +1,5 @@
 from aiida.engine import ToContext, WorkChain
-from aiida.orm import Code
+from aiida.orm import Code, SinglefileData
 from aiida.plugins.factories import CalculationFactory, DataFactory
 
 Pdb2gmxCalculation = CalculationFactory('gromacs.pdb2gmx')
@@ -27,7 +27,10 @@ class SetupWorkChain(WorkChain):
             cls.pdb2gmx,
             cls.editconf,
             cls.solvate,
+            cls.result,
         )
+        
+        spec.output('result')
     
     
     def pdb2gmx(self):
@@ -43,7 +46,7 @@ class SetupWorkChain(WorkChain):
 
         future = self.submit(Pdb2gmxCalculation, **inputs)
 
-        return ToContex(pdb2gmx=future)
+        return ToContext(pdb2gmx=future)
 
 
     def editconf(self):
@@ -59,7 +62,7 @@ class SetupWorkChain(WorkChain):
 
         future = self.submit(EditconfCalculation, **inputs)
 
-        return ToContex(editconf=future)
+        return ToContext(editconf=future)
 
 
     def solvate(self):
@@ -68,7 +71,7 @@ class SetupWorkChain(WorkChain):
             'code': self.inputs.code,
             'parameters': self.inputs.solvateparameters,
             'grofile': self.ctx.editconf.outputs.outputfile,
-            'topfile': self.ctx.pdb2gmx.outputs.topfile
+            'topfile': self.ctx.pdb2gmx.outputs.topfile,
             'metadata': {
                 'description': 'solvate job submission with the aiida_gromacs setup workflow',
             },
@@ -76,6 +79,9 @@ class SetupWorkChain(WorkChain):
 
         future = self.submit(SolvateCalculation, **inputs)
 
-        return ToContex(solvate=future)
-        
+        return ToContext(solvate=future)
 
+
+    def result(self):
+        """Results"""
+        self.out('result', self.ctx.solvate.outputs.outputfile)

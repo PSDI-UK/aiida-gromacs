@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Run a test calculation on localhost.
+"""Run a test md setup workflow on localhost.
 
-Usage: ./pdb2gmx.py
+Usage: ./md-setup.py
 """
 from os import path
 import click
@@ -61,20 +61,20 @@ def test_run(gromacs_code):
     # Note: in order to submit your calculation to the aiida daemon, do:
     # from aiida.engine import submit
     # future = submit(CalculationFactory('gromacs'), **inputs)
-    result = engine.run(WorkChain('gromacs.setup'), **inputs)
+    result = engine.run(WorkflowFactory('gromacs.setup'), **inputs)
 
 
 @click.command()
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
 def cli(code):
-    """Run example.
+    """Run example workflow.
 
-    Example usage: $ ./pdb2gmx.py --code gmx@localhost
+    Example usage: $ ./md-setup.py --code gmx@localhost
 
-    Alternative (creates gmx@localhost code): $ ./pdb2gmx.py
+    Alternative (creates gmx@localhost code): $ ./md-setup.py
 
-    Help: $ ./pdb2gmx.py --help
+    Help: $ ./md-setup.py --help
     """
     test_run(code)
 
