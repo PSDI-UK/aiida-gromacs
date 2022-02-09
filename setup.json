@@ -13,22 +13,31 @@
         "Development Status :: 3 - Alpha",
         "Framework :: AiiDA"
     ],
-    "version": "0.0.8",
+    "version": "0.0.9",
     "entry_points": {
         "aiida.data": [
             "gromacs.pdb2gmx = aiida_gromacs.data.pdb2gmx:Pdb2gmxParameters",
             "gromacs.editconf = aiida_gromacs.data.editconf:EditconfParameters",
+            "gromacs.genion = aiida_gromacs.data.genion:GenionParameters",
+            "gromacs.grompp = aiida_gromacs.data.grompp:GromppParameters",
+            "gromacs.mdrun = aiida_gromacs.data.mdrun:MdrunParameters",
             "gromacs.solvate = aiida_gromacs.data.solvate:SolvateParameters"
         ],
         "aiida.calculations": [
             "gromacs.pdb2gmx = aiida_gromacs.calculations.pdb2gmx:Pdb2gmxCalculation",
             "gromacs.editconf = aiida_gromacs.calculations.editconf:EditconfCalculation",
+            "gromacs.genion = aiida_gromacs.calculations.genion:GenionCalculation",
+            "gromacs.grompp = aiida_gromacs.calculations.grompp:GromppCalculation",
+            "gromacs.mdrun = aiida_gromacs.calculations.mdrun:MdrunCalculation",
             "gromacs.solvate = aiida_gromacs.calculations.solvate:SolvateCalculation"
         ],
         "aiida.parsers": [
             "gromacs.pdb2gmx = aiida_gromacs.parsers.pdb2gmx:Pdb2gmxParser",
             "gromacs.editconf = aiida_gromacs.parsers.editconf:EditconfParser",
-            "gromacs.solvate = aiida_gromacs.parsers.solvate:SolvateParser"
+            "gromacs.genion = aiida_gromacs.parsers.genion:GenionParser",
+            "gromacs.grompp = aiida_gromacs.parsers.grompp:GromppParser",
+            "gromacs.mdrun = aiida_gromacs.parsers.mdrun:MdrunParser",
+            "gromacs.solvate = aiida_gromacs.parsers.solvate:SolvateParser",
         ],
         "aiida.workflows": [
             "gromacs.setup = aiida_gromacs.workflows.simsetup:SetupWorkChain"

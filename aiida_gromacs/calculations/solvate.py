@@ -37,8 +37,8 @@ class SolvateCalculation(CalcJob):
         spec.input('parameters', valid_type=SolvateParameters, help='Command line parameters for gmx solvate.')
 
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
-        spec.output('outputfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
-        spec.output('topfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
+        spec.output('outputfile', valid_type=SinglefileData, help='Output solvated gro file.')
+        spec.output('topfile', valid_type=SinglefileData, help='Output topology file.')
 
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 
