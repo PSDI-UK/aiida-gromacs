@@ -6,7 +6,7 @@ Register calculations via the "aiida.calculations" entry point in setup.json.
 """
 from aiida.common import datastructures
 from aiida.engine import CalcJob
-from aiida import orm
+from aiida.orm import SinglefileData
 from aiida.plugins import DataFactory
 
 Pdb2gmxParameters = DataFactory('gromacs.pdb2gmx')
@@ -31,14 +31,14 @@ class Pdb2gmxCalculation(CalcJob):
             'num_mpiprocs_per_machine': 1,
         }
         spec.inputs['metadata']['options']['parser_name'].default = 'gromacs.pdb2gmx'
-        spec.input('metadata.options.output_filename', valid_type=str, default='aiida.out')
-        spec.input('pdbfile', valid_type=orm.SinglefileData, help='Input structure.')
+        spec.input('metadata.options.output_filename', valid_type=str, default='pdb2gmx.out')
+        spec.input('pdbfile', valid_type=SinglefileData, help='Input structure.')
         spec.input('parameters', valid_type=Pdb2gmxParameters, help='Command line parameters for gmx pdb2gmx')
 
-        spec.output('stdout', valid_type=orm.SinglefileData, help='stdout')
-        spec.output('outputfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file.')
-        spec.output('topfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file.')
-        spec.output('itpfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file.')
+        spec.output('stdout', valid_type=SinglefileData, help='stdout')
+        spec.output('outputfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
+        spec.output('topfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
+        spec.output('itpfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
 
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 

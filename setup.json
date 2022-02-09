@@ -13,7 +13,7 @@
         "Development Status :: 3 - Alpha",
         "Framework :: AiiDA"
     ],
-    "version": "0.0.7",
+    "version": "0.0.8",
     "entry_points": {
         "aiida.data": [
             "gromacs.pdb2gmx = aiida_gromacs.data.pdb2gmx:Pdb2gmxParameters",
@@ -29,6 +29,9 @@
             "gromacs.pdb2gmx = aiida_gromacs.parsers.pdb2gmx:Pdb2gmxParser",
             "gromacs.editconf = aiida_gromacs.parsers.editconf:EditconfParser",
             "gromacs.solvate = aiida_gromacs.parsers.solvate:SolvateParser"
+        ],
+        "aiida.workflows": [
+            "gromacs.setup = aiida_gromacs.workflows.simsetup:SetupWorkChain"
         ],
         "aiida.cmdline.data": [
             "gromacs = aiida_gromacs.cli:data_cli"

@@ -23,8 +23,8 @@ def test_run(gromacs_code):
                                         computer=computer)
 
     # Prepare input parameters
-    Pdb2gmxParameters = DataFactory('gromacs.editconf')
-    parameters = Pdb2gmxParameters({'center': '0',
+    EditconfParameters = DataFactory('gromacs.editconf')
+    parameters = EditconfParameters({'center': '0',
                                     'd': '1.0',
                                     'bt': 'cubic',
                                     'o': '1AKI_newbox.gro'

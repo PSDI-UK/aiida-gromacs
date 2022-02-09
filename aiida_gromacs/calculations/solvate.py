@@ -6,7 +6,7 @@ Register calculations via the "aiida.calculations" entry point in setup.json.
 """
 from aiida.common import datastructures
 from aiida.engine import CalcJob
-from aiida import orm
+from aiida.orm import SinglefileData
 from aiida.plugins import DataFactory
 
 SolvateParameters = DataFactory('gromacs.solvate')
@@ -31,14 +31,14 @@ class SolvateCalculation(CalcJob):
             'num_mpiprocs_per_machine': 1,
         }
         spec.inputs['metadata']['options']['parser_name'].default = 'gromacs.solvate'
-        spec.input('metadata.options.output_filename', valid_type=str, default='aiida.out')
-        spec.input('grofile', valid_type=orm.SinglefileData, help='Input structure')
-        spec.input('topfile', valid_type=orm.SinglefileData, help='Input topology')
+        spec.input('metadata.options.output_filename', valid_type=str, default='solvate.out')
+        spec.input('grofile', valid_type=SinglefileData, help='Input structure')
+        spec.input('topfile', valid_type=SinglefileData, help='Input topology')
         spec.input('parameters', valid_type=SolvateParameters, help='Command line parameters for gmx solvate.')
 
-        spec.output('stdout', valid_type=orm.SinglefileData, help='stdout')
-        spec.output('outputfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file.')
-        spec.output('topfile', valid_type=orm.SinglefileData, help='Output forcefield compliant file.')
+        spec.output('stdout', valid_type=SinglefileData, help='stdout')
+        spec.output('outputfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
+        spec.output('topfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
 
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 
