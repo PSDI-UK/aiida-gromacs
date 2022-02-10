@@ -17,6 +17,7 @@ LOCALHOST_NAME = 'localhost'
 
 executables = {
     'gromacs': 'gmx',
+    'bash': 'bash',
 }
 
 

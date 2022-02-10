@@ -15,7 +15,7 @@ cmdline_options = {
     Required('o', default='solvated_ions.gro'): str,
     Required('pname', default='NA'): str,
     Required('nname', default='CL'): str,
-    Required('neutral', default= ''): str,
+    Required('neutral', default='true'): str,
 }
 
 
@@ -66,20 +66,22 @@ class GenionParameters(Dict):  # pylint: disable=too-many-ancestors
         :param type pdbfile: str
 
         """
-        parameters = []
+        cmdline = 'echo'
+        cmdline = cmdline + ' ' + 'SOL'
+        cmdline = cmdline + ' ' + '| gmx genion'
+        cmdline = cmdline + ' ' + ' -s ' + tprfile
+        cmdline = cmdline + ' ' + ' -p ' + topfile
 
-        parameters.append('genion')
-        parameters.extend(['-s', tprfile])
-        parameters.extend(['-p', topfile])
+        parameters = []
 
         parm_dict = self.get_dict()
 
         for k in parm_dict.keys():
 
-            parameters.extend(['-' + k, parm_dict[k]])
+            cmdline = cmdline + ' -' + k + ' ' + parm_dict[k]
 
-        parameters.append('<<<"SOL"')
-
+        parameters.extend(['-c', cmdline])
+        
         return [str(p) for p in parameters]
 
     def __str__(self):

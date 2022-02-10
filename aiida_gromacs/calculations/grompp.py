@@ -52,8 +52,8 @@ class GromppCalculation(CalcJob):
         """
         codeinfo = datastructures.CodeInfo()
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(
-            mdpfile=self.inputs.mdpfile.filename
-            grofile=self.inputs.grofile.filename
+            mdpfile=self.inputs.mdpfile.filename,
+            grofile=self.inputs.grofile.filename,
             topfile=self.inputs.topfile.filename)
         codeinfo.code_uuid = self.inputs.code.uuid
         codeinfo.stdout_name = self.metadata.options.output_filename
