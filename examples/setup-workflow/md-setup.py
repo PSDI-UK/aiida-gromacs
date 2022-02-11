@@ -25,26 +25,38 @@ def test_run(gromacs_code):
     # Prepare input parameters
     SinglefileData = DataFactory('singlefile')
     pdbfile = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), '1AKI_clean.pdb'))
+    ionsmdp = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), 'ions.mdp'))
 
     Pdb2gmxParameters = DataFactory('gromacs.pdb2gmx')
     pdb2gmxparameters = Pdb2gmxParameters({'ff': 'oplsaa',
-                                    'water': 'spce',
-                                    'o': '1AKI_forcfield.gro',
-                                    'p': '1AKI_topology.top',
-                                    'i': '1AKI_restraints.itp'
-                                    })
+                                           'water': 'spce',
+                                           'o': '1AKI_forcfield.gro',
+                                           'p': '1AKI_topology.top',
+                                           'i': '1AKI_restraints.itp'
+                                          })
 
     EditconfParameters = DataFactory('gromacs.editconf')
     editconfparameters = EditconfParameters({'center': '0',
-                                    'd': '1.0',
-                                    'bt': 'cubic',
-                                    'o': '1AKI_newbox.gro'
-                                    })
+                                             'd': '1.0',
+                                             'bt': 'cubic',
+                                             'o': '1AKI_newbox.gro'
+                                            })
 
     SolvateParameters = DataFactory('gromacs.solvate')
     solvateparameters = SolvateParameters({'cs': 'spc216.gro',
-                                    'o': '1AKI_solvated.gro'
-                                    })
+                                           'o': '1AKI_solvated.gro'
+                                          })
+
+    GromppParameters = DataFactory('gromacs.grompp')
+    gromppionsparameters = GromppParameters({'o': '1AKI_ions.tpr'
+                                            })
+
+    GenionParameters = DataFactory('gromacs.genion')
+    genionparameters = GenionParameters({'o': '1AKI_solvated_ions.gro',
+                                         'pname': 'NA',
+                                         'nname': 'CL',
+                                         'neutral': 'true',
+                                        })
 
     # set up calculation
     inputs = {
@@ -52,7 +64,10 @@ def test_run(gromacs_code):
         'pdb2gmxparameters': pdb2gmxparameters,
         'editconfparameters': editconfparameters,
         'solvateparameters': solvateparameters,
+        'gromppionsparameters': gromppionsparameters,
+        'genionparameters': genionparameters,
         'pdbfile': pdbfile,
+        'ionsmdp': ionsmdp,
         'metadata': {
             'description': 'setup md calculation with aiida_gromacs plugin',
         },

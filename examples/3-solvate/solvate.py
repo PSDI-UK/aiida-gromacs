@@ -39,7 +39,7 @@ def test_run(gromacs_code):
         'grofile': grofile,
         'topfile': topfile,
         'metadata': {
-            'description': 'editconf job submission with the aiida_gromacs plugin',
+            'description': 'solvate job submission with the aiida_gromacs plugin',
         },
     }
 
