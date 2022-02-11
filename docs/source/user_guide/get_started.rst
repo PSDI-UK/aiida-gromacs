@@ -38,5 +38,20 @@ If you have already set up your own aiida_gromacs code using
 Available calculations
 ++++++++++++++++++++++
 
-.. aiida-calcjob:: DiffCalculation
+.. aiida-calcjob:: Pdb2gmxCalculation
+    :module: aiida_gromacs.calculations
+
+.. aiida-calcjob:: EditconfCalculation
+    :module: aiida_gromacs.calculations
+
+.. aiida-calcjob:: SolvateCalculation
+    :module: aiida_gromacs.calculations
+
+.. aiida-calcjob:: GenionCalculation
+    :module: aiida_gromacs.calculations
+
+.. aiida-calcjob:: GromppCalculation
+    :module: aiida_gromacs.calculations
+
+.. aiida-calcjob:: MdrunCalculation
     :module: aiida_gromacs.calculations
