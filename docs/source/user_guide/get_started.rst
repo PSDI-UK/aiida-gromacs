@@ -39,19 +39,19 @@ Available calculations
 ++++++++++++++++++++++
 
 .. aiida-calcjob:: Pdb2gmxCalculation
-    :module: aiida_gromacs.calculations
+    :module: aiida_gromacs.calculations.pdb2gmx
 
 .. aiida-calcjob:: EditconfCalculation
-    :module: aiida_gromacs.calculations
+    :module: aiida_gromacs.calculations.editconf
 
 .. aiida-calcjob:: SolvateCalculation
-    :module: aiida_gromacs.calculations
+    :module: aiida_gromacs.calculations.solvate
 
 .. aiida-calcjob:: GenionCalculation
-    :module: aiida_gromacs.calculations
+    :module: aiida_gromacs.calculations.genion
 
 .. aiida-calcjob:: GromppCalculation
-    :module: aiida_gromacs.calculations
+    :module: aiida_gromacs.calculations.grompp
 
 .. aiida-calcjob:: MdrunCalculation
-    :module: aiida_gromacs.calculations
+    :module: aiida_gromacs.calculations.mdrun
