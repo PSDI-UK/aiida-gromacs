@@ -24,11 +24,13 @@ class SetupWorkChain(WorkChain):
         spec.input('code', valid_type=Code)
         spec.input('pdbfile', valid_type=SinglefileData, help='Input structure.')
         spec.input('ionsmdp', valid_type=SinglefileData, help='Input structure.')
+        spec.input('minmdp', valid_type=SinglefileData, help='Input structure.')
         spec.input('pdb2gmxparameters', valid_type=Pdb2gmxParameters, help='Command line parameters for gmx pdb2gmx')    
         spec.input('editconfparameters', valid_type=EditconfParameters, help='Command line parameters for gmx editconf')
         spec.input('solvateparameters', valid_type=SolvateParameters, help='Command line parameters for gmx solvate')
         spec.input('gromppionsparameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
         spec.input('genionparameters', valid_type=GenionParameters, help='Command line parameters for gmx genion')
+        spec.input('gromppminparameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
 
         spec.outline(
             cls.pdb2gmx,
@@ -36,6 +38,7 @@ class SetupWorkChain(WorkChain):
             cls.solvate,
             cls.gromppions,
             cls.genion,
+            cls.gromppmin,
             cls.result,
         )
         
@@ -106,7 +109,7 @@ class SetupWorkChain(WorkChain):
 
         future = self.submit(GromppCalculation, **inputs)
 
-        return ToContext(grommp=future)
+        return ToContext(gromppions=future)
 
 
     def genion(self):
@@ -120,7 +123,7 @@ class SetupWorkChain(WorkChain):
         inputs = {
             'code': gromacs_code,
             'parameters': self.inputs.genionparameters,
-            'tprfile': self.ctx.grommp.outputs.outputfile,
+            'tprfile': self.ctx.gromppions.outputs.outputfile,
             'topfile': self.ctx.solvate.outputs.topfile,
             'metadata': {
                 'description': 'add ions to simulation box.',
@@ -132,6 +135,25 @@ class SetupWorkChain(WorkChain):
         return ToContext(genion=future)
 
 
+    def gromppmin(self):
+        """Create a tpr for adding ions."""
+        inputs = {
+            'code': self.inputs.code,
+            'parameters': self.inputs.gromppminparameters,
+            'mdpfile': self.inputs.minmdp,
+            'grofile': self.ctx.genion.outputs.outputfile,
+            'topfile': self.ctx.genion.outputs.topfile,
+            'metadata': {
+                'description': 'prepare the tpr for minimisation run.',
+            },
+        }
+
+        future = self.submit(GromppCalculation, **inputs)
+
+        return ToContext(gromppmin=future)
+
+
     def result(self):
         """Results"""
-        self.out('result', self.ctx.genion.outputs.outputfile)
+        self.out('result', self.ctx.gromppmin.outputs.outputfile)
+

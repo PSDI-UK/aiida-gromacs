@@ -26,6 +26,7 @@ def test_run(gromacs_code):
     SinglefileData = DataFactory('singlefile')
     pdbfile = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), '1AKI_clean.pdb'))
     ionsmdp = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), 'ions.mdp'))
+    minmdp = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), 'min.mdp'))
 
     Pdb2gmxParameters = DataFactory('gromacs.pdb2gmx')
     pdb2gmxparameters = Pdb2gmxParameters({'ff': 'oplsaa',
@@ -58,6 +59,9 @@ def test_run(gromacs_code):
                                          'neutral': 'true',
                                         })
 
+    gromppminparameters = GromppParameters({'o': '1AKI_min.tpr'
+                                            })
+
     # set up calculation
     inputs = {
         'code': gromacs_code,
@@ -66,8 +70,10 @@ def test_run(gromacs_code):
         'solvateparameters': solvateparameters,
         'gromppionsparameters': gromppionsparameters,
         'genionparameters': genionparameters,
+        'gromppminparameters': gromppminparameters,
         'pdbfile': pdbfile,
         'ionsmdp': ionsmdp,
+        'minmdp': minmdp,
         'metadata': {
             'description': 'setup md calculation with aiida_gromacs plugin',
         },
