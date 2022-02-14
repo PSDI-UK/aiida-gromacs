@@ -7,12 +7,14 @@ EditconfCalculation = CalculationFactory('gromacs.editconf')
 SolvateCalculation = CalculationFactory('gromacs.solvate')
 GromppCalculation = CalculationFactory('gromacs.grompp')
 GenionCalculation = CalculationFactory('gromacs.genion')
+MdrunCalculation = CalculationFactory('gromacs.mdrun')
 
 Pdb2gmxParameters = DataFactory('gromacs.pdb2gmx')
 EditconfParameters = DataFactory('gromacs.editconf')
 SolvateParameters = DataFactory('gromacs.solvate')
 GromppParameters = DataFactory('gromacs.grompp')
 GenionParameters = DataFactory('gromacs.genion')
+MdrunParameters = DataFactory('gromacs.mdrun')
 
 class SetupWorkChain(WorkChain):
     """WorkChain for setting up a gromacs simulation automatically."""
@@ -23,14 +25,21 @@ class SetupWorkChain(WorkChain):
         super().define(spec)
         spec.input('code', valid_type=Code)
         spec.input('pdbfile', valid_type=SinglefileData, help='Input structure.')
-        spec.input('ionsmdp', valid_type=SinglefileData, help='Input structure.')
-        spec.input('minmdp', valid_type=SinglefileData, help='Input structure.')
+        spec.input('ionsmdp', valid_type=SinglefileData, help='MD parameters for adding ions.')
+        spec.input('minmdp', valid_type=SinglefileData, help='MD parameters for energy minimisation.')
+        spec.input('nvtmdp', valid_type=SinglefileData, help='MD parameters for equilibration.')
+        spec.input('nptmdp', valid_type=SinglefileData, help='MD parameters for equilibration.')
         spec.input('pdb2gmxparameters', valid_type=Pdb2gmxParameters, help='Command line parameters for gmx pdb2gmx')    
         spec.input('editconfparameters', valid_type=EditconfParameters, help='Command line parameters for gmx editconf')
         spec.input('solvateparameters', valid_type=SolvateParameters, help='Command line parameters for gmx solvate')
         spec.input('gromppionsparameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
         spec.input('genionparameters', valid_type=GenionParameters, help='Command line parameters for gmx genion')
         spec.input('gromppminparameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
+        spec.input('minimiseparameters', valid_type=MdrunParameters, help='Command line parameters for gmx mdrun')
+        spec.input('gromppnvtparameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
+        spec.input('nvtparameters', valid_type=MdrunParameters, help='Command line parameters for gmx mdrun')
+        spec.input('gromppnptparameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
+        spec.input('nptparameters', valid_type=MdrunParameters, help='Command line parameters for gmx mdrun')
 
         spec.outline(
             cls.pdb2gmx,
@@ -39,6 +48,11 @@ class SetupWorkChain(WorkChain):
             cls.gromppions,
             cls.genion,
             cls.gromppmin,
+            cls.minimise,
+            cls.gromppnvt,
+            cls.nvtequilibrate,
+            cls.gromppnpt,
+            cls.nptequilibrate,
             cls.result,
         )
         
@@ -136,7 +150,7 @@ class SetupWorkChain(WorkChain):
 
 
     def gromppmin(self):
-        """Create a tpr for adding ions."""
+        """Create a tpr for minimisation."""
         inputs = {
             'code': self.inputs.code,
             'parameters': self.inputs.gromppminparameters,
@@ -153,7 +167,92 @@ class SetupWorkChain(WorkChain):
         return ToContext(gromppmin=future)
 
 
+    def minimise(self):
+        """Minimise system."""
+        inputs = {
+            'code': self.inputs.code,
+            'parameters': self.inputs.minimiseparameters,
+            'tprfile': self.ctx.gromppmin.outputs.outputfile,
+            'metadata': {
+                'description': 'minimise system.',
+            },
+        }
+
+        future = self.submit(MdrunCalculation, **inputs)
+
+        return ToContext(minimise=future)
+
+    def gromppnvt(self):
+        """Create a tpr for NVT equilibration."""
+        inputs = {
+            'code': self.inputs.code,
+            'parameters': self.inputs.gromppnvtparameters,
+            'mdpfile': self.inputs.nvtmdp,
+            'grofile': self.ctx.minimise.outputs.grofile,
+            'topfile': self.ctx.genion.outputs.topfile,
+            'itpfile': self.ctx.pdb2gmx.outputs.itpfile,
+            'metadata': {
+                'description': 'prepare the tpr for NVT equlibration.',
+            },
+        }
+
+        future = self.submit(GromppCalculation, **inputs)
+
+        return ToContext(gromppnvt=future)
+
+
+    def nvtequilibrate(self):
+        """NVT Equilibration of system."""
+        inputs = {
+            'code': self.inputs.code,
+            'parameters': self.inputs.nvtparameters,
+            'tprfile': self.ctx.gromppnvt.outputs.outputfile,
+            'metadata': {
+                'description': 'NVT equilibrate system.',
+            },
+        }
+
+        future = self.submit(MdrunCalculation, **inputs)
+
+        return ToContext(nvtequilibrate=future)
+
+
+    def gromppnpt(self):
+        """Create a tpr for NPT equilibration."""
+        inputs = {
+            'code': self.inputs.code,
+            'parameters': self.inputs.gromppnptparameters,
+            'mdpfile': self.inputs.nptmdp,
+            'grofile': self.ctx.nvtequilibrate.outputs.grofile,
+            'topfile': self.ctx.genion.outputs.topfile,
+            'itpfile': self.ctx.pdb2gmx.outputs.itpfile,
+            'metadata': {
+                'description': 'prepare the tpr for NPT equlibration.',
+            },
+        }
+
+        future = self.submit(GromppCalculation, **inputs)
+
+        return ToContext(gromppnpt=future)
+
+
+    def nptequilibrate(self):
+        """NPT Equilibration of system system."""
+        inputs = {
+            'code': self.inputs.code,
+            'parameters': self.inputs.nptparameters,
+            'tprfile': self.ctx.gromppnpt.outputs.outputfile,
+            'metadata': {
+                'description': 'NPT equilibrate system.',
+            },
+        }
+
+        future = self.submit(MdrunCalculation, **inputs)
+
+        return ToContext(nptequilibrate=future)
+
+
     def result(self):
         """Results"""
-        self.out('result', self.ctx.gromppmin.outputs.outputfile)
+        self.out('result', self.ctx.nptequilibrate.outputs.trrfile)
 

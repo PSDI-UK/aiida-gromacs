@@ -36,6 +36,8 @@ class GromppCalculation(CalcJob):
         spec.input('grofile', valid_type=SinglefileData, help='Input structure')
         spec.input('topfile', valid_type=SinglefileData, help='Input topology')
         spec.input('parameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
+        
+        spec.input('itpfile', valid_type=SinglefileData, required=False,help='Restraints file')
 
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
         spec.output('outputfile', valid_type=SinglefileData, help='Output gro file ready for adding ions.')
@@ -67,6 +69,8 @@ class GromppCalculation(CalcJob):
             (self.inputs.grofile.uuid, self.inputs.grofile.filename, self.inputs.grofile.filename),
             (self.inputs.topfile.uuid, self.inputs.topfile.filename, self.inputs.topfile.filename),
         ]
+        if 'itpfile' in self.inputs: calcinfo.local_copy_list.append((self.inputs.itpfile.uuid, self.inputs.itpfile.filename, self.inputs.itpfile.filename))
+
         calcinfo.retrieve_list = [self.metadata.options.output_filename,
                                   self.inputs.parameters['o'],
                                   ]

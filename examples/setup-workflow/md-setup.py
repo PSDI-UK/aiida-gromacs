@@ -27,6 +27,8 @@ def test_run(gromacs_code):
     pdbfile = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), '1AKI_clean.pdb'))
     ionsmdp = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), 'ions.mdp'))
     minmdp = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), 'min.mdp'))
+    eqnvt = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), 'nvt.mdp'))
+    eqnpt = SinglefileData(file=path.join(path.dirname(path.realpath(__file__)), 'npt.mdp'))
 
     Pdb2gmxParameters = DataFactory('gromacs.pdb2gmx')
     pdb2gmxparameters = Pdb2gmxParameters({'ff': 'oplsaa',
@@ -62,6 +64,38 @@ def test_run(gromacs_code):
     gromppminparameters = GromppParameters({'o': '1AKI_min.tpr'
                                             })
 
+    MdrunParameters = DataFactory('gromacs.mdrun')
+    minimiseparameters = MdrunParameters({'c': '1AKI_minimised.gro',
+                                          'e': '1AKI_minimised.edr',
+                                          'g': '1AKI_minimised.log',
+                                          'o': '1AKI_minimised.trr',
+                                          'v': 'true'
+                                         })
+
+    gromppnvtparameters = GromppParameters({'o': '1AKI_nvt.tpr',
+                                            'r': '1AKI_minimised.gro'
+                                            })
+
+    nvtparameters = MdrunParameters({'c': '1AKI_nvt.gro',
+                                     'e': '1AKI_nvt.edr',
+                                     'g': '1AKI_nvt.log',
+                                     'o': '1AKI_nvt.trr',
+                                     'cpo': '1AKI_nvt.cpt',
+                                     'v': 'true'
+                                    })
+
+    gromppnptparameters = GromppParameters({'o': '1AKI_npt.tpr',
+                                            'r': '1AKI_nvt.gro'
+                                            })
+
+    nptparameters = MdrunParameters({'c': '1AKI_npt.gro',
+                                     'e': '1AKI_npt.edr',
+                                     'g': '1AKI_npt.log',
+                                     'o': '1AKI_npt.trr',
+                                     'cpo': '1AKI_npt.cpt',
+                                     'v': 'true'
+                                    })
+
     # set up calculation
     inputs = {
         'code': gromacs_code,
@@ -71,17 +105,23 @@ def test_run(gromacs_code):
         'gromppionsparameters': gromppionsparameters,
         'genionparameters': genionparameters,
         'gromppminparameters': gromppminparameters,
+        'minimiseparameters': minimiseparameters,
+        'gromppnvtparameters': gromppnvtparameters,
+        'nvtparameters': nvtparameters,
+        'gromppnptparameters': gromppnptparameters,
+        'nptparameters': nptparameters,
         'pdbfile': pdbfile,
         'ionsmdp': ionsmdp,
         'minmdp': minmdp,
+        'nvtmdp': eqnvt,
+        'nptmdp': eqnpt,
         'metadata': {
             'description': 'setup md calculation with aiida_gromacs plugin',
         },
     }
 
     # Note: in order to submit your calculation to the aiida daemon, do:
-    # from aiida.engine import submit
-    # future = submit(CalculationFactory('gromacs'), **inputs)
+    #future = engine.submit(CalculationFactory('gromacs.setup'), **inputs)
     result = engine.run(WorkflowFactory('gromacs.setup'), **inputs)
 
 

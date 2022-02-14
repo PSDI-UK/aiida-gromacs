@@ -32,13 +32,16 @@ class MdrunCalculation(CalcJob):
         }
         spec.inputs['metadata']['options']['parser_name'].default = 'gromacs.mdrun'
         spec.input('metadata.options.output_filename', valid_type=str, default='mdrun.out')
-        spec.input('pdbfile', valid_type=SinglefileData, help='Input structure.')
+        spec.input('tprfile', valid_type=SinglefileData, help='Input structure.')
         spec.input('parameters', valid_type=MdrunParameters, help='Command line parameters for gmx mdrun')
 
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
-        spec.output('outputfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
-        spec.output('topfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
-        spec.output('itpfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
+        spec.output('trrfile', valid_type=SinglefileData, help='Output trajectory.')
+        spec.output('grofile', valid_type=SinglefileData, help='Output structure file.')
+        spec.output('logfile', valid_type=SinglefileData, help='Output log file.')
+        spec.output('enfile', valid_type=SinglefileData, help='Output energy file.')
+        
+        spec.output('cptfile', valid_type=SinglefileData, required=False, help='Checkpoint file.')
 
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 
@@ -52,7 +55,7 @@ class MdrunCalculation(CalcJob):
         """
         codeinfo = datastructures.CodeInfo()
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(
-            pdbfile=self.inputs.pdbfile.filename)
+            tprfile=self.inputs.tprfile.filename)
         codeinfo.code_uuid = self.inputs.code.uuid
         codeinfo.stdout_name = self.metadata.options.output_filename
         codeinfo.withmpi = self.inputs.metadata.options.withmpi
@@ -61,11 +64,16 @@ class MdrunCalculation(CalcJob):
         calcinfo = datastructures.CalcInfo()
         calcinfo.codes_info = [codeinfo]
         calcinfo.local_copy_list = [
-            (self.inputs.pdbfile.uuid, self.inputs.pdbfile.filename, self.inputs.pdbfile.filename),
+            (self.inputs.tprfile.uuid, self.inputs.tprfile.filename, self.inputs.tprfile.filename),
         ]
+
         calcinfo.retrieve_list = [self.metadata.options.output_filename,
-                                  self.inputs.parameters['o'],
-                                  self.inputs.parameters['p'],
-                                  self.inputs.parameters['i']]
+                                  self.inputs.parameters['c'],
+                                  self.inputs.parameters['e'],
+                                  self.inputs.parameters['g'],
+                                  self.inputs.parameters['o']]
+
+        if 'cpo' in self.inputs.parameters.keys():
+            calcinfo.retrieve_list.append(self.inputs.parameters['cpo'])
 
         return calcinfo

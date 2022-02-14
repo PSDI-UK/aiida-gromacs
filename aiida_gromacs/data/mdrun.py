@@ -7,18 +7,18 @@ Register data types via the "aiida.data" entry point in setup.json.
 
 # You can directly use or subclass aiida.orm.data.Data
 # or any other data type listed under 'verdi data'
-from voluptuous import Schema, Optional, Required
+from voluptuous import Schema, Optional, Required, All, Any
 from aiida.orm import Dict
 
 # A subset of diff's command line options
 cmdline_options = {
-    Required('water', default='spce'): str,
-    Required('ff', default='oplsaa'): str,
-    Required('o', default='conf.gro'): str,
-    Required('p', default='topol.top'): str,
-    Required('i', default='posre.itp'): str,
+    Required('c', default='confout.gro'): str,
+    Required('e', default='energy.edr'): str,
+    Required('g', default='md.log'): str,
+    Required('o', default='trajectory.trr'): str,
+    Optional('cpo'): str,
+    Optional('v'): str
 }
-
 
 class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
     """
@@ -30,6 +30,7 @@ class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
 
     # "voluptuous" schema  to add automatic validation
     schema = Schema(cmdline_options)
+
 
     # pylint: disable=redefined-builtin
     def __init__(self, dict=None, **kwargs):
@@ -58,7 +59,7 @@ class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         return MdrunParameters.schema(parameters_dict)
 
-    def cmdline_params(self, pdbfile):
+    def cmdline_params(self, tprfile):
         """Synthesize command line parameters.
 
         e.g. [ '--ignore-case', 'filename1', 'filename2']
@@ -70,7 +71,7 @@ class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
         parameters = []
 
         parameters.append('mdrun')
-        parameters.extend(['-f', pdbfile])
+        parameters.extend(['-s', tprfile])
 
         parm_dict = self.get_dict()
 

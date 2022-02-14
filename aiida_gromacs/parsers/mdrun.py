@@ -37,14 +37,19 @@ class MdrunParser(Parser):
 
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
-        outputs = ['stdout', 'outputfile', 'topfile', 'itpfile']
+        outputs = ['stdout', 'grofile', 'enfile', 'logfile', 'trrfile']
 
         # Check that folder content is as expected
         files_retrieved = self.retrieved.list_object_names()
         files_expected = [self.node.get_option('output_filename'),
-                          self.node.inputs.parameters['o'],
-                          self.node.inputs.parameters['p'],
-                          self.node.inputs.parameters['i']]
+                          self.node.inputs.parameters['c'],
+                          self.node.inputs.parameters['e'],
+                          self.node.inputs.parameters['g'],
+                          self.node.inputs.parameters['o']]
+
+        if 'cpo' in self.node.inputs.parameters.keys():
+            outputs.append('cptfile')
+            files_expected.append(self.node.inputs.parameters['cpo'])
 
         # Note: set(A) <= set(B) checks whether A is a subset of B
         if not set(files_expected) <= set(files_retrieved):

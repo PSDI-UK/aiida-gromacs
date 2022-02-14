@@ -13,6 +13,7 @@ from aiida.orm import Dict
 # A subset of diff's command line options
 cmdline_options = {
     Required('o', default='ions.tpr'): str,
+    Optional('r'): str,
 }
 
 
