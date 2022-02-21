@@ -1,6 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+aiida_gromacs
+
+A workflow for setting up basic molecular dynamics simulations.
+"""
 from aiida.engine import ToContext, WorkChain
 from aiida.orm import Code, SinglefileData
 from aiida.plugins.factories import CalculationFactory, DataFactory
+from aiida_gromacs import helpers
 
 Pdb2gmxCalculation = CalculationFactory('gromacs.pdb2gmx')
 EditconfCalculation = CalculationFactory('gromacs.editconf')
@@ -16,30 +23,77 @@ GromppParameters = DataFactory('gromacs.grompp')
 GenionParameters = DataFactory('gromacs.genion')
 MdrunParameters = DataFactory('gromacs.mdrun')
 
+
 class SetupWorkChain(WorkChain):
     """WorkChain for setting up a gromacs simulation automatically."""
-    
     @classmethod
     def define(cls, spec):
         """Specify workflow recipe."""
         super().define(spec)
         spec.input('code', valid_type=Code)
-        spec.input('pdbfile', valid_type=SinglefileData, help='Input structure.')
-        spec.input('ionsmdp', valid_type=SinglefileData, help='MD parameters for adding ions.')
-        spec.input('minmdp', valid_type=SinglefileData, help='MD parameters for energy minimisation.')
-        spec.input('nvtmdp', valid_type=SinglefileData, help='MD parameters for equilibration.')
-        spec.input('nptmdp', valid_type=SinglefileData, help='MD parameters for equilibration.')
-        spec.input('pdb2gmxparameters', valid_type=Pdb2gmxParameters, help='Command line parameters for gmx pdb2gmx')    
-        spec.input('editconfparameters', valid_type=EditconfParameters, help='Command line parameters for gmx editconf')
-        spec.input('solvateparameters', valid_type=SolvateParameters, help='Command line parameters for gmx solvate')
-        spec.input('gromppionsparameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
-        spec.input('genionparameters', valid_type=GenionParameters, help='Command line parameters for gmx genion')
-        spec.input('gromppminparameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
-        spec.input('minimiseparameters', valid_type=MdrunParameters, help='Command line parameters for gmx mdrun')
-        spec.input('gromppnvtparameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
-        spec.input('nvtparameters', valid_type=MdrunParameters, help='Command line parameters for gmx mdrun')
-        spec.input('gromppnptparameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
-        spec.input('nptparameters', valid_type=MdrunParameters, help='Command line parameters for gmx mdrun')
+        spec.input('pdbfile',
+                   valid_type=SinglefileData,
+                   help='Input structure.')
+        spec.input('ionsmdp',
+                   valid_type=SinglefileData,
+                   help='MD parameters for adding ions.')
+        spec.input('minmdp',
+                   valid_type=SinglefileData,
+                   help='MD parameters for minimisation.')
+        spec.input('nvtmdp',
+                   valid_type=SinglefileData,
+                   help='MD parameters for NVT equilibration.')
+        spec.input('nptmdp',
+                   valid_type=SinglefileData,
+                   help='MD parameters for NPT equilibration.')
+        spec.input('prodmdp',
+                   valid_type=SinglefileData,
+                   help='MD parameters for production run.')
+        spec.input('pdb2gmxparameters',
+                   valid_type=Pdb2gmxParameters,
+                   help='Command line parameters for gmx pdb2gmx')
+        spec.input('editconfparameters',
+                   valid_type=EditconfParameters,
+                   help='Command line parameters for gmx editconf')
+        spec.input('solvateparameters',
+                   valid_type=SolvateParameters,
+                   help='Command line parameters for gmx solvate')
+        spec.input('gromppionsparameters',
+                   valid_type=GromppParameters,
+                   help='Command line parameters for gmx grompp')
+        spec.input('genionparameters',
+                   valid_type=GenionParameters,
+                   help='Command line parameters for gmx genion')
+        spec.input(
+            'gromppminparameters',
+            valid_type=GromppParameters,
+            help='Command line parameters for gmx grompp minimisation run')
+        spec.input(
+            'minimiseparameters',
+            valid_type=MdrunParameters,
+            help='Command line parameters for gmx mdrun minimisation run')
+        spec.input(
+            'gromppnvtparameters',
+            valid_type=GromppParameters,
+            help='Command line parameters for gmx grompp nvt equilibration run'
+        )
+        spec.input(
+            'nvtparameters',
+            valid_type=MdrunParameters,
+            help='Command line parameters for gmx mdrun nvt equilibration run')
+        spec.input(
+            'gromppnptparameters',
+            valid_type=GromppParameters,
+            help='Command line parameters for gmx grompp npt equilibration run'
+        )
+        spec.input(
+            'nptparameters',
+            valid_type=MdrunParameters,
+            help='Command line parameters for gmx mdrun npt equilibration run')
+        spec.input(
+            'gromppprodparameters',
+            valid_type=GromppParameters,
+            help='Command line parameters for gmx grompp production run')
 
         spec.outline(
             cls.pdb2gmx,
@@ -53,12 +107,12 @@ class SetupWorkChain(WorkChain):
             cls.nvtequilibrate,
             cls.gromppnpt,
             cls.nptequilibrate,
+            cls.gromppprod,
             cls.result,
         )
-        
+
         spec.output('result')
-    
-    
+
     def pdb2gmx(self):
         """Convert PDB file to forcefield compliant GRO file"""
         inputs = {
@@ -73,7 +127,6 @@ class SetupWorkChain(WorkChain):
         future = self.submit(Pdb2gmxCalculation, **inputs)
 
         return ToContext(pdb2gmx=future)
-
 
     def editconf(self):
         """Add simulation box to GRO file."""
@@ -90,7 +143,6 @@ class SetupWorkChain(WorkChain):
 
         return ToContext(editconf=future)
 
-
     def solvate(self):
         """Add solvent to GRO file."""
         inputs = {
@@ -106,7 +158,6 @@ class SetupWorkChain(WorkChain):
         future = self.submit(SolvateCalculation, **inputs)
 
         return ToContext(solvate=future)
-
 
     def gromppions(self):
         """Create a tpr for adding ions."""
@@ -125,15 +176,12 @@ class SetupWorkChain(WorkChain):
 
         return ToContext(gromppions=future)
 
-
     def genion(self):
         """Add ions to system to balance charge."""
-        
-        #TODO sort this out.
-        from aiida_gromacs import helpers
+
+        #Sort this out.
         computer = helpers.get_computer()
-        gromacs_code = helpers.get_code(entry_point='bash',
-                                        computer=computer)
+        gromacs_code = helpers.get_code(entry_point='bash', computer=computer)
         inputs = {
             'code': gromacs_code,
             'parameters': self.inputs.genionparameters,
@@ -147,7 +195,6 @@ class SetupWorkChain(WorkChain):
         future = self.submit(GenionCalculation, **inputs)
 
         return ToContext(genion=future)
-
 
     def gromppmin(self):
         """Create a tpr for minimisation."""
@@ -165,7 +212,6 @@ class SetupWorkChain(WorkChain):
         future = self.submit(GromppCalculation, **inputs)
 
         return ToContext(gromppmin=future)
-
 
     def minimise(self):
         """Minimise system."""
@@ -200,7 +246,6 @@ class SetupWorkChain(WorkChain):
 
         return ToContext(gromppnvt=future)
 
-
     def nvtequilibrate(self):
         """NVT Equilibration of system."""
         inputs = {
@@ -215,7 +260,6 @@ class SetupWorkChain(WorkChain):
         future = self.submit(MdrunCalculation, **inputs)
 
         return ToContext(nvtequilibrate=future)
-
 
     def gromppnpt(self):
         """Create a tpr for NPT equilibration."""
@@ -235,7 +279,6 @@ class SetupWorkChain(WorkChain):
 
         return ToContext(gromppnpt=future)
 
-
     def nptequilibrate(self):
         """NPT Equilibration of system system."""
         inputs = {
@@ -251,8 +294,24 @@ class SetupWorkChain(WorkChain):
 
         return ToContext(nptequilibrate=future)
 
+    def gromppprod(self):
+        """Create a tpr for production run."""
+        inputs = {
+            'code': self.inputs.code,
+            'parameters': self.inputs.gromppprodparameters,
+            'mdpfile': self.inputs.prodmdp,
+            'grofile': self.ctx.nptequilibrate.outputs.grofile,
+            'topfile': self.ctx.genion.outputs.topfile,
+            'itpfile': self.ctx.pdb2gmx.outputs.itpfile,
+            'metadata': {
+                'description': 'prepare the tpr for production run.',
+            },
+        }
+
+        future = self.submit(GromppCalculation, **inputs)
+
+        return ToContext(gromppprod=future)
 
     def result(self):
         """Results"""
-        self.out('result', self.ctx.nptequilibrate.outputs.trrfile)
-
+        self.out('result', self.ctx.gromppprod.outputs.outputfile)

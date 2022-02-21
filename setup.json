@@ -13,7 +13,7 @@
         "Development Status :: 3 - Alpha",
         "Framework :: AiiDA"
     ],
-    "version": "0.0.10",
+    "version": "0.1.0",
     "entry_points": {
         "aiida.data": [
             "gromacs.pdb2gmx = aiida_gromacs.data.pdb2gmx:Pdb2gmxParameters",
