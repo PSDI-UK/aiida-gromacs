@@ -16,8 +16,15 @@ cmdline_options = {
     Required('e', default='energy.edr'): str,
     Required('g', default='md.log'): str,
     Required('o', default='trajectory.trr'): str,
+    Optional('bonded'): str,
     Optional('cpo'): str,
-    Optional('v'): str
+    Optional('nb'): str,
+    Optional('nstlist'): str,
+    Optional('ntmpi'): str,
+    Optional('ntomp'): str,
+    Optional('pin'): str,
+    Optional('pme'): str,
+    Optional('v'): str,
 }
 
 class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors

@@ -30,7 +30,8 @@ class SetupWorkChain(WorkChain):
     def define(cls, spec):
         """Specify workflow recipe."""
         super().define(spec)
-        spec.input('code', valid_type=Code)
+        spec.input('local_code', valid_type=Code)
+        spec.input('remote_code', required=False, valid_type=Code)
         spec.input('pdbfile',
                    valid_type=SinglefileData,
                    help='Input structure.')
@@ -94,6 +95,10 @@ class SetupWorkChain(WorkChain):
             'gromppprodparameters',
             valid_type=GromppParameters,
             help='Command line parameters for gmx grompp production run')
+        spec.input(
+            'mdrunparameters',
+            valid_type=MdrunParameters,
+            help='Command line parameters for gmx mdrun production run')
 
         spec.outline(
             cls.pdb2gmx,
@@ -108,6 +113,7 @@ class SetupWorkChain(WorkChain):
             cls.gromppnpt,
             cls.nptequilibrate,
             cls.gromppprod,
+            cls.prodmd,
             cls.result,
         )
 
@@ -116,7 +122,7 @@ class SetupWorkChain(WorkChain):
     def pdb2gmx(self):
         """Convert PDB file to forcefield compliant GRO file"""
         inputs = {
-            'code': self.inputs.code,
+            'code': self.inputs.local_code,
             'parameters': self.inputs.pdb2gmxparameters,
             'pdbfile': self.inputs.pdbfile,
             'metadata': {
@@ -131,7 +137,7 @@ class SetupWorkChain(WorkChain):
     def editconf(self):
         """Add simulation box to GRO file."""
         inputs = {
-            'code': self.inputs.code,
+            'code': self.inputs.local_code,
             'parameters': self.inputs.editconfparameters,
             'grofile': self.ctx.pdb2gmx.outputs.outputfile,
             'metadata': {
@@ -146,7 +152,7 @@ class SetupWorkChain(WorkChain):
     def solvate(self):
         """Add solvent to GRO file."""
         inputs = {
-            'code': self.inputs.code,
+            'code': self.inputs.local_code,
             'parameters': self.inputs.solvateparameters,
             'grofile': self.ctx.editconf.outputs.outputfile,
             'topfile': self.ctx.pdb2gmx.outputs.topfile,
@@ -162,7 +168,7 @@ class SetupWorkChain(WorkChain):
     def gromppions(self):
         """Create a tpr for adding ions."""
         inputs = {
-            'code': self.inputs.code,
+            'code': self.inputs.local_code,
             'parameters': self.inputs.gromppionsparameters,
             'mdpfile': self.inputs.ionsmdp,
             'grofile': self.ctx.solvate.outputs.outputfile,
@@ -199,7 +205,7 @@ class SetupWorkChain(WorkChain):
     def gromppmin(self):
         """Create a tpr for minimisation."""
         inputs = {
-            'code': self.inputs.code,
+            'code': self.inputs.local_code,
             'parameters': self.inputs.gromppminparameters,
             'mdpfile': self.inputs.minmdp,
             'grofile': self.ctx.genion.outputs.outputfile,
@@ -216,7 +222,7 @@ class SetupWorkChain(WorkChain):
     def minimise(self):
         """Minimise system."""
         inputs = {
-            'code': self.inputs.code,
+            'code': self.inputs.local_code,
             'parameters': self.inputs.minimiseparameters,
             'tprfile': self.ctx.gromppmin.outputs.outputfile,
             'metadata': {
@@ -231,7 +237,7 @@ class SetupWorkChain(WorkChain):
     def gromppnvt(self):
         """Create a tpr for NVT equilibration."""
         inputs = {
-            'code': self.inputs.code,
+            'code': self.inputs.local_code,
             'parameters': self.inputs.gromppnvtparameters,
             'mdpfile': self.inputs.nvtmdp,
             'grofile': self.ctx.minimise.outputs.grofile,
@@ -249,7 +255,7 @@ class SetupWorkChain(WorkChain):
     def nvtequilibrate(self):
         """NVT Equilibration of system."""
         inputs = {
-            'code': self.inputs.code,
+            'code': self.inputs.local_code,
             'parameters': self.inputs.nvtparameters,
             'tprfile': self.ctx.gromppnvt.outputs.outputfile,
             'metadata': {
@@ -264,7 +270,7 @@ class SetupWorkChain(WorkChain):
     def gromppnpt(self):
         """Create a tpr for NPT equilibration."""
         inputs = {
-            'code': self.inputs.code,
+            'code': self.inputs.local_code,
             'parameters': self.inputs.gromppnptparameters,
             'mdpfile': self.inputs.nptmdp,
             'grofile': self.ctx.nvtequilibrate.outputs.grofile,
@@ -282,7 +288,7 @@ class SetupWorkChain(WorkChain):
     def nptequilibrate(self):
         """NPT Equilibration of system system."""
         inputs = {
-            'code': self.inputs.code,
+            'code': self.inputs.local_code,
             'parameters': self.inputs.nptparameters,
             'tprfile': self.ctx.gromppnpt.outputs.outputfile,
             'metadata': {
@@ -297,7 +303,7 @@ class SetupWorkChain(WorkChain):
     def gromppprod(self):
         """Create a tpr for production run."""
         inputs = {
-            'code': self.inputs.code,
+            'code': self.inputs.local_code,
             'parameters': self.inputs.gromppprodparameters,
             'mdpfile': self.inputs.prodmdp,
             'grofile': self.ctx.nptequilibrate.outputs.grofile,
@@ -312,6 +318,30 @@ class SetupWorkChain(WorkChain):
 
         return ToContext(gromppprod=future)
 
+    def prodmd(self):
+        """Run production MD"""
+        
+        if "remote_code" in self.inputs:
+
+            code = self.inputs.remote_code
+
+        else:
+
+            code = self.inputs.local_code
+        
+        inputs = {
+            'code': code,
+            'parameters': self.inputs.mdrunparameters,
+            'tprfile': self.ctx.gromppprod.outputs.outputfile,
+            'metadata': {
+                'description': 'Production MD.',
+            },
+        }
+        
+        future = self.submit(MdrunCalculation, **inputs)
+
+        return ToContext(prodmd=future)
+
     def result(self):
         """Results"""
-        self.out('result', self.ctx.gromppprod.outputs.outputfile)
+        self.out('result', self.ctx.prodmd.outputs.trrfile)

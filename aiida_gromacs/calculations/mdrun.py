@@ -29,7 +29,11 @@ class MdrunCalculation(CalcJob):
         spec.inputs['metadata']['options']['resources'].default = {
             'num_machines': 1,
             'num_mpiprocs_per_machine': 1,
+            'num_cores_per_mpiproc': 5,
         }
+        
+        spec.inputs['metadata']['options']['max_wallclock_seconds'].default = 86400
+        
         spec.inputs['metadata']['options']['parser_name'].default = 'gromacs.mdrun'
         spec.input('metadata.options.output_filename', valid_type=str, default='mdrun.out')
         spec.input('tprfile', valid_type=SinglefileData, help='Input structure.')
