@@ -27,6 +27,7 @@ cmdline_options = {
     Optional('v'): str,
 }
 
+
 class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
     """
     Command line options for diff.
@@ -37,7 +38,6 @@ class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
 
     # "voluptuous" schema  to add automatic validation
     schema = Schema(cmdline_options)
-
 
     # pylint: disable=redefined-builtin
     def __init__(self, dict=None, **kwargs):

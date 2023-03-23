@@ -95,10 +95,9 @@ class SetupWorkChain(WorkChain):
             'gromppprodparameters',
             valid_type=GromppParameters,
             help='Command line parameters for gmx grompp production run')
-        spec.input(
-            'mdrunparameters',
-            valid_type=MdrunParameters,
-            help='Command line parameters for gmx mdrun production run')
+        spec.input('mdrunparameters',
+                   valid_type=MdrunParameters,
+                   help='Command line parameters for gmx mdrun production run')
 
         spec.outline(
             cls.pdb2gmx,
@@ -320,15 +319,15 @@ class SetupWorkChain(WorkChain):
 
     def prodmd(self):
         """Run production MD"""
-        
-        if "remote_code" in self.inputs:
+
+        if 'remote_code' in self.inputs:
 
             code = self.inputs.remote_code
 
         else:
 
             code = self.inputs.local_code
-        
+
         inputs = {
             'code': code,
             'parameters': self.inputs.mdrunparameters,
@@ -337,7 +336,7 @@ class SetupWorkChain(WorkChain):
                 'description': 'Production MD.',
             },
         }
-        
+
         future = self.submit(MdrunCalculation, **inputs)
 
         return ToContext(prodmd=future)
