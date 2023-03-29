@@ -331,7 +331,7 @@ class SetupWorkChain(WorkChain):
         inputs = {
             'code': code,
             'parameters': self.inputs.mdrunparameters,
-            'tprfile': self.ctx.gromppprod.outputs.outputfile,
+            'tprfile': self.ctx.gromppprod.outputs.tprfile,
             'metadata': {
                 'description': 'Production MD.',
             },
