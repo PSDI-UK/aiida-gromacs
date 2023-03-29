@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 """
 Calculations provided by aiida_gromacs.
 
-Register calculations via the "aiida.calculations" entry point in setup.json.
+This calculation configures the ability to use the 'gmx genion' executable.
 """
-from aiida.common import datastructures
+from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
 from aiida.orm import SinglefileData
 from aiida.plugins import DataFactory
@@ -37,7 +36,7 @@ class GenionCalculation(CalcJob):
         spec.input('parameters', valid_type=GenionParameters, help='Command line parameters for gmx genion')
 
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
-        spec.output('outputfile', valid_type=SinglefileData, help='Output gro file with ions added.')
+        spec.output('grofile', valid_type=SinglefileData, help='Output gro file with ions added.')
         spec.output('topfile', valid_type=SinglefileData, help='Output topology with ions added.')
 
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
@@ -50,7 +49,7 @@ class GenionCalculation(CalcJob):
             needed by the calculation.
         :return: `aiida.common.datastructures.CalcInfo` instance
         """
-        codeinfo = datastructures.CodeInfo()
+        codeinfo = CodeInfo()
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(
             tprfile=self.inputs.tprfile.filename,
             topfile=self.inputs.topfile.filename)
@@ -59,7 +58,7 @@ class GenionCalculation(CalcJob):
         codeinfo.withmpi = self.inputs.metadata.options.withmpi
 
         # Prepare a `CalcInfo` to be returned to the engine
-        calcinfo = datastructures.CalcInfo()
+        calcinfo = CalcInfo()
         calcinfo.codes_info = [codeinfo]
         calcinfo.local_copy_list = [
             (self.inputs.tprfile.uuid, self.inputs.tprfile.filename, self.inputs.tprfile.filename),

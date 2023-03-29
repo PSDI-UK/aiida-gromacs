@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 """
 Calculations provided by aiida_gromacs.
 
-Register calculations via the "aiida.calculations" entry point in setup.json.
+This calculation configures the ability to use the 'gmx pdb2gmx' executable.
 """
-from aiida.common import datastructures
+from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
 from aiida.orm import SinglefileData
 from aiida.plugins import DataFactory
@@ -36,7 +35,7 @@ class Pdb2gmxCalculation(CalcJob):
         spec.input('parameters', valid_type=Pdb2gmxParameters, help='Command line parameters for gmx pdb2gmx')
 
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
-        spec.output('outputfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
+        spec.output('grofile', valid_type=SinglefileData, help='Output forcefield compliant file.')
         spec.output('topfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
         spec.output('itpfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
 
@@ -50,7 +49,7 @@ class Pdb2gmxCalculation(CalcJob):
             needed by the calculation.
         :return: `aiida.common.datastructures.CalcInfo` instance
         """
-        codeinfo = datastructures.CodeInfo()
+        codeinfo = CodeInfo()
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(
             pdbfile=self.inputs.pdbfile.filename)
         codeinfo.code_uuid = self.inputs.code.uuid
@@ -58,7 +57,7 @@ class Pdb2gmxCalculation(CalcJob):
         codeinfo.withmpi = self.inputs.metadata.options.withmpi
 
         # Prepare a `CalcInfo` to be returned to the engine
-        calcinfo = datastructures.CalcInfo()
+        calcinfo = CalcInfo()
         calcinfo.codes_info = [codeinfo]
         calcinfo.local_copy_list = [
             (self.inputs.pdbfile.uuid, self.inputs.pdbfile.filename, self.inputs.pdbfile.filename),
