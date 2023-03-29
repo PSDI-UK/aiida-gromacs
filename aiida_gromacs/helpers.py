@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Helper functions for automatically setting up computer & code.
 Helper functions for setting up
 
@@ -44,7 +43,7 @@ def get_computer(name=LOCALHOST_NAME, workdir=None):
     :param workdir: path to work directory
         Used only when creating a new computer.
     :return: The computer node
-    :rtype: :py:class:`aiida.orm.Computer`
+    :rtype: :py:class:`aiida.orm.computers.Computer`
     """
 
     try:
@@ -58,10 +57,10 @@ def get_computer(name=LOCALHOST_NAME, workdir=None):
             description='localhost computer set up by gromacs plugin',
             hostname=name,
             workdir=workdir,
-            transport_type='local',
-            scheduler_type='direct')
+            transport_type='core.local',
+            scheduler_type='core.direct')
         computer.store()
-        computer.set_minimum_job_poll_interval(0.)
+        computer.set_minimum_job_poll_interval(0.0)
         computer.configure()
 
     return computer
@@ -74,7 +73,7 @@ def get_code(entry_point, computer):
     :param entry_point: Entry point of calculation plugin
     :param computer: (local) AiiDA computer
     :return: The code node
-    :rtype: :py:class:`aiida.orm.Code`
+    :rtype: :py:class:`aiida.orm.code.Code`
     """
 
     try:

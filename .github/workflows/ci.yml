@@ -1,6 +1,9 @@
 name: ci
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [master]
+  pull_request:
 
 jobs:
 
@@ -10,13 +13,13 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8]
-        backend: ['django']
+        backend: ['stable']
 
     services:
       postgres:
         image: postgres:10
         env:
-          POSTGRES_DB: test_${{ matrix.backend }}
+          POSTGRES_DB: test_aiida
           POSTGRES_PASSWORD: ''
           POSTGRES_HOST_AUTH_METHOD: trust
         options: >-
@@ -43,14 +46,12 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install -e .[testing]
-        reentry scan -r aiida
 
     - name: Run test suite
       env:
-        AIIDA_TEST_BACKEND: ${{ matrix.backend }}
         # show timings of tests
         PYTEST_ADDOPTS: "--durations=0"
-      run: py.test --cov aiida_gromacs --cov-append .
+      run: pytest --cov aiida_gromacs --cov-append .
 
   docs:
     runs-on: ubuntu-latest
@@ -65,7 +66,6 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install -e .[docs]
-        reentry scan -r aiida
     - name: Build docs
       run: cd docs && make
 
@@ -82,7 +82,6 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install -e .[pre-commit,docs,testing]
-        reentry scan -r aiida
     - name: Run pre-commit
       run: |
         pre-commit install

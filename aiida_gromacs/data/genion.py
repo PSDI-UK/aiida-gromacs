@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Data types provided by plugin
 

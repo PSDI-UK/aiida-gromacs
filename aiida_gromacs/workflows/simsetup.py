@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 aiida_gromacs
 
@@ -135,10 +134,11 @@ class SetupWorkChain(WorkChain):
 
     def editconf(self):
         """Add simulation box to GRO file."""
+
         inputs = {
             'code': self.inputs.local_code,
             'parameters': self.inputs.editconfparameters,
-            'grofile': self.ctx.pdb2gmx.outputs.outputfile,
+            'grofile': self.ctx.pdb2gmx.outputs.grofile,
             'metadata': {
                 'description': 'add simulation box parameters to gro file.',
             },
@@ -153,7 +153,7 @@ class SetupWorkChain(WorkChain):
         inputs = {
             'code': self.inputs.local_code,
             'parameters': self.inputs.solvateparameters,
-            'grofile': self.ctx.editconf.outputs.outputfile,
+            'grofile': self.ctx.editconf.outputs.grofile,
             'topfile': self.ctx.pdb2gmx.outputs.topfile,
             'metadata': {
                 'description': 'add solvent to simulation box.',
@@ -170,7 +170,7 @@ class SetupWorkChain(WorkChain):
             'code': self.inputs.local_code,
             'parameters': self.inputs.gromppionsparameters,
             'mdpfile': self.inputs.ionsmdp,
-            'grofile': self.ctx.solvate.outputs.outputfile,
+            'grofile': self.ctx.solvate.outputs.grofile,
             'topfile': self.ctx.solvate.outputs.topfile,
             'metadata': {
                 'description': 'prepare the tpr for adding ions.',
@@ -190,7 +190,7 @@ class SetupWorkChain(WorkChain):
         inputs = {
             'code': gromacs_code,
             'parameters': self.inputs.genionparameters,
-            'tprfile': self.ctx.gromppions.outputs.outputfile,
+            'tprfile': self.ctx.gromppions.outputs.tprfile,
             'topfile': self.ctx.solvate.outputs.topfile,
             'metadata': {
                 'description': 'add ions to simulation box.',
@@ -207,7 +207,7 @@ class SetupWorkChain(WorkChain):
             'code': self.inputs.local_code,
             'parameters': self.inputs.gromppminparameters,
             'mdpfile': self.inputs.minmdp,
-            'grofile': self.ctx.genion.outputs.outputfile,
+            'grofile': self.ctx.genion.outputs.grofile,
             'topfile': self.ctx.genion.outputs.topfile,
             'metadata': {
                 'description': 'prepare the tpr for minimisation run.',
@@ -223,7 +223,7 @@ class SetupWorkChain(WorkChain):
         inputs = {
             'code': self.inputs.local_code,
             'parameters': self.inputs.minimiseparameters,
-            'tprfile': self.ctx.gromppmin.outputs.outputfile,
+            'tprfile': self.ctx.gromppmin.outputs.tprfile,
             'metadata': {
                 'description': 'minimise system.',
             },
@@ -256,7 +256,7 @@ class SetupWorkChain(WorkChain):
         inputs = {
             'code': self.inputs.local_code,
             'parameters': self.inputs.nvtparameters,
-            'tprfile': self.ctx.gromppnvt.outputs.outputfile,
+            'tprfile': self.ctx.gromppnvt.outputs.tprfile,
             'metadata': {
                 'description': 'NVT equilibrate system.',
             },
@@ -289,7 +289,7 @@ class SetupWorkChain(WorkChain):
         inputs = {
             'code': self.inputs.local_code,
             'parameters': self.inputs.nptparameters,
-            'tprfile': self.ctx.gromppnpt.outputs.outputfile,
+            'tprfile': self.ctx.gromppnpt.outputs.tprfile,
             'metadata': {
                 'description': 'NPT equilibrate system.',
             },
@@ -331,7 +331,7 @@ class SetupWorkChain(WorkChain):
         inputs = {
             'code': code,
             'parameters': self.inputs.mdrunparameters,
-            'tprfile': self.ctx.gromppprod.outputs.outputfile,
+            'tprfile': self.ctx.gromppprod.outputs.tprfile,
             'metadata': {
                 'description': 'Production MD.',
             },

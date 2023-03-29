@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 """pytest fixtures for simplified testing."""
-from __future__ import absolute_import
 import pytest
 
 pytest_plugins = ['aiida.manage.tests.pytest_fixtures']
@@ -13,6 +11,5 @@ def clear_database_auto(clear_database):  # pylint: disable=unused-argument
 
 @pytest.fixture(scope='function')
 def gromacs_code(aiida_local_code_factory):
-    """Get a gromacs code.
-    """
-    return aiida_local_code_factory(executable='diff', entry_point='gromacs')
+    """Get a gromacs code."""
+    return aiida_local_code_factory(executable='gmx', entry_point='gromacs')

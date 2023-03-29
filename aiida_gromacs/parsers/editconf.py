@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 Parsers provided by aiida_gromacs.
 
-Register parsers via the "aiida.parsers" entry point in setup.json.
+This parser adds the ability to parse the outputs of the 'gmx editconf' executable.
 """
 from aiida.engine import ExitCode
 from aiida.parsers.parser import Parser
@@ -25,7 +24,7 @@ class EditconfParser(Parser):
         Checks that the ProcessNode being passed was produced by a EditconfCalculation.
 
         :param node: ProcessNode of calculation
-        :param type node: :class:`aiida.orm.ProcessNode`
+        :param type node: :class:`aiida.orm.process.ProcessNode`
         """
         super().__init__(node)
         if not issubclass(node.process_class, EditconfCalculation):
@@ -37,10 +36,10 @@ class EditconfParser(Parser):
 
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
-        outputs = ['stdout', 'outputfile']
+        outputs = ['stdout', 'grofile']
 
         # Check that folder content is as expected
-        files_retrieved = self.retrieved.list_object_names()
+        files_retrieved = self.retrieved.base.repository.list_object_names()
         files_expected = [self.node.get_option('output_filename'),
                           self.node.inputs.parameters['o']]
 
@@ -53,8 +52,8 @@ class EditconfParser(Parser):
         # add outputs
         for index, thing in enumerate(files_expected):
             self.logger.info("Parsing '{}'".format(thing))
-            with self.retrieved.open(thing, 'rb') as handle:
-                output_node = SinglefileData(file=handle)
+            with self.retrieved.base.repository.open(thing, 'rb') as handle:
+                output_node = SinglefileData(filename=thing, file=handle)
             self.out(outputs[index], output_node)
 
         return ExitCode(0)
