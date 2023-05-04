@@ -9,7 +9,7 @@ Register data types via the "aiida.data" entry point in setup.json.
 from voluptuous import Schema, Optional, Required
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of solvate command line options
 cmdline_options = {
     Required('cs', default='spc216.gro'): str,
     Required('o', default='solvated.gro'): str,

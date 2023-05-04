@@ -9,7 +9,7 @@ Register data types via the "aiida.data" entry point in setup.json.
 from voluptuous import Schema, Optional, Required
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of pdb2gmx command line options
 cmdline_options = {
     Required('water', default='spce'): str,
     Required('ff', default='oplsaa'): str,

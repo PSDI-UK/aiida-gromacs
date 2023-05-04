@@ -9,7 +9,7 @@ Register data types via the "aiida.data" entry point in setup.json.
 from voluptuous import Schema, Optional, Required, All, Any
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of mdrun command line options
 cmdline_options = {
     Required('c', default='confout.gro'): str,
     Required('e', default='energy.edr'): str,

@@ -9,7 +9,7 @@ Register data types via the "aiida.data" entry point in setup.json.
 from voluptuous import Schema, Optional, Required
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of grompp command line options
 cmdline_options = {
     Required('o', default='ions.tpr'): str,
     Optional('r'): str,
