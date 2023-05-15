@@ -11,23 +11,25 @@ from aiida.plugins import DataFactory, CalculationFactory
 from aiida_gromacs import helpers
 
 
-def launch(gromacs_code, pdbfile, params):
+def launch(params):
     """Run pdb2gmx.
 
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
+
+    # If code is not initialised, then setup.
+    gromacs_code = params.pop('code')
     if not gromacs_code:
-        # get code
         computer = helpers.get_computer()
         gromacs_code = helpers.get_code(entry_point='gromacs',
                                         computer=computer)
 
-    # Prepare input parameters
+    # Prepare input parameters in AiiDA formats.
+    SinglefileData = DataFactory('core.singlefile')
+    pdbfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop('f')))
+
     Pdb2gmxParameters = DataFactory('gromacs.pdb2gmx')
     parameters = Pdb2gmxParameters(params)
-
-    SinglefileData = DataFactory('core.singlefile')
-    pdbfile = SinglefileData(file=os.path.join(os.getcwd(), pdbfile))
 
     # set up calculation
     inputs = {
@@ -54,7 +56,7 @@ def launch(gromacs_code, pdbfile, params):
 @click.option('-o', default='conf.gro', type=str, help="Output structure file")
 @click.option('-p', default='topol.gro', type=str, help="Topology file")
 @click.option('-i', default='posre.itp', type=str, help="Include file for topology")
-def cli(code, f, ff, water, o, p, i):
+def cli(*args, **kwargs):
     """Run example.
 
     Example usage: 
@@ -68,15 +70,7 @@ def cli(code, f, ff, water, o, p, i):
 
     Help: $ gmx_pdb2gmx --help
     """
-    
-    # Place CLI params in a dict.
-    params={'ff': ff,
-            'water': water,
-            'o': o,
-            'p': p,
-            'i': i
-           }
-    
+
     launch(code, f, params)
 
 

@@ -11,24 +11,26 @@ from aiida.plugins import DataFactory, CalculationFactory
 from aiida_gromacs import helpers
 
 
-def launch(gromacs_code, grofile, topfile, params):
+def launch(params):
     """Run solvate.
 
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
+
+    # If code is not initialised, then setup.
+    gromacs_code = params.pop('code')
     if not gromacs_code:
-        # get code
         computer = helpers.get_computer()
         gromacs_code = helpers.get_code(entry_point='gromacs',
                                         computer=computer)
 
-    # Prepare input parameters
+    # Prepare input parameters in AiiDA formats.
+    SinglefileData = DataFactory('core.singlefile')
+    grofile = SinglefileData(file=os.path.join(os.getcwd(), params.pop('cp'))
+    topfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop('p'))
+
     SolvateParameters = DataFactory('gromacs.solvate')
     parameters = SolvateParameters(params)
-
-    SinglefileData = DataFactory('core.singlefile')
-    grofile = SinglefileData(file=os.path.join(os.getcwd(), grofile)
-    topfile = SinglefileData(file=os.path.join(os.getcwd(), topfile)
 
     # set up calculation
     inputs = {
@@ -54,7 +56,7 @@ def launch(gromacs_code, grofile, topfile, params):
 @click.option('-cs', default='spc216.gro', type=str, help="Library structure file")
 @click.option('-p', default='topol.top', type=str, help="Topology file")
 @click.option('-o', default='out.gro', type=str, help="Output structure file")
-def cli(code, cp, cs, p, o):
+def cli(*args, **kwargs):
     """Run example.
 
     Example usage: 
@@ -69,11 +71,7 @@ def cli(code, cp, cs, p, o):
     Help: $ gmx_solvate --help
     """
 
-    params = {'cs': cs,
-              'o': o
-             }
-
-    launch(code, cp, p, params)
+    launch(kwargs)
 
 
 if __name__ == '__main__':

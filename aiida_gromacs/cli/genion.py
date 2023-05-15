@@ -11,26 +11,28 @@ from aiida.plugins import DataFactory, CalculationFactory
 from aiida_gromacs import helpers
 
 
-def launch(gromacs_code, tprfile, topfile, params):
+def launch(params):
     """Run genion.
 
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
+
+    # If code is not initialised, then setup.
+    gromacs_code = params.pop('code')
     if not gromacs_code:
-        # get code
         computer = helpers.get_computer()
-        gromacs_code = helpers.get_code(entry_point='bash',
+        gromacs_code = helpers.get_code(entry_point='gromacs',
                                         computer=computer)
 
-    # Prepare input parameters
+    # Prepare input parameters in AiiDA formats.
+    SinglefileData = DataFactory('core.singlefile')
+    tprfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop('s')))
+    topfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop('p')))
+
     GenionParameters = DataFactory('gromacs.genion')
     parameters = GenionParameters(params)
 
-    SinglefileData = DataFactory('core.singlefile')
-    tprfile = SinglefileData(file=os.path.join(os.getcwd(), tprfile))
-    topfile = SinglefileData(file=os.path.join(os.getcwd(), topfile))
-
-    # set up calculation
+    # set up calculation.
     inputs = {
         'code': gromacs_code,
         'parameters': parameters,
@@ -56,7 +58,7 @@ def launch(gromacs_code, tprfile, topfile, params):
 @click.option('-nname', default='CL', type=str, help="Name of negative ion")
 @click.option('-neutral', default='false', type=str, help="Neutralise the system with ions")
 @click.option('-o', default='out.gro', type=str, help="Output structure file")
-def cli(code, s, p, pname, nname, neutral, o):
+def cli(*args, **kwargs):
     """Run example.
 
     Example usage: 
@@ -71,14 +73,7 @@ def cli(code, s, p, pname, nname, neutral, o):
     Help: $ gmx_genion --help
     """
 
-    # Place CLI params in a dict.
-    params={'pname': pname,
-            'nname': nname,
-            'neutral': neutral,
-            'o': o,
-           }
-
-    launch(code, s, p, params)
+    launch(kwargs)
 
 
 if __name__ == '__main__':

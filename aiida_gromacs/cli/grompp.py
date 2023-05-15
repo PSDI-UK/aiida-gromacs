@@ -11,25 +11,27 @@ from aiida.plugins import DataFactory, CalculationFactory
 from aiida_gromacs import helpers
 
 
-def launch(gromacs_code, mdpfile, grofile, topfile, params):
+def launch(params):
     """Run grompp.
 
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
+
+    # If code is not initialised, then setup.
+    gromacs_code = params.pop('code')
     if not gromacs_code:
-        # get code
         computer = helpers.get_computer()
         gromacs_code = helpers.get_code(entry_point='gromacs',
                                         computer=computer)
 
-    # Prepare input parameters
+    # Prepare input parameters in AiiDA formats.
+    SinglefileData = DataFactory('core.singlefile')
+    mdpfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop('f')))
+    grofile = SinglefileData(file=os.path.join(os.getcwd(), params.pop('c')))
+    topfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop('p')))
+
     GromppParameters = DataFactory('gromacs.grompp')
     parameters = GromppParameters(params)
-
-    SinglefileData = DataFactory('core.singlefile')
-    mdpfile = SinglefileData(file=os.path.join(os.getcwd(), mdpfile))
-    grofile = SinglefileData(file=os.path.join(os.getcwd(), grofile))
-    topfile = SinglefileData(file=os.path.join(os.getcwd(), topfile))
 
     # set up calculation
     inputs = {
@@ -56,7 +58,7 @@ def launch(gromacs_code, mdpfile, grofile, topfile, params):
 @click.option('-c', required=True, type=str, help="Input structure file")
 @click.option('-p', default='topol.top', type=str, help="Topology file")
 @click.option('-o', default='conf.gro', type=str, help="Output structure file")
-def cli(code, f, c, p, o):
+def cli(*args, **kwargs):
     """Run example.
 
     Example usage: 
@@ -70,12 +72,8 @@ def cli(code, f, c, p, o):
 
     Help: $ gmx_grompp --help
     """
-    
-    # Place CLI params in a dict.
-    params={'o': o,
-           }
 
-    launch(code, f, c, p, params)
+    launch(kwargs)
 
 
 if __name__ == '__main__':

@@ -11,25 +11,27 @@ from aiida.plugins import DataFactory, CalculationFactory
 from aiida_gromacs import helpers
 
 
-def launch(gromacs_code, grofile, params):
+def launch(params):
     """Run editconf.
 
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
+    
+    # If code is not initialised, then setup.
+    gromacs_code = params.pop('code')
     if not gromacs_code:
-        # get code
         computer = helpers.get_computer()
         gromacs_code = helpers.get_code(entry_point='gromacs',
                                         computer=computer)
 
-    # Prepare input parameters
+    # Prepare input parameters in AiiDA formats.
+    SinglefileData = DataFactory('core.singlefile')
+    grofile = SinglefileData(file=os.path.join(os.getcwd(), params.pop('f')))
+        
     EditconfParameters = DataFactory('gromacs.editconf')
     parameters = EditconfParameters(params)
 
-    SinglefileData = DataFactory('core.singlefile')
-    grofile = SinglefileData(file=os.path.join(os.getcwd(), grofile))
-
-    # set up calculation
+    # set up calculation.
     inputs = {
         'code': gromacs_code,
         'parameters': parameters,
@@ -53,7 +55,7 @@ def launch(gromacs_code, grofile, params):
 @click.option('-d', default='0', type=str, help="Distance between box and solute")
 @click.option('-bt', default='triclinic', type=str, help="Box type")
 @click.option('-o', default='out.gro', type=str, help="Output structure file")
-def cli(code, f, center, d, bt, o):
+def cli(*args, **kwargs):
     """Run example.
 
     Example usage: 
@@ -68,14 +70,7 @@ def cli(code, f, center, d, bt, o):
     Help: $ gmx_editconf --help
     """
 
-    # Place CLI params in a dict.
-    params={'center': center,
-            'd': d,
-            'bt': bt,
-            'o': o,
-           }
-
-    launch(code, f, params)
+    launch(kwargs)
 
 
 if __name__ == '__main__':

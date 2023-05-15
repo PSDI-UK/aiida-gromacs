@@ -11,25 +11,27 @@ from aiida.plugins import DataFactory, CalculationFactory
 from aiida_gromacs import helpers
 
 
-def launch(gromacs_code, tprfile, params):
+def launch(params):
     """Run mdrun.
 
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
+
+    # If code is not initialised, then setup.
+    gromacs_code = params.pop('code')
     if not gromacs_code:
-        # get code
         computer = helpers.get_computer()
         gromacs_code = helpers.get_code(entry_point='gromacs',
                                         computer=computer)
 
-    # Prepare input parameters
+    # Prepare input parameters in AiiDA formats.
+    SinglefileData = DataFactory('core.singlefile')
+    tprfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop('s')))
+
     MdrunParameters = DataFactory('gromacs.mdrun')
     parameters = MdrunParameters(params)
 
-    SinglefileData = DataFactory('core.singlefile')
-    tprfile = SinglefileData(file=os.path.join(os.getcwd(), tprfile))
-
-    # set up calculation
+    # set up calculation.
     inputs = {
         'code': gromacs_code,
         'parameters': parameters,
@@ -54,7 +56,7 @@ def launch(gromacs_code, tprfile, params):
 @click.option('-g', default='md.log', type=str, help="MD log file")
 @click.option('-o', default='topol.gro', type=str, help="Trajectory output file")
 @click.option('-v', default='false', type=str, help="verbose")
-def cli(code, s, c, e, g, o, v):
+def cli(*args, **kwargs):
     """Run example.
 
     Example usage: 
@@ -68,14 +70,8 @@ def cli(code, s, c, e, g, o, v):
 
     Help: $ gmx_mdrun --help
     """
-    params = {'c': c,
-              'e': e,
-              'g': g,
-              'o': o,
-              'v': v
-             }
 
-    launch(code, s, params)
+    launch(kwargs)
 
 
 if __name__ == '__main__':
