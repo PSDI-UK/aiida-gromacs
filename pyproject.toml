@@ -93,8 +93,8 @@ disable = [
     "invalid-name",
     "duplicate-code",
     # black compatibility
-    "C0330",
-    "C0326",
+#    "C0330",
+#    "C0326",
 ]
 
 [tool.pytest.ini_options]
