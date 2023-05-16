@@ -24,7 +24,7 @@ class Pdb2gmxParser(Parser):
         Checks that the ProcessNode being passed was produced by a Pdb2gmxCalculation.
 
         :param node: ProcessNode of calculation
-        :param type node: :class:`aiida.orm.process.ProcessNode`
+        :param type node: :class:`aiida.orm.nodes.process.process.ProcessNode`
         """
         super().__init__(node)
         if not issubclass(node.process_class, Pdb2gmxCalculation):
