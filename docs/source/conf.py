@@ -20,8 +20,7 @@ import aiida_gromacs
 
 # -- AiiDA-related setup --------------------------------------------------
 
-# Load the dummy profile even if we are running locally, this way the documentation will succeed even if the current
-# default profile of the AiiDA installation does not use a Django backend.
+# Load the dummy documentation profile
 load_documentation_profile()
 
 # If we are not on READTHEDOCS load the Sphinx theme manually
@@ -73,7 +72,7 @@ master_doc = "index"
 # General information about the project.
 project = "aiida-gromacs"
 copyright_first_year = "2022"
-copyright_owners = "James Gebbie-Rayet"
+copyright_owners = "James Gebbie-Rayet and Jas Kalayan"
 
 current_year = str(time.localtime().tm_year)
 copyright_year_string = (
@@ -82,9 +81,7 @@ copyright_year_string = (
     else f"{copyright_first_year}-{current_year}"
 )
 # pylint: disable=redefined-builtin
-copyright = "{}, {}. All rights reserved".format(
-    copyright_year_string, copyright_owners
-)
+copyright = f"{copyright_year_string}, {copyright_owners}. All rights reserved"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -238,6 +235,12 @@ html_search_language = "en"
 # Output file base name for HTML help builder.
 htmlhelp_basename = "aiida-gromacs-doc"
 
+# Warnings to ignore when using the -n (nitpicky) option
+# We should ignore any python built-in exception, for instance
+nitpick_ignore = [
+    ("py:class", "Logger"),
+]
+
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
@@ -352,7 +355,3 @@ def setup(app):
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 # texinfo_no_detailmenu = False
-
-# Warnings to ignore when using the -n (nitpicky) option
-# We should ignore any python built-in exception, for instance
-nitpick_ignore = []
