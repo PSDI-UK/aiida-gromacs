@@ -40,7 +40,7 @@ testing = [
 ]
 pre-commit = [
     "pre-commit~=2.2",
-    "pylint>=2.5.0,<2.9"
+    "pylint~=2.17.4"
 ]
 docs = [
     "sphinx",
@@ -93,8 +93,8 @@ disable = [
     "invalid-name",
     "duplicate-code",
     # black compatibility
-#    "C0330",
-#    "C0326",
+    #"C0330",
+    #"C0326",
 ]
 
 [tool.pytest.ini_options]
@@ -124,7 +124,7 @@ legacy_tox_ini = """
 envlist = py38
 [testenv]
 usedevelop=True
-[testenv:py{38,39,310}]
+[testenv:py{38,39,310,311}]
 description = Run the test suite against a python version
 extras = testing
 setenv =
