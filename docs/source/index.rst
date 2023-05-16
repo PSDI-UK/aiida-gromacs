@@ -28,7 +28,7 @@ If you use AiiDA for your research, please cite the following work:
 
 ``aiida-gromacs`` is released under the MIT license.
 
-Please contact james.gebbie@stfc.ac.uk for information concerning ``aiida-gromacs`` and the `AiiDA mailing list <http://www.aiida.net/mailing-list/>`_ for questions concerning ``aiida``.
+Please contact James Gebbie-Rayet james.gebbie@stfc.ac.uk or Jas Kalayan jas.kalayan@stfc.ac.uk for information concerning ``aiida-gromacs`` and the `AiiDA mailing list <http://www.aiida.net/mailing-list/>`_ for questions concerning ``aiida``.
 
 
 Indices and tables
