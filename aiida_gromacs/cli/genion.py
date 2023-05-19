@@ -24,7 +24,7 @@ def launch(params):
     gromacs_code = params.pop("code")
     if not gromacs_code:
         computer = helpers.get_computer()
-        gromacs_code = helpers.get_code(entry_point="gromacs", computer=computer)
+        gromacs_code = helpers.get_code(entry_point="bash", computer=computer)
 
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
