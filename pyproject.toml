@@ -51,6 +51,14 @@ docs = [
     "markupsafe<2.1"
 ]
 
+[project.scripts]
+gmx_pdb2gmx = "aiida_gromacs.cli.pdb2gmx:cli"
+gmx_editconf = "aiida_gromacs.cli.editconf:cli"
+gmx_genion = "aiida_gromacs.cli.genion:cli"
+gmx_grompp = "aiida_gromacs.cli.grompp:cli"
+gmx_mdrun = "aiida_gromacs.cli.mdrun:cli"
+gmx_solvate = "aiida_gromacs.cli.solvate:cli"
+
 [project.entry-points."aiida.data"]
 "gromacs.pdb2gmx" = "aiida_gromacs.data.pdb2gmx:Pdb2gmxParameters"
 "gromacs.editconf" = "aiida_gromacs.data.editconf:EditconfParameters"
@@ -77,9 +85,6 @@ docs = [
 
 [project.entry-points."aiida.workflows"]
 "gromacs.setup" = "aiida_gromacs.workflows.simsetup:SetupWorkChain"
-
-[project.entry-points."aiida.cmdline.data"]
-"gromacs" = "aiida_gromacs.cli:data_cli"
 
 [tool.flit.module]
 name = "aiida_gromacs"

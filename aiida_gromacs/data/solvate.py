@@ -10,7 +10,7 @@ from voluptuous import Required, Schema
 
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of solvate command line options
 cmdline_options = {
     Required("cs", default="spc216.gro"): str,
     Required("o", default="solvated.gro"): str,

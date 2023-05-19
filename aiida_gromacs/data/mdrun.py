@@ -10,7 +10,7 @@ from voluptuous import Optional, Required, Schema
 
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of mdrun command line options
 cmdline_options = {
     Required("c", default="confout.gro"): str,
     Required("e", default="energy.edr"): str,

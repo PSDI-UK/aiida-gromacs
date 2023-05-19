@@ -10,7 +10,7 @@ from voluptuous import Required, Schema
 
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of pdb2gmx command line options
 cmdline_options = {
     Required("water", default="spce"): str,
     Required("ff", default="oplsaa"): str,

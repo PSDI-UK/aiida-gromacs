@@ -10,7 +10,7 @@ from voluptuous import Optional, Required, Schema
 
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of editconf command line options
 cmdline_options = {
     Required("o", default="newbox.gro"): str,
     Optional("center", default="0 0 0"): str,

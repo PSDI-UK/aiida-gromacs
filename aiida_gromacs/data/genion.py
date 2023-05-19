@@ -10,7 +10,7 @@ from voluptuous import Required, Schema
 
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of genion command line options
 cmdline_options = {
     Required("o", default="solvated_ions.gro"): str,
     Required("pname", default="NA"): str,
