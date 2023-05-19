@@ -24,7 +24,7 @@ class GeneralParser(Parser):
     1. self.retrieved: An instance of FolderData, which points to the
     folder containing all output files that the CalcJob instructed
     to retrieve, and provides the means to open() any file it contains.
-    2. self.node: The CalcJobNode representing the finished calculation,
+    2. self.node: The node representing the finished calculation,
     which, among other things, provides access to all of its inputs
     (self.node.inputs).
     """
