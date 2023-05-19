@@ -17,16 +17,16 @@ GeneralCalculation = CalculationFactory("general-MD")
 class GeneralParser(Parser):
     """
     Parsing the output files produced by a code into AiiDA nodes
-        is optional, but it can make your data queryable and therefore easier
-        to access and analyze.
+    is optional, but it can make your data queryable and therefore easier
+    to access and analyze.
     Before the parse() method is called, two important attributes are set on
-        the Parser instance:
-        1. self.retrieved: An instance of FolderData, which points to the
-            folder containing all output files that the CalcJob instructed
-            to retrieve, and provides the means to open() any file it contains.
-        2. self.node: The CalcJobNode representing the finished calculation,
-            which, among other things, provides access to all of its inputs
-            (self.node.inputs).
+    the Parser instance:
+    1. self.retrieved: An instance of FolderData, which points to the
+    folder containing all output files that the CalcJob instructed
+    to retrieve, and provides the means to open() any file it contains.
+    2. self.node: The CalcJobNode representing the finished calculation,
+    which, among other things, provides access to all of its inputs
+    (self.node.inputs).
 
     """
 
