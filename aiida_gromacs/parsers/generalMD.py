@@ -27,7 +27,6 @@ class GeneralParser(Parser):
     2. self.node: The CalcJobNode representing the finished calculation,
     which, among other things, provides access to all of its inputs
     (self.node.inputs).
-
     """
 
     def parse(self, **kwargs):
@@ -125,9 +124,9 @@ class GeneralParser(Parser):
         Modified from: https://github.com/sphuber/aiida-shell/blob/master/src/aiida_shell/parsers/shell.py
         Format the link label from a given filename.
         Valid link labels can only contain alphanumeric characters and
-            underscores, without consecutive underscores. So all characters
-            that are not alphanumeric or an underscore are converted to
-            underscores, where consecutive underscores are merged into one.
+        underscores, without consecutive underscores. So all characters
+        that are not alphanumeric or an underscore are converted to
+        underscores, where consecutive underscores are merged into one.
         Additional: Label cannot start with a number or underscore.
         :param filename: The filename.
         :returns: The link label.
