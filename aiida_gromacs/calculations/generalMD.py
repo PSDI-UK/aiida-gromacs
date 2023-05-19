@@ -16,9 +16,9 @@ class GeneralCalculation(CalcJob):
     def define(cls, spec):
         """
         Define inputs and outputs of the calculation.
-            The define method tells AiiDA which inputs the CalcJob
+        The define method tells AiiDA which inputs the CalcJob
         expects and which outputs it produces.
-            This is done through an instance of the CalcJobProcessSpec class,
+        This is done through an instance of the CalcJobProcessSpec class,
         which is passed as the spec argument to the define method.
         """
         # yapf: disable
