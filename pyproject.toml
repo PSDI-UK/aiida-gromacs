@@ -8,8 +8,8 @@ build-backend = "flit_core.buildapi"
 name = "aiida-gromacs"
 dynamic = ["version"]  # read from aiida_gromacs/__init__.py
 description = "A plugin for using GROMACS with AiiDA for molecular dymanics simulations."
-authors = [{name = "James Gebbie-Rayet"},
-           {email = "james.gebbie@stfc.ac.uk"}]
+authors = [{name = "James Gebbie-Rayet", email = "james.gebbie@stfc.ac.uk"},
+           {name = "Jas Kalayan", email = "jas.kalayan@stfc.ac.uk"}]
 readme = "README.md"
 license = {file = "LICENSE"}
 classifiers = [
@@ -35,11 +35,11 @@ testing = [
     "pgtest~=1.3.1",
     "wheel~=0.31",
     "coverage[toml]",
-    "pytest~=6.0",
+    "pytest~=7.3.1",
     "pytest-cov"
 ]
 pre-commit = [
-    "pre-commit~=2.2",
+    "pre-commit~=3.3.2",
     "pylint~=2.17.4"
 ]
 docs = [
