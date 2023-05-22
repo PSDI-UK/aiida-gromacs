@@ -58,6 +58,7 @@ gmx_genion = "aiida_gromacs.cli.genion:cli"
 gmx_grompp = "aiida_gromacs.cli.grompp:cli"
 gmx_mdrun = "aiida_gromacs.cli.mdrun:cli"
 gmx_solvate = "aiida_gromacs.cli.solvate:cli"
+launch = "aiida_gromacs.cli.launch:cli"
 
 [project.entry-points."aiida.data"]
 "gromacs.pdb2gmx" = "aiida_gromacs.data.pdb2gmx:Pdb2gmxParameters"
@@ -74,6 +75,7 @@ gmx_solvate = "aiida_gromacs.cli.solvate:cli"
 "gromacs.grompp" = "aiida_gromacs.calculations.grompp:GromppCalculation"
 "gromacs.mdrun" = "aiida_gromacs.calculations.mdrun:MdrunCalculation"
 "gromacs.solvate" = "aiida_gromacs.calculations.solvate:SolvateCalculation"
+"general-MD" = "aiida_gromacs.calculations.generalMD:GeneralCalculation"
 
 [project.entry-points."aiida.parsers"]
 "gromacs.pdb2gmx" = "aiida_gromacs.parsers.pdb2gmx:Pdb2gmxParser"
@@ -82,6 +84,7 @@ gmx_solvate = "aiida_gromacs.cli.solvate:cli"
 "gromacs.grompp" = "aiida_gromacs.parsers.grompp:GromppParser"
 "gromacs.mdrun" = "aiida_gromacs.parsers.mdrun:MdrunParser"
 "gromacs.solvate" = "aiida_gromacs.parsers.solvate:SolvateParser"
+"general-MD" = "aiida_gromacs.parsers.generalMD:GeneralParser"
 
 [project.entry-points."aiida.workflows"]
 "gromacs.setup" = "aiida_gromacs.workflows.simsetup:SetupWorkChain"
