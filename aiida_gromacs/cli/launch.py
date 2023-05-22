@@ -11,6 +11,7 @@ from time import sleep
 import click
 
 from aiida import cmdline, engine, orm
+from aiida.common import exceptions
 from aiida.orm.nodes.process.process import ProcessState
 from aiida.orm.querybuilder import QueryBuilder
 from aiida.plugins import CalculationFactory
@@ -73,10 +74,10 @@ def append_prev_nodes(qb, inputs, inputs_):
             previous_calculation = entry[0]
             wait_for.append(previous_calculation)
             # Get the outputs from a previous process.
-            previous_output = previous_calculation.outputs
+            # previous_output = previous_calculation.outputs
             # previous_node = orm.load_node(previous_calculation)
 
-            for label in previous_output:
+            for label in previous_calculation.outputs:
                 previous_output_node = previous_calculation.outputs[f"{label}"]
                 # (below 2 lines does the same as above)
                 # previous_output_node = orm.load_node(
@@ -99,9 +100,8 @@ def append_prev_nodes(qb, inputs, inputs_):
         for filename in list(inputs):
             stripped_input = filename.split("/")[-1]
             if stripped_input not in prev_files:
-                file_path = os.path.join(INPUT_DIR, filename)
                 prev[format_link_label(stripped_input)] = orm.SinglefileData(
-                    file=file_path
+                    file=os.path.join(INPUT_DIR, filename)
                 )
 
         # update the calculation inputs dict with new dictionary of
@@ -122,7 +122,7 @@ def launch_generalMD(options):
     print(f"command: {command}")
 
     if not code:
-        raise Exception("Code has not been set.")
+        raise exceptions.NonExistent("Code has not been set.")
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     MyAppCalculation = CalculationFactory("general-MD")

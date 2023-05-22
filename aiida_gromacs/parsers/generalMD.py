@@ -5,6 +5,7 @@ Parser for saving outputted files from command.
 import os
 import re
 
+from aiida.common import exceptions
 from aiida.engine import ExitCode
 from aiida.orm import SinglefileData
 from aiida.parsers.parser import Parser
@@ -28,6 +29,19 @@ class GeneralParser(Parser):
     which, among other things, provides access to all of its inputs
     (self.node.inputs).
     """
+
+    def __init__(self, node):
+        """
+        Initialize Parser instance
+
+        Checks that the ProcessNode being passed was produced by a GeneralCalculation.
+
+        :param node: ProcessNode of calculation
+        :param type node: :class:`aiida.orm.nodes.process.process.ProcessNode`
+        """
+        super().__init__(node)
+        if not issubclass(node.process_class, GeneralCalculation):
+            raise exceptions.ParsingError("Can only parse GeneralCalculation")
 
     def parse(self, **kwargs):
         """
