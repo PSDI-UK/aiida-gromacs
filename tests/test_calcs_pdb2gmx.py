@@ -14,20 +14,20 @@ def test_process(gromacs_code):
     Note: this does not test that the expected outputs are created of output parsing"""
 
     # Prepare input parameters
-    DiffParameters = DataFactory("gromacs.pdb2gmx")
-    parameters = DiffParameters(
+    Pdb2gmxParameters = DataFactory("gromacs.pdb2gmx")
+    parameters = Pdb2gmxParameters(
         {
             "ff": "oplsaa",
             "water": "spce",
-            "o": "1AKI_forcefield.gro",
-            "p": "1AKI_topology.top",
-            "i": "1AKI_restraints.itp",
+            "o": "pdb2gmx_1AKI_forcefield.gro",
+            "p": "pdb2gmx_1AKI_topology.top",
+            "i": "pdb2gmx_1AKI_restraints.itp",
         }
     )
 
     SinglefileData = DataFactory("core.singlefile")
     pdbfile = SinglefileData(
-        file=os.path.join(TEST_DIR, "input_files", "1AKI_clean.pdb")
+        file=os.path.join(TEST_DIR, "input_files", "pdb2gmx_1AKI_clean.pdb")
     )
 
     # set up calculation
