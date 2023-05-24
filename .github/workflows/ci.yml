@@ -44,7 +44,7 @@ jobs:
         use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
         auto-update-conda: true
         auto-activate-base: true
-    - name: Pull miniconda and autoactivate.
+      name: Pull miniconda and autoactivate.
 
     - name: Install GROMACS
       shell: bash -el {0}
