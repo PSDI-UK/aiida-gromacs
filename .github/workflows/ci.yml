@@ -64,6 +64,10 @@ jobs:
       shell: bash -el {0}
       run: pytest --cov aiida_gromacs --cov-report term-missing --cov-append .
 
+    - name: Report Coverage
+      uses: coverallsapp/github-action@v2
+
+
   docs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
