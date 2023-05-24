@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: [3.11]
         backend: ['stable']
 
     services:
@@ -37,12 +37,22 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+    - uses: conda-incubator/setup-miniconda@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        miniconda-version: "latest"
+        python-version: 3.11
+        channels: conda-forge, defaults
+        use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
+        auto-update-conda: true
+        auto-activate-base: true
+      name: Pull miniconda and autoactivate.
 
-    - name: Install python dependencies
+    - name: Install GROMACS
+      shell: bash -el {0}
+      run: conda install -c conda-forge gromacs
+
+    - name: Install aiida-gromacs and dependencies
+      shell: bash -el {0}
       run: |
         pip install --upgrade pip
         pip install -e .[testing]
@@ -51,17 +61,18 @@ jobs:
       env:
         # show timings of tests
         PYTEST_ADDOPTS: "--durations=0"
-      run: pytest --cov aiida_gromacs --cov-append .
+      shell: bash -el {0}
+      run: pytest --cov aiida_gromacs --cov-report term-missing --cov-append .
 
   docs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.8
+    - name: Set up Python 3.11
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.11
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
@@ -74,10 +85,10 @@ jobs:
     timeout-minutes: 15
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.8
+    - name: Set up Python 3.11
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.11
     - name: Install python dependencies
       run: |
         pip install --upgrade pip

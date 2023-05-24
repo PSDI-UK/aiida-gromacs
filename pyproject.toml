@@ -8,8 +8,8 @@ build-backend = "flit_core.buildapi"
 name = "aiida-gromacs"
 dynamic = ["version"]  # read from aiida_gromacs/__init__.py
 description = "A plugin for using GROMACS with AiiDA for molecular dymanics simulations."
-authors = [{name = "James Gebbie-Rayet"},
-           {email = "james.gebbie@stfc.ac.uk"}]
+authors = [{name = "James Gebbie-Rayet", email = "james.gebbie@stfc.ac.uk"},
+           {name = "Jas Kalayan", email = "jas.kalayan@stfc.ac.uk"}]
 readme = "README.md"
 license = {file = "LICENSE"}
 classifiers = [
@@ -32,15 +32,16 @@ Source = "https://github.com/jimboid/aiida-gromacs"
 
 [project.optional-dependencies]
 testing = [
-    "pgtest~=1.3.1",
-    "wheel~=0.31",
+    "pgtest~=1.3",
+    "wheel~=0.40",
     "coverage[toml]",
-    "pytest~=6.0",
-    "pytest-cov"
+    "pytest~=7.3",
+    "pytest-cov~=4.0",
+    "pytest-sugar~=0.9"
 ]
 pre-commit = [
-    "pre-commit~=2.2",
-    "pylint~=2.17.4"
+    "pre-commit~=3.3",
+    "pylint~=2.17"
 ]
 docs = [
     "sphinx",
@@ -125,6 +126,7 @@ line_length = 120
 force_sort_within_sections = true
 sections = ['FUTURE', 'STDLIB', 'THIRDPARTY', 'AIIDA', 'FIRSTPARTY', 'LOCALFOLDER']
 known_aiida = ['aiida']
+extend_skip = [".tpr", ".gro", ".pdb", ".top", ".mdp"]
 
 [tool.tox]
 legacy_tox_ini = """
