@@ -53,10 +53,19 @@ def launch(params):
 @click.command()
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
+# Input file options
 @click.option("-cp", default="protein.gro", type=str, help="Input structure file")
 @click.option("-cs", default="spc216.gro", type=str, help="Library structure file")
 @click.option("-p", default="topol.top", type=str, help="Topology file")
+# Output file options
 @click.option("-o", default="out.gro", type=str, help="Output structure file")
+# Other parameter options
+@click.option("-box", type=str, help="Box size (in nm)")
+@click.option("-radius", type=str, help="Default van der Waals distance")
+@click.option("-scale", type=str, help="Scale factor to multiply Van der Waals radii from the database in share/gromacs/top/vdwradii.dat. The default value of 0.57 yields density close to 1000 g/l for proteins in water.")
+@click.option("-shell", type=str, help="Thickness of optional water layer around solute")
+@click.option("-maxsol", type=str, help="Maximum number of solvent molecules to add if they fit in the box. If zero (default) this is ignored")
+@click.option("-vel", type=str, help="Keep velocities from input solute and solvent")
 def cli(*args, **kwargs):
     # pylint: disable=unused-argument
     """Run example.

@@ -53,14 +53,25 @@ def launch(params):
 @click.command()
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
+# Input file options
 @click.option("-s", default="topol.tpr", type=str, help="Input structure file")
+@click.option("-n", type=str, help="Index file")
 @click.option("-p", default="topol.top", type=str, help="Topology file")
+# Output file options
+@click.option("-o", default="out.gro", type=str, help="Output structure file")
+# Other parameter options
+@click.option("-np", type=str, help="Number of positive ions")
 @click.option("-pname", default="NA", type=str, help="Name of positive ion")
+@click.option("-pq", type=str, help="Charge of the positive ion")
+@click.option("-nn", type=str, help="Number of negative ions")
 @click.option("-nname", default="CL", type=str, help="Name of negative ion")
+@click.option("-nq", type=str, help="Charge of the negative ion")
+@click.option("-rmin", type=str, help="Minimum distance between ions and non-solvent")
+@click.option("-seed", type=str, help="Seed for random number generator (0 means generate)")
+@click.option("-conc", type=str, help="Specify salt concentration (mol/liter). This will add sufficient ions to reach up to the specified concentration as computed from the volume of the cell in the input .tpr file. Overrides the -np and -nn options.")
 @click.option(
     "-neutral", default="false", type=str, help="Neutralise the system with ions"
 )
-@click.option("-o", default="out.gro", type=str, help="Output structure file")
 def cli(*args, **kwargs):
     # pylint: disable=unused-argument
     # pylint: disable=line-too-long

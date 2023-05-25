@@ -55,10 +55,29 @@ def launch(params):
 @click.command()
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
+# Input file options
 @click.option("-f", default="grompp.mdp", type=str, help="Input parameter file")
 @click.option("-c", required=True, type=str, help="Input structure file")
+@click.option("-r", type=str, help="Structure file: gro g96 pdb brk ent esp tpr")
+@click.option("-rb", type=str, help="Structure file: gro g96 pdb brk ent esp tpr")
+@click.option("-n", type=str, help="Index file")
 @click.option("-p", default="topol.top", type=str, help="Topology file")
+@click.option("-t", type=str, help="Full precision trajectory: trr cpt tng")
+@click.option("-e", type=str, help="Energy file")
+@click.option("-qmi", type=str, help="Input file for QM program")
+@click.option("-ref", type=str, help="Full precision trajectory: trr cpt tng")
+# Output file options
 @click.option("-o", default="conf.gro", type=str, help="Output structure file")
+@click.option("-po", type=str, help="grompp input file with MD parameters")
+@click.option("-pp", type=str, help="Topology file")
+@click.option("-imd", type=str, help="Coordinate file in Gromos-87 format")
+# Other parameter options
+@click.option("-v", type=str, help="Be loud and noisy")
+@click.option("-time", type=str, help="Take frame at or first after this time.")
+@click.option("-rmvsbds", type=str, help="Remove constant bonded interactions with virtual sites")
+@click.option("-maxwarn", type=str, help="Number of allowed warnings during input processing. Not for normal use and may generate unstable systems")
+@click.option("-zero", type=str, help="Set parameters for bonded interactions without defaults to zero instead of generating an error")
+@click.option("-renum", type=str, help="Renumber atomtypes and minimize number of atomtypes")
 def cli(*args, **kwargs):
     # pylint: disable=unused-argument
     """Run example.
