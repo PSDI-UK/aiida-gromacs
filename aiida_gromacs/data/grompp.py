@@ -14,6 +14,12 @@ from aiida.orm import Dict
 cmdline_options = {
     Required("o", default="ions.tpr"): str,
     Optional("r"): str,
+    #Optional("-v", type=str, help="Be loud and noisy")
+    Optional("time"): str,
+    Optional("rmvsbds"): str,
+    Optional("maxwarn"): str,
+    Optional("zero"): str,
+    Optional("renum"): str,
 }
 
 

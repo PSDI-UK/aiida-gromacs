@@ -13,9 +13,31 @@ from aiida.orm import Dict
 # A subset of editconf command line options
 cmdline_options = {
     Required("o", default="newbox.gro"): str,
-    Optional("center", default="0 0 0"): str,
-    Optional("d"): str,
+    Optional("w"): str,
+    Optional("ndef"): str,
     Optional("bt"): str,
+    Optional("box"): str,
+    Optional("angle"): str,
+    Optional("d"): str,
+    Optional("c"): str,
+    Optional("center"): str,
+    Optional("aligncenter"): str,
+    Optional("align"): str,
+    Optional("translate"): str,
+    Optional("rotate"): str,
+    Optional("princ"): str,
+    Optional("scale"): str,
+    Optional("density"): str,
+    Optional("pbc"): str,
+    Optional("resnr"): str,
+    Optional("grasp"): str,
+    Optional("rvdw"): str,
+    Optional("sig56"): str,
+    Optional("vdwread"): str,
+    Optional("atom"): str,
+    Optional("legend"): str,
+    Optional("label"): str,
+    Optional("conect"): str,
 }
 
 

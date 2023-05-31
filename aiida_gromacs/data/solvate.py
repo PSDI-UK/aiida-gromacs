@@ -14,6 +14,12 @@ from aiida.orm import Dict
 cmdline_options = {
     Required("cs", default="spc216.gro"): str,
     Required("o", default="solvated.gro"): str,
+    Optional("box"): str,
+    Optional("radius"): str,
+    Optional("scale"): str,
+    Optional("shell"): str,
+    Optional("maxsol"): str,
+    Optional("vel"): str,
 }
 
 
