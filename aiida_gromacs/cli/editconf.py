@@ -20,28 +20,25 @@ def launch(params):
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
 
-    # If code is not initialised, then setup.
-    gromacs_code = params.pop("code")
-    if not gromacs_code:
-        computer = helpers.get_computer()
-        gromacs_code = helpers.get_code(entry_point="gromacs", computer=computer)
-
-    # Prepare input parameters in AiiDA formats.
-    SinglefileData = DataFactory("core.singlefile")
-    grofile = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
-
-    EditconfParameters = DataFactory("gromacs.editconf")
-    parameters = EditconfParameters(params)
-
-    # set up calculation.
+    # dict to hold our calculation data.
     inputs = {
-        "code": gromacs_code,
-        "parameters": parameters,
-        "grofile": grofile,
         "metadata": {
             "description": "record editconf data provenance via the aiida_gromacs plugin",
         },
     }
+
+    # If code is not initialised, then setup.
+    inputs["code"] = params.pop("code")
+    if not inputs["code"]:
+        computer = helpers.get_computer()
+        inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
+
+    # Prepare input parameters in AiiDA formats.
+    SinglefileData = DataFactory("core.singlefile")
+    inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
+
+    EditconfParameters = DataFactory("gromacs.editconf")
+    inputs["parameters"] = EditconfParameters(params)
 
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable

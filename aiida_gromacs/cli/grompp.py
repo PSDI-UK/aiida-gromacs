@@ -20,32 +20,27 @@ def launch(params):
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
 
+    # dict to hold our calculation data.
+    inputs = {
+        "metadata": {
+            "description": "record grompp data provenance via the aiida_gromacs plugin",
+        },
+    }
+
     # If code is not initialised, then setup.
-    gromacs_code = params.pop("code")
-    if not gromacs_code:
+    inputs["code"] = params.pop("code")
+    if not inputs["code"]:
         computer = helpers.get_computer()
-        gromacs_code = helpers.get_code(entry_point="gromacs", computer=computer)
+        inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
 
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
-    mdpfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
-    grofile = SinglefileData(file=os.path.join(os.getcwd(), params.pop("c")))
-    topfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
+    inputs["mdpfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
+    inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("c")))
+    inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
     GromppParameters = DataFactory("gromacs.grompp")
-    parameters = GromppParameters(params)
-
-    # set up calculation
-    inputs = {
-        "code": gromacs_code,
-        "parameters": parameters,
-        "mdpfile": mdpfile,
-        "grofile": grofile,
-        "topfile": topfile,
-        "metadata": {
-            "description": "grompp job submission with the aiida_gromacs plugin",
-        },
-    }
+    inputs["parameters"] = GromppParameters(params)
 
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable

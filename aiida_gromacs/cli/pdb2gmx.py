@@ -19,29 +19,26 @@ def launch(params):
 
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
-
-    # If code is not initialised, then setup.
-    gromacs_code = params.pop("code")
-    if not gromacs_code:
-        computer = helpers.get_computer()
-        gromacs_code = helpers.get_code(entry_point="gromacs", computer=computer)
-
-    # Prepare input parameters in AiiDA formats.
-    SinglefileData = DataFactory("core.singlefile")
-    pdbfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
-
-    Pdb2gmxParameters = DataFactory("gromacs.pdb2gmx")
-    parameters = Pdb2gmxParameters(params)
-
-    # set up calculation
+    
+    # dict to hold our calculation data.
     inputs = {
-        "code": gromacs_code,
-        "parameters": parameters,
-        "pdbfile": pdbfile,
         "metadata": {
             "description": "record pdb2gmx data provenance via the aiida_gromacs plugin",
         },
     }
+
+    # If code is not initialised, then setup.
+    inputs["code"] = params.pop("code")
+    if not inputs["code"]:
+        computer = helpers.get_computer()
+        inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
+
+    # Prepare input parameters in AiiDA formats.
+    SinglefileData = DataFactory("core.singlefile")
+    inputs["pdbfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
+
+    Pdb2gmxParameters = DataFactory("gromacs.pdb2gmx")
+    inputs["parameters"] = Pdb2gmxParameters(params)
 
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable

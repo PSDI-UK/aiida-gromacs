@@ -20,30 +20,26 @@ def launch(params):
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
 
+    # dict to hold our calculation data.
+    inputs = {
+        "metadata": {
+            "description": "record pdb2gmx data provenance via the aiida_gromacs plugin",
+        },
+    }
+
     # If code is not initialised, then setup.
-    gromacs_code = params.pop("code")
-    if not gromacs_code:
+    inputs["code"] = params.pop("code")
+    if not inputs["code"]:
         computer = helpers.get_computer()
-        gromacs_code = helpers.get_code(entry_point="gromacs", computer=computer)
+        inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
 
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
-    grofile = SinglefileData(file=os.path.join(os.getcwd(), params.pop("cp")))
-    topfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
+    inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("cp")))
+    inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
     SolvateParameters = DataFactory("gromacs.solvate")
-    parameters = SolvateParameters(params)
-
-    # set up calculation
-    inputs = {
-        "code": gromacs_code,
-        "parameters": parameters,
-        "grofile": grofile,
-        "topfile": topfile,
-        "metadata": {
-            "description": "solvate job submission with the aiida_gromacs plugin",
-        },
-    }
+    inputs["parameters"] = SolvateParameters(params)
 
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable
