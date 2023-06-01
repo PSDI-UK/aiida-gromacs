@@ -15,12 +15,15 @@ from aiida.common import exceptions
 from aiida.orm.nodes.process.process import ProcessState
 from aiida.orm.querybuilder import QueryBuilder
 from aiida.plugins import CalculationFactory
+from aiida import load_profile
 
 # from aiida.common.exceptions import NotExistent
-# from aiida_gromacs import helpers
+from aiida_gromacs import helpers
 
 # set base path for input files.
 INPUT_DIR = os.path.join(os.getcwd())
+profile = load_profile()
+computer = helpers.get_computer()
 
 
 def format_link_label(filename: str) -> str:
