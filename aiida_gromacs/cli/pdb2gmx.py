@@ -52,13 +52,13 @@ def launch(params):
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
 # Input file options
-@click.option("-f", default="conf.gro", type=str, help="Input structure file")
+@click.option("-f", default="prot.pdb", type=str, help="Input structure file")
 # Output file options 
-@click.option("-o", default="out.gro", type=str, help="Output structure file")
-@click.option("-p", default="out.gro", type=str, help="Output topology file")
-@click.option("-i", default="out.gro", type=str, help="Output itp file")
-@click.option("-n", default="out.gro", type=str, help="Output index file")
-@click.option("-q", default="out.gro", type=str, help="Output Structure file")
+@click.option("-o", default="conf.gro", type=str, help="Output structure file")
+@click.option("-p", default="topol.top", type=str, help="Output topology file")
+@click.option("-i", default="posre.itp", type=str, help="Output itp file")
+@click.option("-n", type=str, help="Output index file")
+@click.option("-q", type=str, help="Output Structure file")
 # Parameter options
 @click.option("-chainsep", type=str, help="Condition in PDB files when a new chain should be started (adding termini): id_or_ter, id_and_ter, ter, id, interactive")
 @click.option("-merge", type=str, help="Merge multiple chains into a single [moleculetype]: no, all, interactive")
