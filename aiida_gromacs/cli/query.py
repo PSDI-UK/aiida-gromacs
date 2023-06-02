@@ -6,7 +6,7 @@ Query AiiDA databases.
 from aiida.orm.querybuilder import QueryBuilder
 from aiida.plugins import CalculationFactory
 from aiida import load_profile
-#from aiida.manage.configuration import get_profile
+from aiida.manage.configuration import get_profile
 
 profile = load_profile()
 

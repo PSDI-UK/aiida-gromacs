@@ -24,7 +24,8 @@ from aiida_gromacs import helpers
 INPUT_DIR = os.path.join(os.getcwd())
 profile = load_profile()
 computer = helpers.get_computer()
-
+code = helpers.get_code(entry_point="gromacs", computer=computer)
+code = helpers.get_code(entry_point="bash", computer=computer)
 
 def format_link_label(filename: str) -> str:
     """
@@ -182,6 +183,12 @@ def launch_generalMD(options):
 @click.command()
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
+# @click.option(
+#     "--code",
+#     type=str,
+#     multiple=True,
+#     help="The code used to in the executable.",
+# )
 @click.option(
     "--command",
     type=str,
