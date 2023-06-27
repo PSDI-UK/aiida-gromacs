@@ -20,7 +20,7 @@ cmdline_options = {
     Optional("angle"): str,
     Optional("d"): str,
     Optional("c"): str,
-    Optional("center"): str,
+    Optional("center", default="0 0 0"): str,
     Optional("aligncenter"): str,
     Optional("align"): str,
     Optional("translate"): str,

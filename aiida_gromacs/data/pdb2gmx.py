@@ -18,7 +18,7 @@ cmdline_options = {
     Optional("chainsep"): str,
     Optional("merge"): str,
     Required("ff", default="oplsaa"): str,
-    Required("water", default="oplsaa"): str,
+    Required("water", default="spce"): str,
     Optional("inter"): str,
     Optional("ss"): str,
     Optional("ter"): str,
