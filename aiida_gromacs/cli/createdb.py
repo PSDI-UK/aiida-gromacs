@@ -11,6 +11,7 @@ import os
 def create_db(options):
     """
     Create .aiida file of archived database.
+    https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/share_data.html
     """
     output_file = options["filename"]
     load_profile()

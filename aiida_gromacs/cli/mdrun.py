@@ -12,6 +12,7 @@ from aiida import cmdline, engine
 from aiida.plugins import CalculationFactory, DataFactory
 
 from aiida_gromacs import helpers
+from aiida_gromacs.utils import findInputs
 
 
 def launch(params):
@@ -42,6 +43,10 @@ def launch(params):
             "description": "mdrun minimisation job submission with the aiida_gromacs plugin",
         },
     }
+
+    # check if inputs are outputs from prev processes
+    inputs = findInputs.get_prev_inputs(inputs, ["tprfile"])
+
 
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable

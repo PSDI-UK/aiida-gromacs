@@ -52,7 +52,7 @@ class GeneralCalculation(CalcJob):
         # AiiDA will attach the outputs defined here to a (successfully)
         # finished calculation using the link label provided.
         spec.output('log', valid_type=SinglefileData, required=False,
-                help='link to the default file.log.')
+                help='link to the default file.out.')
 
         # set the list of output file names as an input so that it can be
         # iterated over in the parser later.
@@ -61,7 +61,7 @@ class GeneralCalculation(CalcJob):
 
         # define the schema for metadata.options
         spec.input('metadata.options.output_filename', valid_type=str,
-                default='file.log', help='name of file produced by default.')
+                default='file.out', help='name of file produced by default.')
         spec.input('metadata.options.output_dir', valid_type=str,
                 help='The directory where output files will be saved '
                     'when parsed.')

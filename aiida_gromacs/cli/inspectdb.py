@@ -78,6 +78,7 @@ with profile_context(archive_profile):
                 print(output_node.value)
 
 
+# print(graph)
 # #graph.graphviz
 # # print(help(graph.graphviz))
 # graph.graphviz.render('graph', format='pdf')
