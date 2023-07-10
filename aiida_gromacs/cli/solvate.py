@@ -38,6 +38,9 @@ def launch(params):
     inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("cp")))
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
+    if "cs" in params:
+        inputs["cs_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("cs")))
+
     SolvateParameters = DataFactory("gromacs.solvate")
     inputs["parameters"] = SolvateParameters(params)
 

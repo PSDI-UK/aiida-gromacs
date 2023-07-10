@@ -37,6 +37,12 @@ def launch(params):
     SinglefileData = DataFactory("core.singlefile")
     inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
 
+    if "n" in params:
+        inputs["n_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("n")))
+
+    if "bf" in params:
+        inputs["bf_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("bf")))
+
     EditconfParameters = DataFactory("gromacs.editconf")
     inputs["parameters"] = EditconfParameters(params)
 

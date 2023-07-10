@@ -39,6 +39,27 @@ def launch(params):
     inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("c")))
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
+    if "r" in params:
+        inputs["r_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("r")))
+
+    if "rb" in params:
+        inputs["rb_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("rb")))
+
+    if "n" in params:
+        inputs["n_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("n")))
+  
+    if "t" in params:
+        inputs["t_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("t")))
+
+    if "e" in params:
+        inputs["e_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("e")))
+
+    if "qmi" in params:
+        inputs["qmi_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("qmi")))
+
+    if "ref" in params:
+        inputs["ref_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("ref")))
+
     GromppParameters = DataFactory("gromacs.grompp")
     inputs["parameters"] = GromppParameters(params)
 

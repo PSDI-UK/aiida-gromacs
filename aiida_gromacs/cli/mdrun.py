@@ -37,6 +37,36 @@ def launch(params):
     SinglefileData = DataFactory("core.singlefile")
     inputs["tprfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("s")))
 
+    if "cpi" in params:
+        inputs["cpi_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("cpi")))
+
+    if "table" in params:
+        inputs["table_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("table")))
+
+    if "tablep" in params:
+        inputs["tablep_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("tablep")))
+
+    if "rerun" in params:
+        inputs["rerun_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("rerun")))
+
+    if "ei" in params:
+        inputs["ei_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("ei")))
+
+    if "multidir" in params:
+        inputs["multidir_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("multidir")))
+
+    if "awh" in params:
+        inputs["awh_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("awh")))
+
+    if "membed" in params:
+        inputs["membed_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("membed")))
+
+    if "mp" in params:
+        inputs["mp_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("mp")))
+
+    if "mn" in params:
+        inputs["mn_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("mn")))
+
     MdrunParameters = DataFactory("gromacs.mdrun")
     inputs["parameters"] = MdrunParameters(params)
 

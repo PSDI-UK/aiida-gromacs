@@ -38,6 +38,9 @@ def launch(params):
     inputs["tprfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("s")))
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
+    if "n" in params:
+        inputs["n_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("n")))
+
     GenionParameters = DataFactory("gromacs.genion")
     inputs["parameters"] = GenionParameters(params)
 
