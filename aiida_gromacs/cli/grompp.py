@@ -23,7 +23,7 @@ def launch(params):
     # dict to hold our calculation data.
     inputs = {
         "metadata": {
-            "description": "record grompp data provenance via the aiida_gromacs plugin",
+            "description": params.pop("description"),
         },
     }
 
@@ -50,6 +50,7 @@ def launch(params):
 @click.command()
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
+@click.option("--description", default="record grompp data provenance via the aiida_gromacs plugin", type=str, help="Short metadata description")
 # Input file options
 @click.option("-f", default="grompp.mdp", type=str, help="Input parameter file")
 @click.option("-c", required=True, type=str, help="Input structure file")

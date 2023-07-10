@@ -23,7 +23,7 @@ def launch(params):
     # dict to hold our calculation data.
     inputs = {
         "metadata": {
-            "description": "record editconf data provenance via the aiida_gromacs plugin",
+            "description": params.pop("description"),
         },
     }
 
@@ -48,6 +48,8 @@ def launch(params):
 @click.command()
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
+# Plugin options
+@click.option("--description", default="record editconf data provenance via the aiida_gromacs plugin", type=str, help="Short metadata description")
 # Input file options
 @click.option("-f", default="conf.gro", type=str, help="Input structure file")
 @click.option("-n", type=str, help="Index file")
