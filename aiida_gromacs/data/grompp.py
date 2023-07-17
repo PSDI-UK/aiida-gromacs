@@ -61,7 +61,7 @@ class GromppParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         return GromppParameters.schema(parameters_dict)
 
-    def cmdline_params(self, mdpfile, grofile, topfile):
+    def cmdline_params(self, input_files):
         """Synthesize command line parameters.
 
         e.g. [ '--ignore-case', 'filename1', 'filename2']
@@ -73,9 +73,16 @@ class GromppParameters(Dict):  # pylint: disable=too-many-ancestors
         parameters = []
 
         parameters.append("grompp")
-        parameters.extend(["-f", mdpfile])
-        parameters.extend(["-c", grofile])
-        parameters.extend(["-p", topfile])
+        parameters.extend(["-f", input_files["mdpfile"]])
+        parameters.extend(["-c", input_files["grofile"]])
+        parameters.extend(["-p", input_files["topfile"]])
+        if "r_file" in input_files: parameters.extend(["-r", input_files["r_file"]])
+        if "rb_file" in input_files: parameters.extend(["-rb", input_files["rb_file"]])
+        if "n_file" in input_files: parameters.extend(["-n", input_files["n_file"]])
+        if "t_file" in input_files: parameters.extend(["-t", input_files["t_file"]])
+        if "e_file" in input_files: parameters.extend(["-e", input_files["e_file"]])
+        if "qmi_file" in input_files: parameters.extend(["-qmi", input_files["qmi_file"]])
+        if "ref_file" in input_files: parameters.extend(["-ref", input_files["ref_file"]])
 
         parm_dict = self.get_dict()
 

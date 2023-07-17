@@ -79,7 +79,7 @@ class EditconfParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         return EditconfParameters.schema(parameters_dict)
 
-    def cmdline_params(self, grofile):
+    def cmdline_params(self, input_files):
         """Synthesize command line parameters.
 
         e.g. [ '--ignore-case', 'filename1', 'filename2']
@@ -91,7 +91,9 @@ class EditconfParameters(Dict):  # pylint: disable=too-many-ancestors
         parameters = []
 
         parameters.append("editconf")
-        parameters.extend(["-f", grofile])
+        parameters.extend(["-f", input_files["grofile"]])
+        if "n_file" in input_files: parameters.extend(["-n", input_files["n_file"]])
+        if "bf_file" in input_files: parameters.extend(["-bf", input_files["bf_file"]])
 
         parm_dict = self.get_dict()
 

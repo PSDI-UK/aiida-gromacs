@@ -64,7 +64,7 @@ class GenionParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         return GenionParameters.schema(parameters_dict)
 
-    def cmdline_params(self, tprfile, topfile):
+    def cmdline_params(self, input_files):
         """Synthesize command line parameters.
 
         e.g. [ '--ignore-case', 'filename1', 'filename2']
@@ -76,8 +76,9 @@ class GenionParameters(Dict):  # pylint: disable=too-many-ancestors
         cmdline = "echo"
         cmdline = cmdline + " " + "SOL"
         cmdline = cmdline + " " + "| gmx genion"
-        cmdline = cmdline + " " + " -s " + tprfile
-        cmdline = cmdline + " " + " -p " + topfile
+        cmdline = cmdline + " " + " -s " + input_files["tprfile"]
+        cmdline = cmdline + " " + " -p " + input_files["topfile"]
+        if "n_file" in input_files: cmdline = cmdline + " " + " -n " + input_files["n_file"]
 
         parameters = []
 
