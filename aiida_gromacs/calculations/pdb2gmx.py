@@ -25,6 +25,8 @@ class Pdb2gmxCalculation(CalcJob):
         super().define(spec)
 
         # set default values for AiiDA options
+        # TODO: something changed about withmpi in aiida-2.4.0, needs investigation.
+        spec.inputs['metadata']['options']['withmpi'].default = False
         spec.inputs['metadata']['options']['resources'].default = {
             'num_machines': 1,
             'num_mpiprocs_per_machine': 1,

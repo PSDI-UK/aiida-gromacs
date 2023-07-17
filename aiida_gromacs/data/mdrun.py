@@ -41,7 +41,7 @@ cmdline_options = {
     Optional("pmefft"): str,
     Optional("bonded"): str,
     Optional("update"): str,
-    # Optional("v"): str,
+    Optional("v"): str,
     Optional("pforce"): str,
     Optional("reprod"): str,
     Optional("cpt"): str,
