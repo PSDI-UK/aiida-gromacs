@@ -20,30 +20,29 @@ def launch(params):
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
 
+    # dict to hold our calculation data.
+    inputs = {
+        "metadata": {
+            "description": params.pop("description"),
+        },
+    }
+
     # If code is not initialised, then setup.
-    gromacs_code = params.pop("code")
-    if not gromacs_code:
+    inputs["code"] = params.pop("code")
+    if not inputs["code"]:
         computer = helpers.get_computer()
-        gromacs_code = helpers.get_code(entry_point="bash", computer=computer)
+        inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
 
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
-    tprfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop("s")))
-    topfile = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
+    inputs["tprfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("s")))
+    inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
+
+    if "n" in params:
+        inputs["n_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("n")))
 
     GenionParameters = DataFactory("gromacs.genion")
-    parameters = GenionParameters(params)
-
-    # set up calculation.
-    inputs = {
-        "code": gromacs_code,
-        "parameters": parameters,
-        "tprfile": tprfile,
-        "topfile": topfile,
-        "metadata": {
-            "description": "genion job submission with the aiida_gromacs plugin",
-        },
-    }
+    inputs["parameters"] = GenionParameters(params)
 
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable
@@ -53,14 +52,27 @@ def launch(params):
 @click.command()
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
+# Plugin options
+@click.option("--description", default="record genion data provenance via the aiida_gromacs plugin", type=str, help="Short metadata description")
+# Input file options
 @click.option("-s", default="topol.tpr", type=str, help="Input structure file")
+@click.option("-n", type=str, help="Index file")
 @click.option("-p", default="topol.top", type=str, help="Topology file")
+# Output file options
+@click.option("-o", default="out.gro", type=str, help="Output structure file")
+# Other parameter options
+@click.option("-np", type=str, help="Number of positive ions")
 @click.option("-pname", default="NA", type=str, help="Name of positive ion")
+@click.option("-pq", type=str, help="Charge of the positive ion")
+@click.option("-nn", type=str, help="Number of negative ions")
 @click.option("-nname", default="CL", type=str, help="Name of negative ion")
+@click.option("-nq", type=str, help="Charge of the negative ion")
+@click.option("-rmin", type=str, help="Minimum distance between ions and non-solvent")
+@click.option("-seed", type=str, help="Seed for random number generator (0 means generate)")
+@click.option("-conc", type=str, help="Specify salt concentration (mol/liter). This will add sufficient ions to reach up to the specified concentration as computed from the volume of the cell in the input .tpr file. Overrides the -np and -nn options.")
 @click.option(
     "-neutral", default="false", type=str, help="Neutralise the system with ions"
 )
-@click.option("-o", default="out.gro", type=str, help="Output structure file")
 def cli(*args, **kwargs):
     # pylint: disable=unused-argument
     # pylint: disable=line-too-long

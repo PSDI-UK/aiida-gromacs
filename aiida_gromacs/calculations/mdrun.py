@@ -25,19 +25,36 @@ class MdrunCalculation(CalcJob):
         super().define(spec)
 
         # set default values for AiiDA options
+        # TODO: something changed about withmpi in aiida-2.4.0, needs investigation.
+        spec.inputs['metadata']['options']['withmpi'].default = False
+        # TODO: remove this for production release.
+        spec.inputs['metadata']['options']['max_wallclock_seconds'].default = 86400
         spec.inputs['metadata']['options']['resources'].default = {
             'num_machines': 1,
             'num_mpiprocs_per_machine': 1,
             'num_cores_per_mpiproc': 5,
         }
 
-        spec.inputs['metadata']['options']['max_wallclock_seconds'].default = 86400
-
+        # Required inputs.
         spec.inputs['metadata']['options']['parser_name'].default = 'gromacs.mdrun'
         spec.input('metadata.options.output_filename', valid_type=str, default='mdrun.out')
         spec.input('tprfile', valid_type=SinglefileData, help='Input structure.')
         spec.input('parameters', valid_type=MdrunParameters, help='Command line parameters for gmx mdrun')
 
+        # Optional inputs.
+        spec.input('cpi_file', valid_type=SinglefileData, required=False, help='Checkpoint file')
+        spec.input('table_file', valid_type=SinglefileData, required=False, help='xvgr/xmgr file')
+        spec.input('tableb_file', valid_type=SinglefileData, required=False, help='xvgr/xmgr file')
+        spec.input('tablep_file', valid_type=SinglefileData, required=False, help='xvgr/xmgr file')
+        spec.input('rerun_file', valid_type=SinglefileData, required=False, help='Trajectory: xtc trr cpt gro g96 pdb tng')
+        spec.input('ei_file', valid_type=SinglefileData, required=False, help='ED sampling input')
+        spec.input('multidir_file', valid_type=SinglefileData, required=False, help='Run directory')
+        spec.input('awh_file', valid_type=SinglefileData, required=False, help='xvgr/xmgr file')
+        spec.input('membed_file', valid_type=SinglefileData, required=False, help='Generic data file')
+        spec.input('mp_file', valid_type=SinglefileData, required=False, help='Topology file')
+        spec.input('mn_file', valid_type=SinglefileData, required=False, help='Index file')
+
+        # Required outputs.
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
         spec.output('trrfile', valid_type=SinglefileData, help='Output trajectory.')
         spec.output('grofile', valid_type=SinglefileData, help='Output structure file.')
@@ -57,9 +74,25 @@ class MdrunCalculation(CalcJob):
         :return: `aiida.common.datastructures.CalcInfo` instance
         """
         codeinfo = CodeInfo()
-        codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(
-            tprfile=self.inputs.tprfile.filename
-        )
+
+        # Setup data structures for files.
+        input_options = ["tprfile", "cpi_file", "table_file", "tableb_file", "tablep_file", "rerun_file", "ei_file", "multidir_file", "awh_file", "membed_file", "mp_file", "mn_file"]
+        cmdline_input_files = {}
+        input_files = []
+
+        # Map input files to AiiDA plugin data types.
+        for item in input_options:
+            if item in self.inputs:
+                cmdline_input_files[item] = self.inputs[item].filename
+                input_files.append((
+                        self.inputs[item].uuid,
+                        self.inputs[item].filename,
+                        self.inputs[item].filename,
+                    ))
+
+        # Form the commandline.
+        codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(cmdline_input_files)
+        
         codeinfo.code_uuid = self.inputs.code.uuid
         codeinfo.stdout_name = self.metadata.options.output_filename
         codeinfo.withmpi = self.inputs.metadata.options.withmpi
@@ -67,13 +100,7 @@ class MdrunCalculation(CalcJob):
         # Prepare a `CalcInfo` to be returned to the engine
         calcinfo = CalcInfo()
         calcinfo.codes_info = [codeinfo]
-        calcinfo.local_copy_list = [
-            (
-                self.inputs.tprfile.uuid,
-                self.inputs.tprfile.filename,
-                self.inputs.tprfile.filename,
-            ),
-        ]
+        calcinfo.local_copy_list = input_files
 
         calcinfo.retrieve_list = [
             self.metadata.options.output_filename,

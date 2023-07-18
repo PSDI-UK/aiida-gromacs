@@ -6,15 +6,22 @@ Register data types via the "aiida.data" entry point in setup.json.
 
 # You can directly use or subclass aiida.orm.data.Data
 # or any other data type listed under 'verdi data'
-from voluptuous import Required, Schema
+from voluptuous import Optional, Required, Schema
 
 from aiida.orm import Dict
 
 # A subset of genion command line options
 cmdline_options = {
     Required("o", default="solvated_ions.gro"): str,
+    Optional("np"): str,
     Required("pname", default="NA"): str,
+    Optional("pq"): str,
+    Optional("nn"): str,
     Required("nname", default="CL"): str,
+    Optional("nq"): str,
+    Optional("rmin"): str,
+    Optional("seed"): str,
+    Optional("conc"): str,
     Required("neutral", default="true"): str,
 }
 
@@ -57,7 +64,7 @@ class GenionParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         return GenionParameters.schema(parameters_dict)
 
-    def cmdline_params(self, tprfile, topfile):
+    def cmdline_params(self, input_files):
         """Synthesize command line parameters.
 
         e.g. [ '--ignore-case', 'filename1', 'filename2']
@@ -69,8 +76,9 @@ class GenionParameters(Dict):  # pylint: disable=too-many-ancestors
         cmdline = "echo"
         cmdline = cmdline + " " + "SOL"
         cmdline = cmdline + " " + "| gmx genion"
-        cmdline = cmdline + " " + " -s " + tprfile
-        cmdline = cmdline + " " + " -p " + topfile
+        cmdline = cmdline + " " + " -s " + input_files["tprfile"]
+        cmdline = cmdline + " " + " -p " + input_files["topfile"]
+        if "n_file" in input_files: cmdline = cmdline + " " + " -n " + input_files["n_file"]
 
         parameters = []
 
