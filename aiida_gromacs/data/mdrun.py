@@ -93,7 +93,7 @@ class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         return MdrunParameters.schema(parameters_dict)
 
-    def cmdline_params(self, tprfile):
+    def cmdline_params(self, input_files):
         """Synthesize command line parameters.
 
         e.g. [ '--ignore-case', 'filename1', 'filename2']
@@ -105,7 +105,18 @@ class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
         parameters = []
 
         parameters.append("mdrun")
-        parameters.extend(["-s", tprfile])
+        parameters.extend(["-s", input_files["tprfile"]])
+        if "cpi_file" in input_files: parameters.extend(["-cpi", input_files["cpi_file"]])
+        if "table_file" in input_files: parameters.extend(["-table", input_files["cpi_file"]])
+        if "tableb_file" in input_files: parameters.extend(["-tableb", input_files["tableb_file"]])
+        if "tablep_file" in input_files: parameters.extend(["-tablep", input_files["tablep_file"]])
+        if "rerun_file" in input_files: parameters.extend(["-rerun", input_files["rerun_file"]])
+        if "ei_file" in input_files: parameters.extend(["-ei", input_files["ei_file"]])
+        if "multidir_file" in input_files: parameters.extend(["-multidir", input_files["multidir_file"]])
+        if "awh_file" in input_files: parameters.extend(["-awh", input_files["awh_file"]])
+        if "membed_file" in input_files: parameters.extend(["-membed", input_files["membed_file"]])
+        if "mp_file" in input_files: parameters.extend(["-mp", input_files["mp_file"]])
+        if "mp_file" in input_files: parameters.extend(["-mn", input_files["mp_file"]])
 
         parm_dict = self.get_dict()
 

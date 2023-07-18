@@ -43,6 +43,9 @@ def launch(params):
     if "table" in params:
         inputs["table_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("table")))
 
+    if "tableb" in params:
+        inputs["tableb_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("tableb")))
+
     if "tablep" in params:
         inputs["tablep_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("tablep")))
 

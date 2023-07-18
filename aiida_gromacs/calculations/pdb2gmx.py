@@ -31,11 +31,14 @@ class Pdb2gmxCalculation(CalcJob):
             'num_machines': 1,
             'num_mpiprocs_per_machine': 1,
         }
+        
+        # Required inputs.
         spec.inputs['metadata']['options']['parser_name'].default = 'gromacs.pdb2gmx'
         spec.input('metadata.options.output_filename', valid_type=str, default='pdb2gmx.out')
         spec.input('pdbfile', valid_type=SinglefileData, help='Input structure.')
         spec.input('parameters', valid_type=Pdb2gmxParameters, help='Command line parameters for gmx pdb2gmx')
 
+        # Default outputs.
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
         spec.output('grofile', valid_type=SinglefileData, help='Output forcefield compliant file.')
         spec.output('topfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
