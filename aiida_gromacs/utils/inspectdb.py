@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Inspect AiiDA databases.
+Sandbox for inspecting AiiDA databases.
 """
 
 import sys

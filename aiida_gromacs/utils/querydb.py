@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Query AiiDA databases.
+Sandbox for querying AiiDA databases.
 """
 
 from aiida.orm.querybuilder import QueryBuilder
