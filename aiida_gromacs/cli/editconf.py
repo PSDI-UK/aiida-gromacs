@@ -12,6 +12,7 @@ from aiida import cmdline, engine
 from aiida.plugins import CalculationFactory, DataFactory
 
 from aiida_gromacs import helpers
+from aiida_gromacs.utils import searchprevious
 
 
 def launch(params):
@@ -45,6 +46,9 @@ def launch(params):
 
     EditconfParameters = DataFactory("gromacs.editconf")
     inputs["parameters"] = EditconfParameters(params)
+
+    # check if inputs are outputs from prev processes
+    inputs = searchprevious.get_prev_inputs(inputs, ["grofile"])
 
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable

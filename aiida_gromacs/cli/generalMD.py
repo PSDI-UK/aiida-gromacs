@@ -15,13 +15,17 @@ from aiida.common import exceptions
 from aiida.orm.nodes.process.process import ProcessState
 from aiida.orm.querybuilder import QueryBuilder
 from aiida.plugins import CalculationFactory
+from aiida import load_profile
 
 # from aiida.common.exceptions import NotExistent
-# from aiida_gromacs import helpers
+from aiida_gromacs import helpers
 
 # set base path for input files.
 INPUT_DIR = os.path.join(os.getcwd())
-
+profile = load_profile()
+computer = helpers.get_computer()
+code = helpers.get_code(entry_point="gromacs", computer=computer)
+code = helpers.get_code(entry_point="bash", computer=computer)
 
 def format_link_label(filename: str) -> str:
     """
@@ -125,15 +129,18 @@ def launch_generalMD(options):
         raise exceptions.NonExistent("Code has not been set.")
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    MyAppCalculation = CalculationFactory("general-MD")
+    # MyAppCalculation = CalculationFactory("general-MD")
 
     # Check if a previous calculation with the same input parameter
     # value has been stored by loading the QueryBuilder and append
     # all previous jobs ordered by newest first.
     qb = QueryBuilder()
-    qb.append(MyAppCalculation, tag="calcjob")
-    qb.order_by({MyAppCalculation: {"ctime": "desc"}})
+    qb.append(orm.ProcessNode, tag='process')
+    qb.order_by({orm.ProcessNode: {"ctime": "desc"}})
+    # qb.append(MyAppCalculation, tag="calcjob")
+    # qb.order_by({MyAppCalculation: {"ctime": "desc"}})
 
+    # Wait for previous process to finish if running
     check_prev_process(qb)
 
     # Save list of input files to a dict with keys that are formatted
@@ -157,9 +164,9 @@ def launch_generalMD(options):
         "output_files": orm.List(output_files),
         "metadata": {
             "label": "general-execute",
-            "description": "Run CLI job and save input and output " "file provenance.",
+            "description": "Run CLI job and save input and output file provenance.",
             "options": {
-                "output_filename": "file.log",
+                "output_filename": "file.out",
                 "output_dir": output_dir,
                 "parser_name": "general-MD",
             },
@@ -179,6 +186,12 @@ def launch_generalMD(options):
 @click.command()
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
+# @click.option(
+#     "--code",
+#     type=str,
+#     multiple=True,
+#     help="The code used to in the executable.",
+# )
 @click.option(
     "--command",
     type=str,
@@ -192,7 +205,8 @@ def launch_generalMD(options):
     "Include the local path to these files.",
 )
 @click.option(
-    "--outputs", multiple=True, type=str, help="Output file name used in the command."
+    "--outputs", multiple=True, type=str, 
+    help="Output file name used in the command."
 )
 @click.option(
     "--output_dir",
@@ -205,7 +219,7 @@ def cli(**kwargs):
 
     Example usage:
 
-    $ ./launch.py --code gmx@localhost
+    $ ./generalMD.py --code gmx@localhost
     --command "pdb2gmx -i 1AKI_restraints.itp -o 1AKI_forcfield.gro
     -p 1AKI_topology.top -ff oplsaa -water spce -f 1AKI_clean.pdb"
     --inputs 1AKI_clean.pdb
@@ -213,7 +227,7 @@ def cli(**kwargs):
     --outputs 1AKI_topology.top
     --outputs 1AKI_forcfield.gro
 
-    Help: $ ./launch.py --help
+    Help: $ ./generalMD.py --help
     """
     launch_generalMD(kwargs)
 
