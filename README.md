@@ -5,84 +5,34 @@
 
 # aiida-gromacs
 
-A plugin for using GROMACS with AiiDA for molecular dymanics simulations.
+The GROMACS plugin for AiiDA aims to enable the capture and sharing of the full
+provenance of data when parameterising and running molecular dynamics
+simulations. This plugin is being developed as part of the Physical Sciences
+Data Infrastructure programme to improve the practices around data within the
+Physical Sciences remit area within the UK.
 
-This plugin is the default output of the
-[AiiDA plugin cutter](https://github.com/aiidateam/aiida-plugin-cutter),
-intended to help developers get started with their AiiDA plugins.
+This package is currently a work in progress and we will be adding much more
+complete functionality to this plugin in the coming months.
 
-## Repository contents
+The design pattern we are aiming for is to simply allow researchers to capture
+the full data provenance for their simulations by only switching on an AiiDA
+conda environment, along with modifying your command lines very slightly.
 
-* [`.github/`](.github/): [Github Actions](https://github.com/features/actions) configuration
-  * [`ci.yml`](.github/workflows/ci.yml): runs tests, checks test coverage and builds documentation at every new commit
-  * [`publish-on-pypi.yml`](.github/workflows/publish-on-pypi.yml): automatically deploy git tags to PyPI - just generate a [PyPI API token](https://pypi.org/help/#apitoken) for your PyPI account and add it to the `pypi_token` secret of your github repository
-* [`aiida_gromacs/`](aiida_gromacs/): The main source code of the plugin package
-  * [`data/`](aiida_gromacs/data/): A new `DiffParameters` data class, used as input to the `DiffCalculation` `CalcJob` class
-  * [`calculations.py`](aiida_gromacs/calculations.py): A new `DiffCalculation` `CalcJob` class
-  * [`cli.py`](aiida_gromacs/cli.py): Extensions of the `verdi data` command line interface for the `DiffParameters` class
-  * [`helpers.py`](aiida_gromacs/helpers.py): Helpers for setting up an AiiDA code for `diff` automatically
-  * [`parsers.py`](aiida_gromacs/parsers.py): A new `Parser` for the `DiffCalculation`
-* [`docs/`](docs/): A documentation template ready for publication on [Read the Docs](http://aiida-diff.readthedocs.io/en/latest/)
-* [`examples/`](examples/): An example of how to submit a calculation using this plugin
-* [`tests/`](tests/): Basic regression tests using the [pytest](https://docs.pytest.org/en/latest/) framework (submitting a calculation, ...). Install `pip install -e .[testing]` and run `pytest`.
-* [`.coveragerc`](.coveragerc): Configuration of [coverage.py](https://coverage.readthedocs.io/en/latest) tool reporting which lines of your plugin are covered by tests
-* [`.gitignore`](.gitignore): Telling git which files to ignore
-* [`.pre-commit-config.yaml`](.pre-commit-config.yaml): Configuration of [pre-commit hooks](https://pre-commit.com/) that sanitize coding style and check for syntax errors. Enable via `pip install -e .[pre-commit] && pre-commit install`
-* [`.readthedocs.yml`](.readthedocs.yml): Configuration of documentation build for [Read the Docs](https://readthedocs.org/)
-* [`LICENSE`](LICENSE): License for your plugin
-* [`MANIFEST.in`](MANIFEST.in): Configure non-Python files to be included for publication on [PyPI](https://pypi.org/)
-* [`README.md`](README.md): This file
-* [`conftest.py`](conftest.py): Configuration of fixtures for [pytest](https://docs.pytest.org/en/latest/)
-* [`pytest.ini`](pytest.ini): Configuration of [pytest](https://docs.pytest.org/en/latest/) test discovery
-* [`setup.json`](setup.json): Plugin metadata for registration on [PyPI](https://pypi.org/) and the [AiiDA plugin registry](https://aiidateam.github.io/aiida-registry/) (including entry points)
-* [`setup.py`](setup.py): Installation script for pip / [PyPI](https://pypi.org/)
-
-
-See also the following video sequences from the 2019-05 AiiDA tutorial:
-
- * [aiida-diff setup.json](https://www.youtube.com/watch?v=2CxiuiA1uVs&t=240s)
- * [run aiida-diff example calculation](https://www.youtube.com/watch?v=2CxiuiA1uVs&t=403s)
- * [aiida-diff CalcJob plugin](https://www.youtube.com/watch?v=2CxiuiA1uVs&t=685s)
- * [aiida-diff Parser plugin](https://www.youtube.com/watch?v=2CxiuiA1uVs&t=936s)
- * [aiida-diff computer/code helpers](https://www.youtube.com/watch?v=2CxiuiA1uVs&t=1238s)
- * [aiida-diff input data (with validation)](https://www.youtube.com/watch?v=2CxiuiA1uVs&t=1353s)
- * [aiida-diff cli](https://www.youtube.com/watch?v=2CxiuiA1uVs&t=1621s)
- * [aiida-diff tests](https://www.youtube.com/watch?v=2CxiuiA1uVs&t=1931s)
- * [Adding your plugin to the registry](https://www.youtube.com/watch?v=760O2lDB-TM&t=112s)
- * [pre-commit hooks](https://www.youtube.com/watch?v=760O2lDB-TM&t=333s)
-
-For more information, see the [developer guide](https://aiida-diff.readthedocs.io/en/latest/developer_guide) of your plugin.
-
+This means that you should gain access to powerful FAIR data practices without
+wholesale cultural or usage pattern shifts in your daily work.
 
 ## Features
 
- * Add input files using `SinglefileData`:
-   ```python
-   SinglefileData = DataFactory('singlefile')
-   inputs['file1'] = SinglefileData(file='/path/to/file1')
-   inputs['file2'] = SinglefileData(file='/path/to/file2')
-   ```
-
- * Specify command line options via a python dictionary and `DiffParameters`:
-   ```python
-   d = { 'ignore-case': True }
-   DiffParameters = DataFactory('gromacs')
-   inputs['parameters'] = DiffParameters(dict=d)
-   ```
-
- * `DiffParameters` dictionaries are validated using [voluptuous](https://github.com/alecthomas/voluptuous).
-   Find out about supported options:
-   ```python
-   DiffParameters = DataFactory('gromacs')
-   print(DiffParameters.schema.schema)
-   ```
+TODO: include some features.
 
 ## Installation
+
+You will need a fully functional working copy of AiiDA installed and if using
+conda, you will need to have the AiiDA environment active, before running:
 
 ```shell
 pip install aiida-gromacs
 verdi quicksetup  # better to set up a new profile
-verdi plugin list aiida.calculations  # should now show your calclulation plugins
 ```
 
 
@@ -106,10 +56,14 @@ verdi data gromacs export <PK>
 
 ## Development
 
+To set up a full development environment, you will require a fully functional
+AiiDA installation, and if using using conda, have the AiiDA environment active
+before running:
+
 ```shell
 git clone https://github.com/jimboid/aiida-gromacs .
 cd aiida-gromacs
-pip install -e .[pre-commit,testing]  # install extra dependencies
+pip install -e .[pre-commit,testing,docs]  # install extra dependencies
 pre-commit install  # install pre-commit hooks
 pytest -v  # discover and run all tests
 ```
@@ -119,6 +73,8 @@ See the [developer guide](http://aiida-gromacs.readthedocs.io/en/latest/develope
 ## License
 
 MIT
+
 ## Contact
 
-james.gebbie@stfc.ac.uk
+- james.gebbie@stfc.ac.uk
+- jas.kalayan@stfc.ac.uk
