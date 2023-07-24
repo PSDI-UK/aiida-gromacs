@@ -38,21 +38,7 @@ verdi quicksetup  # better to set up a new profile
 
 ## Usage
 
-Here goes a complete example of how to submit a test calculation using this plugin.
-
-A quick demo of how to submit a calculation:
-```shell
-verdi daemon start     # make sure the daemon is running
-cd examples
-./example_01.py        # run test calculation
-verdi process list -a  # check record of calculation
-```
-
-The plugin also includes verdi commands to inspect its data types:
-```shell
-verdi data gromacs list
-verdi data gromacs export <PK>
-```
+TODO: quick example.
 
 ## Development
 
