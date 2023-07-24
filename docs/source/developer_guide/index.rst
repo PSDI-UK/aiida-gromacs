@@ -2,8 +2,12 @@
 Developer guide
 ===============
 
+To get up and running as a developer contributing to this plugin, you will need to have a working installation of AiiDA installed on your computer. If you are using conda, you will need this activated when running the below commands.
+
 Running the tests
 +++++++++++++++++
+
+To run our test suite, in addition to having AiiDA installed, you should also have the daemon running, which will include the full AiiDA startup steps for the database and an initial user profile to be setup.
 
 The following will discover and run all unit test::
 
@@ -12,6 +16,8 @@ The following will discover and run all unit test::
 
 Automatic coding style checks
 +++++++++++++++++++++++++++++
+
+We are implemting automated coding style checks, so that we are all commiting code to similar code quality standards.
 
 Enable enable automatic checks of code sanity and coding style::
 
@@ -27,6 +33,8 @@ If you ever need to skip these pre-commit hooks, just use::
 
     git commit -n
 
+Though, for pull requests to be accepted, we will expect these to have been resolved before pulling.
+
 
 Continuous integration
 ++++++++++++++++++++++
@@ -36,6 +44,8 @@ Continuous integration
 #. run all tests
 #. build the documentation
 #. check coding style and version number (not required to pass by default)
+
+We have these activated on github via the github actions platform. When version numbers are tagged, we will also automatically push a version to pypi.
 
 Building the documentation
 ++++++++++++++++++++++++++
@@ -59,38 +69,4 @@ Building the documentation
 
 Check the result by opening ``build/html/index.html`` in your browser.
 
-Publishing the documentation
-++++++++++++++++++++++++++++
-
-Once you're happy with your documentation, it's easy to host it online on ReadTheDocs_:
-
- #. Create an account on ReadTheDocs_
-
- #. Import your ``aiida-gromacs`` repository (preferably using ``aiida-gromacs`` as the project name)
-
-The documentation is now available at `aiida-gromacs.readthedocs.io <http://aiida-gromacs.readthedocs.io/>`_.
-
-PyPI release
-++++++++++++
-
-Your plugin is ready to be uploaded to the `Python Package Index <https://pypi.org/>`_.
-Just register for an account and::
-
-    pip install twine
-    python setup.py sdist bdist_wheel
-    twine upload dist/*
-
-After this, you (and everyone else) should be able to::
-
-    pip install aiida-gromacs
-
-You can also enable *automatic* deployment of git tags to the python package index:
-simply generate a `PyPI API token <https://pypi.org/help/#apitoken>`_ for your PyPI account and add it as a secret to your GitHub repository under the name ``pypi_token`` (Go to Settings -> Secrets).
-
-.. note::
-
-   When updating the plugin package to a new version, remember to update the version number both in ``setup.json`` and ``aiida_gromacs/__init__.py``.
-
-
-.. _ReadTheDocs: https://readthedocs.org/
 .. _Sphinx: https://www.sphinx-doc.org/en/master/

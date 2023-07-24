@@ -76,5 +76,5 @@ MIT
 
 ## Contact
 
-james.gebbie@stfc.ac.uk
-jas.kalayan@stfc.ac.uk
+- james.gebbie@stfc.ac.uk
+- jas.kalayan@stfc.ac.uk
