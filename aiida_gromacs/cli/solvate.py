@@ -21,6 +21,9 @@ def launch(params):
     Uses helpers to add gromacs on localhost to AiiDA on the fly.
     """
 
+    # Prune unused CLI parameters from dict.
+    params = {k:v for k,v in params.items() if v != None}
+
     # dict to hold our calculation data.
     inputs = {
         "metadata": {
@@ -29,8 +32,9 @@ def launch(params):
     }
 
     # If code is not initialised, then setup.
-    inputs["code"] = params.pop("code")
-    if not inputs["code"]:
+    if "code" in inputs:
+        inputs["code"] = params.pop("code")
+    else:
         computer = helpers.get_computer()
         inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
 
