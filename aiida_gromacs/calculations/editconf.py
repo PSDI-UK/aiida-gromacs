@@ -25,15 +25,24 @@ class EditconfCalculation(CalcJob):
         super().define(spec)
 
         # set default values for AiiDA options
+        # TODO: something changed about withmpi in aiida-2.4.0, needs investigation.
+        spec.inputs['metadata']['options']['withmpi'].default = False
         spec.inputs['metadata']['options']['resources'].default = {
             'num_machines': 1,
             'num_mpiprocs_per_machine': 1,
         }
+
+        # Requied inputs.
         spec.inputs['metadata']['options']['parser_name'].default = 'gromacs.editconf'
         spec.input('metadata.options.output_filename', valid_type=str, default='editconf.out')
         spec.input('grofile', valid_type=SinglefileData, help='Input structure file.')
         spec.input('parameters', valid_type=EditconfParameters, help='Command line parameters for gmx editconf.')
 
+        # Optional inputs.
+        spec.input('n_file', required=False, valid_type=SinglefileData, help='Index file.')
+        spec.input('bf_file', required=False, valid_type=SinglefileData, help='Generic data file.')
+
+        # Default outputs.
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
         spec.output('grofile', valid_type=SinglefileData, help='Output file containing simulation box.')
 
@@ -47,10 +56,27 @@ class EditconfCalculation(CalcJob):
             needed by the calculation.
         :return: `aiida.common.datastructures.CalcInfo` instance
         """
+
         codeinfo = CodeInfo()
-        codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(
-            grofile=self.inputs.grofile.filename
-        )
+
+        # Setup data structures for files.
+        input_options = ["grofile", "n_file", "bf_file"]
+        cmdline_input_files = {}
+        input_files = []
+
+        # Map input files to AiiDA plugin data types.
+        for item in input_options:
+            if item in self.inputs:
+                cmdline_input_files[item] = self.inputs[item].filename
+                input_files.append((
+                        self.inputs[item].uuid,
+                        self.inputs[item].filename,
+                        self.inputs[item].filename,
+                    ))
+
+        # Form the commandline.
+        codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(cmdline_input_files)
+
         codeinfo.code_uuid = self.inputs.code.uuid
         codeinfo.stdout_name = self.metadata.options.output_filename
         codeinfo.withmpi = self.inputs.metadata.options.withmpi
@@ -58,13 +84,7 @@ class EditconfCalculation(CalcJob):
         # Prepare a `CalcInfo` to be returned to the engine
         calcinfo = CalcInfo()
         calcinfo.codes_info = [codeinfo]
-        calcinfo.local_copy_list = [
-            (
-                self.inputs.grofile.uuid,
-                self.inputs.grofile.filename,
-                self.inputs.grofile.filename,
-            ),
-        ]
+        calcinfo.local_copy_list = input_files
         calcinfo.retrieve_list = [
             self.metadata.options.output_filename,
             self.inputs.parameters["o"],

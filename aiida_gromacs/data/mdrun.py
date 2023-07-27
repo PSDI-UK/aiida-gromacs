@@ -10,21 +10,48 @@ from voluptuous import Optional, Required, Schema
 
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of mdrun command line options
 cmdline_options = {
     Required("c", default="confout.gro"): str,
     Required("e", default="energy.edr"): str,
     Required("g", default="md.log"): str,
     Required("o", default="trajectory.trr"): str,
-    Optional("bonded"): str,
-    Optional("cpo"): str,
-    Optional("nb"): str,
-    Optional("nstlist"): str,
+    Optional("xvg"): str,
+    Optional("dd"): str,
+    Optional("ddorder"): str,
+    Optional("npme"): str,
+    Optional("nt"): str,
     Optional("ntmpi"): str,
     Optional("ntomp"): str,
+    Optional("ntomp_pme"): str,
     Optional("pin"): str,
+    Optional("pinoffset"): str,
+    Optional("pinstride"): str,
+    Optional("gpu_id"): str,
+    Optional("gputasks"): str,
+    Optional("ddcheck"): str,
+    Optional("rdd"): str,
+    Optional("rcon"): str,
+    Optional("dlb"): str,
+    Optional("dds"): str,
+    Optional("nb"): str,
+    Optional("nstlist"): str,
+    Optional("tunepme"): str,
     Optional("pme"): str,
+    Optional("pmefft"): str,
+    Optional("bonded"): str,
+    Optional("update"): str,
     Optional("v"): str,
+    Optional("pforce"): str,
+    Optional("reprod"): str,
+    Optional("cpt"): str,
+    Optional("cpnum"): str,
+    Optional("append"): str,
+    Optional("nsteps"): str,
+    Optional("maxh"): str,
+    Optional("replex"): str,
+    Optional("nex"): str,
+    Optional("reseed"): str,
 }
 
 
@@ -66,7 +93,7 @@ class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         return MdrunParameters.schema(parameters_dict)
 
-    def cmdline_params(self, tprfile):
+    def cmdline_params(self, input_files):
         """Synthesize command line parameters.
 
         e.g. [ '--ignore-case', 'filename1', 'filename2']
@@ -78,7 +105,18 @@ class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
         parameters = []
 
         parameters.append("mdrun")
-        parameters.extend(["-s", tprfile])
+        parameters.extend(["-s", input_files["tprfile"]])
+        if "cpi_file" in input_files: parameters.extend(["-cpi", input_files["cpi_file"]])
+        if "table_file" in input_files: parameters.extend(["-table", input_files["cpi_file"]])
+        if "tableb_file" in input_files: parameters.extend(["-tableb", input_files["tableb_file"]])
+        if "tablep_file" in input_files: parameters.extend(["-tablep", input_files["tablep_file"]])
+        if "rerun_file" in input_files: parameters.extend(["-rerun", input_files["rerun_file"]])
+        if "ei_file" in input_files: parameters.extend(["-ei", input_files["ei_file"]])
+        if "multidir_file" in input_files: parameters.extend(["-multidir", input_files["multidir_file"]])
+        if "awh_file" in input_files: parameters.extend(["-awh", input_files["awh_file"]])
+        if "membed_file" in input_files: parameters.extend(["-membed", input_files["membed_file"]])
+        if "mp_file" in input_files: parameters.extend(["-mp", input_files["mp_file"]])
+        if "mp_file" in input_files: parameters.extend(["-mn", input_files["mp_file"]])
 
         parm_dict = self.get_dict()
 

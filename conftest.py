@@ -13,3 +13,9 @@ def clear_database_auto(clear_database):  # pylint: disable=unused-argument
 def gromacs_code(aiida_local_code_factory):
     """Get a gromacs code."""
     return aiida_local_code_factory(executable="gmx", entry_point="gromacs")
+
+
+@pytest.fixture(scope="function")
+def bash_code(aiida_local_code_factory):
+    """Get a bash code."""
+    return aiida_local_code_factory(executable="bash", entry_point="gromacs")

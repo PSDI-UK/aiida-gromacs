@@ -6,14 +6,20 @@ Register data types via the "aiida.data" entry point in setup.json.
 
 # You can directly use or subclass aiida.orm.data.Data
 # or any other data type listed under 'verdi data'
-from voluptuous import Required, Schema
+from voluptuous import Optional, Required, Schema
 
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of solvate command line options
 cmdline_options = {
     Required("cs", default="spc216.gro"): str,
     Required("o", default="solvated.gro"): str,
+    Optional("box"): str,
+    Optional("radius"): str,
+    Optional("scale"): str,
+    Optional("shell"): str,
+    Optional("maxsol"): str,
+    Optional("vel"): str,
 }
 
 

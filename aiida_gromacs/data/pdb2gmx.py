@@ -6,17 +6,42 @@ Register data types via the "aiida.data" entry point in setup.json.
 
 # You can directly use or subclass aiida.orm.data.Data
 # or any other data type listed under 'verdi data'
-from voluptuous import Required, Schema
+from voluptuous import Optional, Required, Schema
 
 from aiida.orm import Dict
 
-# A subset of diff's command line options
+# A subset of pdb2gmx command line options
 cmdline_options = {
-    Required("water", default="spce"): str,
-    Required("ff", default="oplsaa"): str,
     Required("o", default="conf.gro"): str,
     Required("p", default="topol.top"): str,
     Required("i", default="posre.itp"): str,
+    Optional("chainsep"): str,
+    Optional("merge"): str,
+    Required("ff", default="oplsaa"): str,
+    Required("water", default="spce"): str,
+    Optional("inter"): str,
+    Optional("ss"): str,
+    Optional("ter"): str,
+    Optional("lys"): str,
+    Optional("arg"): str, 
+    Optional("asp"): str,
+    Optional("glu"): str,
+    Optional("gln"): str,
+    Optional("his"): str,
+    Optional("angle"): str,
+    Optional("dist"): str, 
+    Optional("una"): str, 
+    Optional("ignh"): str,
+    Optional("missing"): str,
+    #Optional("v"): str,
+    Optional("posrefc"): str,
+    Optional("vsite"): str,
+    Optional("heavyh"): str,
+    Optional("deuterate"): str,
+    Optional("chargegrp"): str,
+    Optional("cmap"): str,
+    Optional("renum"): str,
+    Optional("rtpres"): str,
 }
 
 
