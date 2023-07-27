@@ -54,6 +54,11 @@ class GromppCalculation(CalcJob):
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
         spec.output('tprfile', valid_type=SinglefileData, help='Output gro file ready for adding ions.')
 
+        # Optional outputs.
+        spec.output('po_file', required=False, valid_type=SinglefileData, help='grompp input file with MD parameters')
+        spec.output('pp_file', required=False, valid_type=SinglefileData, help='Topology file')
+        spec.output('imd_file', required=False, valid_type=SinglefileData, help='Coordinate file in Gromos-87 format')
+
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 
     def prepare_for_submission(self, folder):
@@ -68,8 +73,10 @@ class GromppCalculation(CalcJob):
 
         # Setup data structures for files.
         input_options = ["mdpfile", "grofile", "topfile", "r_file", "rb_file", "n_file", "t_file", "e_file", "qmi_file", "ref_file"]
+        output_options = ["o", "po", "pp", "imd"] 
         cmdline_input_files = {}
         input_files = []
+        output_files = []
 
         # Map input files to AiiDA plugin data types.
         for item in input_options:
@@ -80,6 +87,12 @@ class GromppCalculation(CalcJob):
                         self.inputs[item].filename,
                         self.inputs[item].filename,
                     ))
+
+        # Add output files to retrieve list.
+        output_files.append(self.metadata.options.output_filename)
+        for item in output_options:
+            if item in self.inputs.parameters:
+                output_files.append(self.inputs.parameters[item])
 
         # Form the commandline.
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(cmdline_input_files)
@@ -92,10 +105,6 @@ class GromppCalculation(CalcJob):
         calcinfo = CalcInfo()
         calcinfo.codes_info = [codeinfo]
         calcinfo.local_copy_list = input_files
-
-        calcinfo.retrieve_list = [
-            self.metadata.options.output_filename,
-            self.inputs.parameters["o"],
-        ]
+        calcinfo.retrieve_list = output_files
 
         return calcinfo

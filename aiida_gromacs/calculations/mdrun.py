@@ -61,7 +61,23 @@ class MdrunCalculation(CalcJob):
         spec.output('logfile', valid_type=SinglefileData, help='Output log file.')
         spec.output('enfile', valid_type=SinglefileData, help='Output energy file.')
 
+        # Optional outputs.
+        spec.output('x_file', required=False, valid_type=SinglefileData, help='Compressed trajectory (tng format or portable xdr format)')
         spec.output('cptfile', valid_type=SinglefileData, required=False, help='Checkpoint file.')
+        spec.output('dhdl_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
+        spec.output('field_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
+        spec.output('tpi_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
+        spec.output('tpid_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
+        spec.output('eo_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
+        spec.output('px_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
+        spec.output('pf_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
+        spec.output('ro_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
+        spec.output('ra_file', required=False, valid_type=SinglefileData, help='Log file')
+        spec.output('rs_file', required=False, valid_type=SinglefileData, help='Log file')
+        spec.output('rt_file', required=False, valid_type=SinglefileData, help='Log file')
+        spec.output('mtx_file', required=False, valid_type=SinglefileData, help='Hessian Matrix')
+        spec.output('if_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
+        spec.output('swap_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
 
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 
@@ -77,8 +93,10 @@ class MdrunCalculation(CalcJob):
 
         # Setup data structures for files.
         input_options = ["tprfile", "cpi_file", "table_file", "tableb_file", "tablep_file", "rerun_file", "ei_file", "multidir_file", "awh_file", "membed_file", "mp_file", "mn_file"]
+        output_options = ["c", "e", "g", "o", "x", "cpo", "dhdl", "field", "tpi", "tpid", "eo", "px", "pf", "ro", "ra", "rs", "rt", "mtx", "if", "swap"]
         cmdline_input_files = {}
         input_files = []
+        output_files = []
 
         # Map input files to AiiDA plugin data types.
         for item in input_options:
@@ -89,6 +107,12 @@ class MdrunCalculation(CalcJob):
                         self.inputs[item].filename,
                         self.inputs[item].filename,
                     ))
+
+        # Add output files to retrieve list.
+        output_files.append(self.metadata.options.output_filename)
+        for item in output_options:
+            if item in self.inputs.parameters:
+                output_files.append(self.inputs.parameters[item])
 
         # Form the commandline.
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(cmdline_input_files)
@@ -101,16 +125,6 @@ class MdrunCalculation(CalcJob):
         calcinfo = CalcInfo()
         calcinfo.codes_info = [codeinfo]
         calcinfo.local_copy_list = input_files
-
-        calcinfo.retrieve_list = [
-            self.metadata.options.output_filename,
-            self.inputs.parameters["c"],
-            self.inputs.parameters["e"],
-            self.inputs.parameters["g"],
-            self.inputs.parameters["o"],
-        ]
-
-        if "cpo" in self.inputs.parameters.keys():
-            calcinfo.retrieve_list.append(self.inputs.parameters["cpo"])
+        calcinfo.retrieve_list = output_files
 
         return calcinfo

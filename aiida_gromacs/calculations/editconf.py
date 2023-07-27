@@ -46,6 +46,9 @@ class EditconfCalculation(CalcJob):
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
         spec.output('grofile', valid_type=SinglefileData, help='Output file containing simulation box.')
 
+        # Optional outputs.
+        spec.output('mead_file', required=False, valid_type=SinglefileData, help='Coordination file for MEAD')
+
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 
     def prepare_for_submission(self, folder):
@@ -61,8 +64,10 @@ class EditconfCalculation(CalcJob):
 
         # Setup data structures for files.
         input_options = ["grofile", "n_file", "bf_file"]
+        output_options = ["o", "mead"] 
         cmdline_input_files = {}
         input_files = []
+        output_files = []
 
         # Map input files to AiiDA plugin data types.
         for item in input_options:
@@ -73,6 +78,12 @@ class EditconfCalculation(CalcJob):
                         self.inputs[item].filename,
                         self.inputs[item].filename,
                     ))
+                    
+        # Add output files to retrieve list.
+        output_files.append(self.metadata.options.output_filename)
+        for item in output_options:
+            if item in self.inputs.parameters:
+                output_files.append(self.inputs.parameters[item])
 
         # Form the commandline.
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(cmdline_input_files)
@@ -85,9 +96,6 @@ class EditconfCalculation(CalcJob):
         calcinfo = CalcInfo()
         calcinfo.codes_info = [codeinfo]
         calcinfo.local_copy_list = input_files
-        calcinfo.retrieve_list = [
-            self.metadata.options.output_filename,
-            self.inputs.parameters["o"],
-        ]
+        calcinfo.retrieve_list = output_files
 
         return calcinfo
