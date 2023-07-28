@@ -3,20 +3,14 @@
 """
 import os
 
-import pytest
-
 from aiida.engine import run
 from aiida.plugins import CalculationFactory, DataFactory
 
 from . import TEST_DIR
 
 
-@pytest.mark.xfail(
-    reason="Strange issue with gromacs not writing the .gro, needs further investigation."
-)
-def test_process(gromacs_code):
-    """Test running a mdrun calculation.
-    Note: this does not test that the expected outputs are created of output parsing"""
+def run_mdrun(gromacs_code):
+    """Run an instance of mdrun and return the results."""
 
     # Prepare input parameters
     MdrunParameters = DataFactory("gromacs.mdrun")
@@ -49,8 +43,29 @@ def test_process(gromacs_code):
 
     result = run(CalculationFactory("gromacs.mdrun"), **inputs)
 
+    return result
+
+
+def test_process(gromacs_code):
+    """Test running a mdrun calculation.
+    Note: this does not test that the expected outputs are created of output parsing"""
+
+    result = run_mdrun(gromacs_code)
+
     assert "stdout" in result
     assert "trrfile" in result
     assert "grofile" in result
     assert "logfile" in result
     assert "enfile" in result
+
+
+def test_file_name_match(gromacs_code):
+    """Test that the file names returned match what was specified on inputs."""
+
+    result = run_mdrun(gromacs_code)
+
+    assert result["stdout"].list_object_names()[0] == "mdrun.out"
+    assert result["trrfile"].list_object_names()[0] == "mdrun_1AKI_minimised.trr"
+    assert result["grofile"].list_object_names()[0] == "mdrun_1AKI_minimised.gro"
+    assert result["logfile"].list_object_names()[0] == "mdrun_1AKI_minimised.log"
+    assert result["enfile"].list_object_names()[0] == "mdrun_1AKI_minimised.edr"

@@ -9,9 +9,8 @@ from aiida.plugins import CalculationFactory, DataFactory
 from . import TEST_DIR
 
 
-def test_process(gromacs_code):
-    """Test running a grompp calculation.
-    Note: this does not test that the expected outputs are created of output parsing"""
+def run_grompp(gromacs_code):
+    """ Run an instance of grompp and return the results."""
 
     # Prepare input parameters
     GromppParameters = DataFactory("gromacs.grompp")
@@ -42,5 +41,23 @@ def test_process(gromacs_code):
 
     result = run(CalculationFactory("gromacs.grompp"), **inputs)
 
+    return result
+
+
+def test_process(gromacs_code):
+    """Test running a grompp calculation.
+    Note: this does not test that the expected outputs are created of output parsing"""
+
+    result = run_grompp(gromacs_code)
+
     assert "stdout" in result
     assert "tprfile" in result
+    
+def test_file_name_match(gromacs_code):
+    """Test that the file names returned match what was specified on inputs."""
+    
+    result = run_grompp(gromacs_code)
+
+    assert result["stdout"].list_object_names()[0] == "grompp.out"
+    assert result["tprfile"].list_object_names()[0] == "grompp_1AKI_ions.tpr"
+
