@@ -51,7 +51,7 @@ class EditconfParser(Parser):
         files_retrieved = self.retrieved.base.repository.list_object_names()
 
         # Grab list of files expected and remove the scheduler stdout and stderr files.
-        files_expected = self.node.get_option("retrieve_list")[2::]
+        files_expected = [files for files in self.node.get_option("retrieve_list") if files not in ["_scheduler-stdout.txt", "_scheduler-stderr.txt"]]
 
         # Check if the expected files are a subset of retrieved.
         if not set(files_expected) <= set(files_retrieved):
