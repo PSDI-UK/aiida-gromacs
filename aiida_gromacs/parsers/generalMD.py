@@ -160,8 +160,7 @@ class GeneralParser(Parser):
     def format_link_label(filename: str) -> str:
         """
         Modified from: https://github.com/sphuber/aiida-shell/blob/master/src/aiida_shell/parsers/shell.py
-        Format the link label from a given filename and append
-        output_files_ to filename.
+        Format the link label from a given filename with prefix.
         Valid link labels can only contain alphanumeric characters and
         underscores, without consecutive underscores. So all characters
         that are not alphanumeric or an underscore are converted to
