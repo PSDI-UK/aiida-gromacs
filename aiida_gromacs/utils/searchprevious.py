@@ -2,6 +2,7 @@
 and appending nodes from previous processes to current process nodes.
 """
 
+import os
 import re
 import time
 import sys
@@ -88,7 +89,7 @@ def check_prev_process(qb):
                 sys.exit("Wait time exceeded for previous process to complete")
 
 
-def append_prev_nodes(qb, inputs, process_inputs):
+def append_prev_nodes(qb, inputs, process_inputs, INPUT_DIR):
     """Checks if previous processes exist and links the most recent 
     SinglefileData type output nodes from previous processs as inputs to the 
     new process if the file names match.
@@ -99,6 +100,7 @@ def append_prev_nodes(qb, inputs, process_inputs):
     :type inputs: list
     :param process_inputs: All inputs for the current process to be submitted
     :type process_inputs: dict
+    :param INPUT_DIR: base directory where outputted files are stored.
     :returns: Updated inputs for the current process
     :rtype: dict
     """

@@ -45,7 +45,7 @@ def launch_generalMD(options):
     # Check if a previous calculation with the same input parameter
     # value has been stored by loading the QueryBuilder and append
     # all previous jobs ordered by newest first.
-    qb = searchprevious.build_query
+    qb = searchprevious.build_query()
     # qb.append(MyAppCalculation, tag="calcjob")
     # qb.order_by({MyAppCalculation: {"ctime": "desc"}})
 
@@ -83,7 +83,7 @@ def launch_generalMD(options):
 
     if qb.count() > 0:
         process_inputs = searchprevious.append_prev_nodes(qb, inputs, 
-                        process_inputs)
+                        process_inputs, INPUT_DIR)
 
     # Submit your calculation to the aiida daemon
     # pylint: disable=unused-variable
