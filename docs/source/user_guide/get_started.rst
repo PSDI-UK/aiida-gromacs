@@ -36,8 +36,8 @@ following commands to install the plugin::
 Then use ``verdi code setup`` with the ``gromacs`` input plugin
 to set up an AiiDA code for aiida-gromacs.
 
-Any installed code run via AiiDA on a local or remote compute resource is first 
-required to be set up, for example set up from the command line via 
+Any installed code run via AiiDA on a local or remote compute resource is first
+required to be set up, for example set up from the command line via
 ``verdi computer setup`` and ``verdi code setup``
 https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/run_codes.html.
 
