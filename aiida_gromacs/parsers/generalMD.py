@@ -1,5 +1,7 @@
 """
-Parser for saving outputted files from command.
+Parsers provided by aiida_gromacs.
+
+This parser saves outputted files from a generic command.
 """
 
 import os
@@ -7,7 +9,7 @@ import re
 
 from aiida.common import exceptions
 from aiida.engine import ExitCode
-from aiida.orm import SinglefileData
+from aiida.orm import SinglefileData, Dict
 from aiida.parsers.parser import Parser
 from aiida.plugins import CalculationFactory
 
@@ -17,24 +19,17 @@ GeneralCalculation = CalculationFactory("general-MD")
 
 class GeneralParser(Parser):
     """
-    Parsing the output files produced by a code into AiiDA nodes
-    is optional, but it can make your data queryable and therefore easier
-    to access and analyze.
-    Before the parse() method is called, two important attributes are set on
-    the Parser instance:
-    1. self.retrieved: An instance of FolderData, which points to the
-    folder containing all output files that the CalcJob instructed
-    to retrieve, and provides the means to open() any file it contains.
-    2. self.node: The node representing the finished calculation,
-    which, among other things, provides access to all of its inputs
-    (self.node.inputs).
+    Parser class for parsing output of general-MD calculation from which
+    the retrieved outputs files from the calcjob and the nodes of finished
+    calculation can be accessed.
     """
 
     def __init__(self, node):
         """
         Initialize Parser instance
 
-        Checks that the ProcessNode being passed was produced by a GeneralCalculation.
+        Checks that the ProcessNode being passed was produced by a 
+        GeneralCalculation.
 
         :param node: ProcessNode of calculation
         :param type node: :class:`aiida.orm.nodes.process.process.ProcessNode`
@@ -45,24 +40,27 @@ class GeneralParser(Parser):
 
     def parse(self, **kwargs):
         """
-        Parse outputs, store results in database.
+        Parse outputs, store results in the AiiDA database.
+
+        :returns: an exit code, if parsing fails or the user defined 
+            output files
         """
 
         # get_option() convenience method is used to get the filename of
-        # the output file.
+        # the output file
         output_filename = self.node.get_option("output_filename")
+        # the directory for storing parsed output files
         output_dir = self.node.get_option("output_dir")
 
         # Check that folder content is as expected
-        # This simple check makes sure that the expected output file
-        # file.log is among the files retrieved from the computer where
-        # the calculation was run.
         files_retrieved = self.retrieved.list_object_names()
         files_expected = []  # [output_filename]
         if "output_files" in self.node.inputs:
             for name in self.node.inputs.output_files:
                 files_expected.extend([str(name)])
 
+        # Check all outputted files produced have been previously 
+        # defined by the user
         for file in files_expected:
             if file not in files_retrieved:
                 self.logger.error(
@@ -71,32 +69,26 @@ class GeneralParser(Parser):
                 )
                 return self.exit_codes.ERROR_UNTRACKED_OUTPUT_FILES
 
-        # add output file
-        # simply passing along the output file as a SinglefileData node.
-        # instead of just returning the file you may want to parse it
-        # e.g. to a python dictionary (Dict node) to make the results easily
-        # searchable.
-
+        # passing along the std output file as a SinglefileData node.
         self.logger.info(f"Parsing '{output_filename}'")
         with self.retrieved.open(output_filename, "rb") as handle:
             output_node = SinglefileData(file=handle)
 
-        # the out() method is used return the output file as the exec output
-        # of the calculation: The first argument is the name to be used as
-        # the label for the link that connects the calculation and data node.
-        # The second argument is the node that should be recorded as an output.
-
+        # return stdout file 
         self.out("log", output_node)
 
+        # passing along all expected output file as SinglefileData nodes.
         for thing in files_expected:
             self.logger.info(f"Parsing '{thing}'")
             with self.retrieved.open(thing, "rb") as handle:
                 output_node = SinglefileData(file=handle, filename=thing)
             self.out(self.format_link_label(thing), output_node)
 
+        # parse retrieved files and write them to where command was run
         for thing in files_retrieved:
             self.logger.info(f"Parsing '{thing}'")
             file_path = os.path.join(output_dir, thing)
+            # file_path3 = os.path.join(output_dir, f'{thing}-test2.txt')
             try:
                 with self.retrieved.open(thing, "rb") as handle:
                     with open(file_path, "wb") as f_out:
@@ -105,43 +97,76 @@ class GeneralParser(Parser):
                             if not chunk:
                                 break
                             f_out.write(chunk)
+
+                # not used yet.
+                # test below for parsing log file and saving output as dict
+                '''if re.search('.log$', thing):
+                    start_string = 'Input Parameters:' #'A ?V ?E ?R ?A ?G ?E ?S'
+                    end_string = 'compressibility' #'M ?E ?G ?A ?- ?F ?L ?O ?P ?S'
+                    with self.retrieved.open(thing, "r") as file:
+                        file_content = file.read()
+                        pattern = rf"{start_string}(.*?){end_string}"
+                        matches = re.findall(pattern, file_content, re.DOTALL)
+                    file_path3 = os.path.join(output_dir, f'{thing}-matched.txt')
+                    # matched_text = self._parse_gromacs_top(thing)
+                    with open(file_path3, "w") as f_out:
+                        f_out.write('matched text:')
+                        for match in matches:
+                            lines = match.splitlines()
+                            for line in lines:
+                                f_out.write(f'{line}\n')
+                    with open(file_path3, "rb") as f_out:
+                        # output_node = SinglefileData(file=f_out, filename=f'{thing}-matched.txt')
+                        # output_node = Dict(file={"test": "test"}, filename='dict.txt')
+                        output_node = Dict({"test": "test"})
+                        output_node.label = 'test-dict'
+                    self.out(self.format_link_label('test-dict'), output_node)'''
+
             except UnicodeDecodeError:
                 with self.retrieved.open(thing, "r") as handle:
                     with open(file_path, "w", encoding="utf-8") as f_out:
                         for line in handle.read():
                             f_out.write(line)
 
-        # Note: The outputs and their types need to match those from the
-        # process specification of the corresponding CalcJob
-        # (or an exception will be raised).
-
-        # In order to request automatic parsing of a CalcJob
-        # (once it has finished), users can set the
-        # metadata.options.parser_name input when launching the job.
-        # If a particular parser should be used by default, the CalcJob define
-        # method can set a default value for the parser name.
-        # `@classmethod
-        #   def define(cls, spec):
-        #       ...
-        #       spec.inputs['metadata']['options']['parser_name'].default = \
-        #           'general-MD'`
-        #
-        # Note that the default is not set to the Parser class itself,
-        # but to the entry point string under which the parser class is
-        # registered.
-
         return ExitCode(0)
+    
+    def _parse_gromacs_top(self, file_path):
+        """Not used yet, test for parsing the gromacs tpr file.
+        :param file_path: The path and name of gtomacs .log file
+        :returns: The required text from the parsed file
+        """
+
+        def _find_text_between_strings(file_path, start_string, end_string):
+            with self.retrieved.open(file_path, "r") as file:
+                file_content = file.read()
+            # use re.escape to escape special characters in the strings
+            # pattern = rf"{re.escape(start_string)}(.*?){re.escape(end_string)}"
+            pattern = rf"{start_string}(.*?){end_string}"
+            # use re.DOTALL to make the dot character match newline characters as well
+            matches = re.findall(pattern, file_content, re.DOTALL)
+            return matches
+
+        #file_path = '1AKI_production.log'
+        start_string = 'A ?V ?E ?R ?A ?G ?E ?S'
+        end_string = 'M ?E ?G ?A ?- ?F ?L ?O ?P ?S'
+        # start_string = '<======  ###############  ==>\n\t<====  A V E R A G E S  ====>\n\t<==  ###############  ======>\n\n' #'A V E R A G E S'
+        # end_string = 'M E G A - F L O P S   A C C O U N T I N G'
+        matched_text = _find_text_between_strings(file_path, start_string, end_string)
+        return matched_text
+    
+
 
     @staticmethod
     def format_link_label(filename: str) -> str:
         """
         Modified from: https://github.com/sphuber/aiida-shell/blob/master/src/aiida_shell/parsers/shell.py
-        Format the link label from a given filename.
+        Format the link label from a given filename with prefix.
         Valid link labels can only contain alphanumeric characters and
         underscores, without consecutive underscores. So all characters
         that are not alphanumeric or an underscore are converted to
         underscores, where consecutive underscores are merged into one.
         Additional: Label cannot start with a number or underscore.
+
         :param filename: The filename.
         :returns: The link label.
         """
@@ -152,3 +177,4 @@ class GeneralParser(Parser):
         link_label = re.sub("_[_]+", "_", alphanumeric)
 
         return link_label
+

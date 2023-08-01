@@ -59,7 +59,7 @@ gmx_genion = "aiida_gromacs.cli.genion:cli"
 gmx_grompp = "aiida_gromacs.cli.grompp:cli"
 gmx_mdrun = "aiida_gromacs.cli.mdrun:cli"
 gmx_solvate = "aiida_gromacs.cli.solvate:cli"
-launch = "aiida_gromacs.cli.launch:cli"
+generalMD = "aiida_gromacs.cli.generalMD:cli"
 
 [project.entry-points."aiida.data"]
 "gromacs.pdb2gmx" = "aiida_gromacs.data.pdb2gmx:Pdb2gmxParameters"

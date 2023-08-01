@@ -25,19 +25,28 @@ class Pdb2gmxCalculation(CalcJob):
         super().define(spec)
 
         # set default values for AiiDA options
+        # TODO: something changed about withmpi in aiida-2.4.0, needs investigation.
+        spec.inputs['metadata']['options']['withmpi'].default = False
         spec.inputs['metadata']['options']['resources'].default = {
             'num_machines': 1,
             'num_mpiprocs_per_machine': 1,
         }
+        
+        # Required inputs.
         spec.inputs['metadata']['options']['parser_name'].default = 'gromacs.pdb2gmx'
         spec.input('metadata.options.output_filename', valid_type=str, default='pdb2gmx.out')
         spec.input('pdbfile', valid_type=SinglefileData, help='Input structure.')
         spec.input('parameters', valid_type=Pdb2gmxParameters, help='Command line parameters for gmx pdb2gmx')
 
+        # Default outputs.
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
         spec.output('grofile', valid_type=SinglefileData, help='Output forcefield compliant file.')
         spec.output('topfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
         spec.output('itpfile', valid_type=SinglefileData, help='Output forcefield compliant file.')
+        
+        # Optional outputs.
+        spec.output('n_file', required=False, valid_type=SinglefileData, help='Output index file')
+        spec.output('q_file', required=False, valid_type=SinglefileData, help='Output Structure file')
 
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 
@@ -50,6 +59,18 @@ class Pdb2gmxCalculation(CalcJob):
         :return: `aiida.common.datastructures.CalcInfo` instance
         """
         codeinfo = CodeInfo()
+
+        # Setup data structures for files.
+        output_options = ["o", "p", "i", "n", "q"] 
+        output_files = []
+
+        # Add output files to retrieve list.
+        output_files.append(self.metadata.options.output_filename)
+        for item in output_options:
+            if item in self.inputs.parameters:
+                output_files.append(self.inputs.parameters[item])
+
+
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(
             pdbfile=self.inputs.pdbfile.filename
         )
@@ -67,11 +88,6 @@ class Pdb2gmxCalculation(CalcJob):
                 self.inputs.pdbfile.filename,
             ),
         ]
-        calcinfo.retrieve_list = [
-            self.metadata.options.output_filename,
-            self.inputs.parameters["o"],
-            self.inputs.parameters["p"],
-            self.inputs.parameters["i"],
-        ]
+        calcinfo.retrieve_list = output_files
 
         return calcinfo
