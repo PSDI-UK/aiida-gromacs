@@ -33,6 +33,7 @@ def launch_generalMD(options):
     inputs = options["inputs"]
     outputs = options["outputs"]
     output_dir = options["output_dir"]
+    run_type = options["run_type"]
 
     print(f"command: {command}")
 
@@ -87,7 +88,12 @@ def launch_generalMD(options):
 
     # Submit your calculation to the aiida daemon
     # pylint: disable=unused-variable
-    future = engine.submit(CalculationFactory("general-MD"), **process_inputs)
+    if run_type == "submit":
+        future = engine.submit(CalculationFactory("general-MD"), 
+                               **process_inputs)
+    if run_type == "run":
+        future = engine.run(CalculationFactory("general-MD"), 
+                               **process_inputs)
     # future = engine.submit(process)
     print(f"Submitted calculation: {future}\n")
 
@@ -116,6 +122,12 @@ def launch_generalMD(options):
     default=os.path.join(os.getcwd()) + "/outputs",
     type=str,
     help="Absolute path of directory where files are saved.",
+)
+@click.option(
+    "--run_type",
+    default="submit",
+    type=str,
+    help="Type of method used to run the AiiDA process.",
 )
 def cli(**kwargs):
     """Run generalMD for use with general commands outside of gromacs
