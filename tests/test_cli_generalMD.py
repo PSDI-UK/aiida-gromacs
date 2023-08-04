@@ -23,7 +23,7 @@ def test_launch_generalMD():
     mdp_file = os.path.join(TEST_DIR, "input_files", "solvate_1AKI_topology.top")
     gro_file = os.path.join(TEST_DIR, "input_files", "solvate_1AKI_newbox.gro")
     with tempfile.TemporaryDirectory() as temp_dir:
-        output_dir = os.path.join(TEST_DIR, temp_dir.name)
+        output_dir = os.path.join(TEST_DIR, temp_dir)
     subprocess.check_output(
         [
             "generalMD",

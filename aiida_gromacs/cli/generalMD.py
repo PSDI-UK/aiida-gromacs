@@ -140,7 +140,7 @@ def cli(**kwargs):
     --inputs 1AKI_clean.pdb
     --outputs 1AKI_restraints.itp
     --outputs 1AKI_topology.top
-    --outputs 1AKI_forcfield.gro
+    --outputs 1AKI_forcefield.gro
 
     Help: $ ./generalMD.py --help
     """
