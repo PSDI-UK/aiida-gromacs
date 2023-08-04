@@ -4,6 +4,7 @@
 
 import os
 import subprocess
+import tempfile
 
 from aiida.orm.nodes.process.process import ProcessState
 
@@ -21,7 +22,8 @@ def test_launch_generalMD():
     top_file = os.path.join(TEST_DIR, "input_files", "grompp_ions.mdp")
     mdp_file = os.path.join(TEST_DIR, "input_files", "solvate_1AKI_topology.top")
     gro_file = os.path.join(TEST_DIR, "input_files", "solvate_1AKI_newbox.gro")
-    output_dir = os.path.join(TEST_DIR, "output_files")
+    with tempfile.TemporaryDirectory() as temp_dir:
+        output_dir = os.path.join(TEST_DIR, temp_dir)
     subprocess.check_output(
         [
             "generalMD",
