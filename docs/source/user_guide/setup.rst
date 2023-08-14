@@ -7,8 +7,19 @@ This page goes through a step-by-step process for installing all relevant packag
 Python environment
 ++++++++++++++++++
 
-We recommend to set up a Python virtual environment via `conda`. Conda can be installed by downloading the relevant installer here https://docs.conda.io/en/latest/miniconda.html. If using Linux or Mac OS, install with::
+We recommend to set up a Python virtual environment via ``conda``. Conda can be installed by downloading the relevant installer here https://docs.conda.io/en/latest/miniconda.html.
+If using Linux or Mac OS, install with,
+
+.. code-block:: bash
+
     bash Miniconda3-latest-MacOSX-arm64.sh
 
-And add the conda path to the bash environment by appending the following to `.bashrc`::
+and add the conda path to the bash environment by appending the following to ``.bashrc``,
+
+.. code-block:: bash
     export PATH="/home/rjw41005/miniconda3/bin:$PATH"
+
+Options for AiiDA Installation
+++++++++++++++++++++++++++++++
+
+It is recommended to install AiiDA
