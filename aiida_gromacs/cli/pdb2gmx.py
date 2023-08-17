@@ -44,9 +44,13 @@ def launch(params):
     Pdb2gmxParameters = DataFactory("gromacs.pdb2gmx")
     inputs["parameters"] = Pdb2gmxParameters(params)
 
+    # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable
-    future = engine.submit(CalculationFactory("gromacs.pdb2gmx"), **inputs)
+    if "PYTEST_CURRENT_TEST" in os.environ:
+        future = engine.run(CalculationFactory("gromacs.pdb2gmx"), **inputs)
+    else:
+        future = engine.submit(CalculationFactory("gromacs.pdb2gmx"), **inputs)
 
 
 @click.command()
