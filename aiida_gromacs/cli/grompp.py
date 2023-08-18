@@ -44,6 +44,9 @@ def launch(params):
     inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("c")))
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
+    if "itpfile" in params:
+        inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("itpfile")
+
     if "r" in params:
         inputs["r_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("r")))
 
@@ -81,6 +84,7 @@ def launch(params):
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
 @click.option("--description", default="record grompp data provenance via the aiida_gromacs plugin", type=str, help="Short metadata description")
+@click.option("--itpfile", type=str, help="An interface to provide the name of the restraint itp file created by pdb2gmx")
 # Input file options
 @click.option("-f", default="grompp.mdp", type=str, help="Input parameter file")
 @click.option("-c", required=True, type=str, help="Input structure file")
