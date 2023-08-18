@@ -41,6 +41,7 @@ class GromppCalculation(CalcJob):
         spec.input('parameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
 
         # Optional inputs.
+        spec.input('itpfile', valid_type=SinglefileData, required=False, help='Restraint file')
         spec.input('r_file', valid_type=SinglefileData, required=False, help='Structure file')
         spec.input('rb_file', valid_type=SinglefileData, required=False, help='Structure file')
         spec.input('n_file', valid_type=SinglefileData, required=False, help='Index file')
@@ -72,7 +73,7 @@ class GromppCalculation(CalcJob):
         codeinfo = CodeInfo()
 
         # Setup data structures for files.
-        input_options = ["mdpfile", "grofile", "topfile", "r_file", "rb_file", "n_file", "t_file", "e_file", "qmi_file", "ref_file"]
+        input_options = ["mdpfile", "grofile", "topfile", "itpfile", "r_file", "rb_file", "n_file", "t_file", "e_file", "qmi_file", "ref_file"]
         output_options = ["o", "po", "pp", "imd"] 
         cmdline_input_files = {}
         input_files = []
