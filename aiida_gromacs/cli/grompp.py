@@ -45,7 +45,7 @@ def launch(params):
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
     if "itpfile" in params:
-        inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("itpfile")
+        inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("itpfile")))
 
     if "r" in params:
         inputs["r_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("r")))
