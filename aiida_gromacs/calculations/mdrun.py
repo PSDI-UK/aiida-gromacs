@@ -63,7 +63,7 @@ class MdrunCalculation(CalcJob):
 
         # Optional outputs.
         spec.output('x_file', required=False, valid_type=SinglefileData, help='Compressed trajectory (tng format or portable xdr format)')
-        spec.output('cptfile', valid_type=SinglefileData, required=False, help='Checkpoint file.')
+        spec.output('cpo_file', valid_type=SinglefileData, required=False, help='Checkpoint file.')
         spec.output('dhdl_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
         spec.output('field_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
         spec.output('tpi_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
