@@ -15,6 +15,30 @@ from aiida_gromacs import helpers
 from aiida_gromacs.utils import searchprevious
 
 
+def posres(mdpfile, topfile):
+    """ Test if position restraints are activated in the MDP file.
+    
+    If it is then read the topology file for the itp.
+    """
+    import re
+    
+    # Grab mdp file contents
+    mdp = mdpfile.get_content()
+
+    # If position restraints are active
+    if "DPOSRES" in mdp:
+        # Grab topology file contents
+        top = topfile.get_content()
+        # Find the position restraints include.
+        find_include = re.search(r'#ifdef POSRES\n([\S\s]*?)#endif', top, re.DOTALL).group()
+        # Find the itp file in quotes.
+        itpfile = re.search(r'"([A-Za-z0-9_\./\\-]*)"', find_include).group().strip('"')
+        return itpfile
+    # If not active then return FALSE.
+    else:
+        return False
+
+
 def launch(params):
     """Run grompp.
 
@@ -44,8 +68,9 @@ def launch(params):
     inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("c")))
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
-    if "itpfile" in params:
-        inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("itpfile")))
+    itpfile = posres(inputs["mdpfile"], inputs["topfile"])
+    if itpfile is not False:
+        inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), itpfile))
 
     if "r" in params:
         inputs["r_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("r")))
@@ -88,7 +113,6 @@ def launch(params):
 @cmdline.utils.decorators.with_dbenv()
 @cmdline.params.options.CODE()
 @click.option("--description", default="record grompp data provenance via the aiida_gromacs plugin", type=str, help="Short metadata description")
-@click.option("--itpfile", type=str, help="An interface to provide the name of the restraint itp file created by pdb2gmx")
 # Input file options
 @click.option("-f", default="grompp.mdp", type=str, help="Input parameter file")
 @click.option("-c", required=True, type=str, help="Input structure file")
