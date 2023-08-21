@@ -85,9 +85,15 @@ def launch_generalMD(options):
         process_inputs = searchprevious.append_prev_nodes(qb, inputs, 
                         process_inputs, INPUT_DIR)
 
+    # check if a pytest test is running, if so run rather than submit aiida job
     # Submit your calculation to the aiida daemon
     # pylint: disable=unused-variable
-    future = engine.submit(CalculationFactory("general-MD"), **process_inputs)
+    if "PYTEST_CURRENT_TEST" in os.environ:
+        future = engine.run(CalculationFactory("general-MD"), 
+                               **process_inputs)
+    else:
+        future = engine.submit(CalculationFactory("general-MD"), 
+                               **process_inputs)
     # future = engine.submit(process)
     print(f"Submitted calculation: {future}\n")
 
@@ -128,7 +134,7 @@ def cli(**kwargs):
     --inputs 1AKI_clean.pdb
     --outputs 1AKI_restraints.itp
     --outputs 1AKI_topology.top
-    --outputs 1AKI_forcfield.gro
+    --outputs 1AKI_forcefield.gro
 
     Help: $ ./generalMD.py --help
     """

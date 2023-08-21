@@ -7,7 +7,6 @@ import re
 import time
 import sys
 from aiida import orm
-from aiida.orm.querybuilder import QueryBuilder
 from aiida.orm.nodes.process.process import ProcessState
 
 

@@ -44,7 +44,8 @@ def launch(params):
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
     if "cs" in params:
-        inputs["cs_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("cs")))
+        if params["cs"] != "spc216.gro": # needs fixing
+            inputs["cs_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("cs")))
 
     SolvateParameters = DataFactory("gromacs.solvate")
     inputs["parameters"] = SolvateParameters(params)
@@ -52,9 +53,13 @@ def launch(params):
     # check if inputs are outputs from prev processes
     inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile"])
 
+    # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable
-    future = engine.submit(CalculationFactory("gromacs.solvate"), **inputs)
+    if "PYTEST_CURRENT_TEST" in os.environ:
+        future = engine.run(CalculationFactory("gromacs.solvate"), **inputs)
+    else:
+        future = engine.submit(CalculationFactory("gromacs.solvate"), **inputs)
 
 
 @click.command()
