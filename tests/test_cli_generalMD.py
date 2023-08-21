@@ -40,8 +40,6 @@ def test_launch_generalMD():
             gro_file,
             "--outputs",
             "1AKI_ions.tpr",
-            "--run_type",
-            "run",
             "--output_dir",
             output_dir,
         ]

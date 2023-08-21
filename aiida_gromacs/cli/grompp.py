@@ -72,9 +72,13 @@ def launch(params):
     # check if inputs are outputs from prev processes
     inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile"])
 
+    # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable
-    future = engine.submit(CalculationFactory("gromacs.grompp"), **inputs)
+    if "PYTEST_CURRENT_TEST" in os.environ:
+        future = engine.run(CalculationFactory("gromacs.grompp"), **inputs)
+    else:
+        future = engine.submit(CalculationFactory("gromacs.grompp"), **inputs)
 
 
 @click.command()

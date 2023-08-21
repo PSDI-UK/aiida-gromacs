@@ -81,10 +81,13 @@ def launch(params):
     # check if inputs are outputs from prev processes
     inputs = searchprevious.get_prev_inputs(inputs, ["tprfile"])
 
-
+    # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable
-    future = engine.submit(CalculationFactory("gromacs.mdrun"), **inputs)
+    if "PYTEST_CURRENT_TEST" in os.environ:
+        future = engine.run(CalculationFactory("gromacs.mdrun"), **inputs)
+    else:
+        future = engine.submit(CalculationFactory("gromacs.mdrun"), **inputs)
 
 
 @click.command()
@@ -127,7 +130,7 @@ def launch(params):
 @click.option("-if", type=str, help="xvgr/xmgr file")
 @click.option("-swap", type=str, help="xvgr/xmgr file")
 # Other parameters
-@click.option("-xvg", default="false", type=str, help="xvg plot formatting: xmgrace, xmgr, none")
+@click.option("-xvg", default="none", type=str, help="xvg plot formatting: xmgrace, xmgr, none")
 @click.option("-dd", type=str, help="Domain decomposition grid, 0 is optimize")
 @click.option("-ddorder", type=str, help="DD rank order: interleave, pp_pme, cartesian")
 @click.option("-npme", type=str, help="Number of separate ranks to be used for PME, -1 is guess")

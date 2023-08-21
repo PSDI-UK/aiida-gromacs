@@ -37,6 +37,7 @@ def launch(params):
     else:
         computer = helpers.get_computer()
         inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
+        inputs["code"] = helpers.get_code(entry_point="bash", computer=computer)
 
 
     # Prepare input parameters in AiiDA formats.
@@ -54,9 +55,13 @@ def launch(params):
     inputs = searchprevious.get_prev_inputs(inputs, ["tprfile", "topfile"])
 
 
+    # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
     # pylint: disable=unused-variable
-    future = engine.submit(CalculationFactory("gromacs.genion"), **inputs)
+    if "PYTEST_CURRENT_TEST" in os.environ:
+        future = engine.run(CalculationFactory("gromacs.genion"), **inputs)
+    else:
+        future = engine.submit(CalculationFactory("gromacs.genion"), **inputs)
 
 
 @click.command()
