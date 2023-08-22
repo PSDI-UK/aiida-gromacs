@@ -15,6 +15,30 @@ from aiida_gromacs import helpers
 from aiida_gromacs.utils import searchprevious
 
 
+def posres(mdpfile, topfile):
+    """ Test if position restraints are activated in the MDP file.
+    
+    If it is then read the topology file for the itp.
+    """
+    import re
+    
+    # Grab mdp file contents
+    mdp = mdpfile.get_content()
+
+    # If position restraints are active
+    if "DPOSRES" in mdp:
+        # Grab topology file contents
+        top = topfile.get_content()
+        # Find the position restraints include.
+        find_include = re.search(r'#ifdef POSRES\n([\S\s]*?)#endif', top, re.DOTALL).group()
+        # Find the itp file in quotes.
+        itpfile = re.search(r'"([A-Za-z0-9_\./\\-]*)"', find_include).group().strip('"')
+        return itpfile
+    # If not active then return FALSE.
+    else:
+        return False
+
+
 def launch(params):
     """Run grompp.
 
@@ -44,6 +68,14 @@ def launch(params):
     inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("c")))
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
+    itpfile = posres(inputs["mdpfile"], inputs["topfile"])
+    if itpfile is not False:
+        # set correct itpfile path for tests
+        if "PYTEST_CURRENT_TEST" in os.environ:
+            inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), 'tests/input_files', itpfile))
+        else:
+            inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), itpfile))
+
     if "r" in params:
         inputs["r_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("r")))
 
@@ -70,7 +102,10 @@ def launch(params):
 
 
     # check if inputs are outputs from prev processes
-    inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile"])
+    if itpfile is not False:
+        inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile", "itpfile"])
+    else:
+        inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile"])
 
     # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:

@@ -132,7 +132,7 @@ class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
         if "awh_file" in input_files: parameters.extend(["-awh", input_files["awh_file"]])
         if "membed_file" in input_files: parameters.extend(["-membed", input_files["membed_file"]])
         if "mp_file" in input_files: parameters.extend(["-mp", input_files["mp_file"]])
-        if "mp_file" in input_files: parameters.extend(["-mn", input_files["mp_file"]])
+        if "mn_file" in input_files: parameters.extend(["-mn", input_files["mn_file"]])
 
         parm_dict = self.get_dict()
 
