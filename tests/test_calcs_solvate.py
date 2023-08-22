@@ -9,9 +9,8 @@ from aiida.plugins import CalculationFactory, DataFactory
 from . import TEST_DIR
 
 
-def test_process(gromacs_code):
-    """Test running a solvate calculation.
-    Note: this does not test that the expected outputs are created of output parsing"""
+def run_solvate(gromacs_code):
+    """Run an instance of solvate and return the results."""
 
     # Prepare input parameters
     SolvateParameters = DataFactory("gromacs.solvate")
@@ -40,6 +39,25 @@ def test_process(gromacs_code):
 
     result = run(CalculationFactory("gromacs.solvate"), **inputs)
 
+    return result
+
+
+def test_process(gromacs_code):
+    """Test running a solvate calculation.
+    Note: this does not test that the expected outputs are created of output parsing"""
+
+    result = run_solvate(gromacs_code)
+
     assert "stdout" in result
     assert "grofile" in result
     assert "topfile" in result
+
+
+def test_file_name_match(gromacs_code):
+    """Test that the file names returned match what was specified on inputs."""
+
+    result = run_solvate(gromacs_code)
+
+    assert result["stdout"].list_object_names()[0] == "solvate.out"
+    assert result["grofile"].list_object_names()[0] == "solvate_1AKI_solvated.gro"
+    assert result["topfile"].list_object_names()[0] == "solvate_1AKI_topology.top"

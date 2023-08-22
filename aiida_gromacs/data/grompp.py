@@ -13,8 +13,11 @@ from aiida.orm import Dict
 # A subset of grompp command line options
 cmdline_options = {
     Required("o", default="ions.tpr"): str,
+    Optional("po"): str,
+    Optional("pp"): str,
+    Optional("imd"): str,
     Optional("r"): str,
-    #Optional("-v", type=str, help="Be loud and noisy")
+    Optional("v"): str,
     Optional("time"): str,
     Optional("rmvsbds"): str,
     Optional("maxwarn"): str,

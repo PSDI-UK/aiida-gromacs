@@ -36,34 +36,53 @@ class MdrunParser(Parser):
 
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
-        outputs = ["stdout", "grofile", "enfile", "logfile", "trrfile"]
+        # Map output files to how they are named.
+        outputs = ["stdout"]
+        output_template = {
+                "c": "grofile",
+                "e": "enfile",
+                "g": "logfile",
+                "o": "trrfile",
+                "x": "x_file",
+                "cpo": "cpo_file",
+                "dhdl": "dhdl_file",
+                "field": "field_file",
+                "tpi": "tpi_file",
+                "tpid": "tpid_file",
+                "eo": "eo_file",
+                "px": "px_file",
+                "pf": "pf_file",
+                "ro": "ro_file",
+                "ra": "ra_file",
+                "rs": "rs_file",
+                "rt": "rt_file",
+                "mtx": "mtx_file",
+                "if": "if_file",
+                "swap": "swap_file"
+            }
 
-        # Check that folder content is as expected
+        for item in output_template:
+            if item in self.node.inputs.parameters.keys():
+                outputs.append(output_template[item])
+
+        # Grab list of retrieved files.
         files_retrieved = self.retrieved.base.repository.list_object_names()
-        files_expected = [
-            self.node.get_option("output_filename"),
-            self.node.inputs.parameters["c"],
-            self.node.inputs.parameters["e"],
-            self.node.inputs.parameters["g"],
-            self.node.inputs.parameters["o"],
-        ]
 
-        if "cpo" in self.node.inputs.parameters.keys():
-            outputs.append("cptfile")
-            files_expected.append(self.node.inputs.parameters["cpo"])
+        # Grab list of files expected and remove the scheduler stdout and stderr files.
+        files_expected = [files for files in self.node.get_option("retrieve_list") if files not in ["_scheduler-stdout.txt", "_scheduler-stderr.txt"]]
 
-        # Note: set(A) <= set(B) checks whether A is a subset of B
+        # Check if the expected files are a subset of retrieved.
         if not set(files_expected) <= set(files_retrieved):
             self.logger.error(
                 f"Found files '{files_retrieved}', expected to find '{files_expected}'"
             )
             return self.exit_codes.ERROR_MISSING_OUTPUT_FILES
 
-        # add outputs
-        for index, thing in enumerate(files_expected):
-            self.logger.info(f"Parsing '{thing}'")
-            with self.retrieved.base.repository.open(thing, "rb") as handle:
-                output_node = SinglefileData(filename=thing, file=handle)
-            self.out(outputs[index], output_node)
+        # Map retrieved files to data nodes.
+        for i, f in enumerate(files_expected):
+            self.logger.info(f"Parsing '{f}'")
+            with self.retrieved.base.repository.open(f, "rb") as handle:
+                output_node = SinglefileData(filename=f, file=handle)
+            self.out(outputs[i], output_node)
 
         return ExitCode(0)

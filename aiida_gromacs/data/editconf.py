@@ -13,6 +13,7 @@ from aiida.orm import Dict
 # A subset of editconf command line options
 cmdline_options = {
     Required("o", default="newbox.gro"): str,
+    Optional("mead"): str,
     Optional("w"): str,
     Optional("ndef"): str,
     Optional("bt"): str,
