@@ -9,11 +9,11 @@ Clone the repository
 
 The first step in getting going as a developer is to clone our git repository by either
 
-#. HTTPS
+#. HTTPS::
 
         git clone https://github.com/jimboid/aiida-gromacs.git
 
-#. SSH
+#. SSH::
 
         git clone git@github.com:jimboid/aiida-gromacs.git
 
@@ -85,6 +85,8 @@ Putting it all together
 
 Putting all of the above together into the following install commands::
 
+        git clone git@github.com:jimboid/aiida-gromacs.git
+        cd aiida-gromacs
         pip install -e .[docs,pre-commit,testing]
         pre-commit install
 
