@@ -8,7 +8,7 @@ import subprocess
 import click
 import os
 
-def create_db(options):
+def create_archive(options):
     """
     Create .aiida file of archived database.
     https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/share_data.html
@@ -31,11 +31,11 @@ def cli(**kwargs):
 
     Example usage:
 
-    $ ./createdb.py --filename archive.aiida
+    $ createarchive.py --filename archive.aiida
 
-    Help: $ ./create.py --help
+    Help: $ createarchive.py --help
     """
-    create_db(kwargs)
+    create_archive(kwargs)
 
 
 if __name__ == "__main__":

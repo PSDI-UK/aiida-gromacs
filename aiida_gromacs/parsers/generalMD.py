@@ -9,7 +9,7 @@ import re
 
 from aiida.common import exceptions
 from aiida.engine import ExitCode
-from aiida.orm import SinglefileData, Dict
+from aiida.orm import SinglefileData
 from aiida.parsers.parser import Parser
 from aiida.plugins import CalculationFactory
 
@@ -43,7 +43,7 @@ class GeneralParser(Parser):
         Parse outputs, store results in the AiiDA database.
 
         :returns: an exit code, if parsing fails or the user defined 
-            output files
+            output files are not returned
         """
 
         # get_option() convenience method is used to get the filename of
