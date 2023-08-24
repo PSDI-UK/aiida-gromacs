@@ -81,6 +81,8 @@ def launch_generalMD(options):
         },
     }
 
+    # check if previous processes have run and add previous outputs
+    # as inputs for new process if file names match
     if qb.count() > 0:
         process_inputs = searchprevious.append_prev_nodes(qb, inputs, 
                         process_inputs, INPUT_DIR)
