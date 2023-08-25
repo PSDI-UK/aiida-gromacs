@@ -4,14 +4,23 @@ Start/Stop AiiDA
 
 Regardless of whether you have switched off AiiDA or restarted your computer. To start recording provenance with this plugin, you will need to start up your AiiDA instance. Likewise, once you have finished using AiiDA, it is best practice to shut things down gracefully. These steps also assume you have already followed the steps within :doc:`installation` and have already a fully working install of the toolchain.
 
-Starting AiiDA
-++++++++++++++
-
 The first step in starting AiiDA is to activate your conda environment, for example:
 
 .. code-block:: bash
 
     conda activate aiida-2.4.0
+
+Initialising AiiDA database
++++++++++++++++++++++++++++
+
+If this is the first time you are using AiiDA, then initialise your AiiDA database:
+
+.. code-block:: bash
+
+    initdb -D ~/.aiida/aiida_db
+
+Starting AiiDA
+++++++++++++++
 
 The next step is to start the aiida database:
 
@@ -31,6 +40,25 @@ You can then confirm all is well by checking the status of verdi:
 .. code-block:: bash
 
     verdi status
+
+.. _create-profile-label:
+
+Creating an AiiDA Database Profile
+++++++++++++++++++++++++++++++++++
+
+To start using AiiDA-gromacs to track the inputs and outputs of GROMACS commands, AiiDA first requires for a profile to be set up for each project via verdi. Verdi is the command line tool in AiiDA used to interact with the AiiDA database. All commands run via the AiiDA-GROMACS plugin are tracked and stored in the AiiDA database. `Create a profile <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/installation.html?highlight=quicksetup#creating-profiles>`_  within the AiiDA database:
+
+.. code-block:: bash
+
+    verdi quicksetup
+        Info: enter "?" for help
+        Info: enter "!" to ignore the default and set no value
+        Profile name: username
+        Email Address (for sharing data): your@email.com
+        First name: Your
+        Last name: Name
+        Institution: where-you-work
+
 
 That is it, you are now free to use your AiiDA toolchain.
 
@@ -59,3 +87,27 @@ Finally you can deactivate your conda environment:
     conda deactivate
 
 That is it, you now have fully disabled the AiiDA toolchain.
+
+
+Switching an AiiDA Database Profile
++++++++++++++++++++++++++++++++++++
+
+If you are working on multiple projects, you can create a :ref:`new profile <create-profile-label>` as before and view all created profiles:
+
+.. code-block:: bash
+
+    verdi profile list
+
+If you want to switch to a different ```<PROFILE>``:
+
+.. code-block:: bash
+
+    verdi profile setdefault <PROFILE>
+
+And to delete a profile no longer needed:
+
+.. code-block:: bash
+
+    verdi profile delete <PROFILE>
+
+You can now create, switch and delete profiles saved in the AiiDA database.

@@ -81,28 +81,4 @@ Add the GROMACS path to the ``.bashrc`` file
 
     export PATH=/usr/local/gromacs/bin:$PATH
 
-AiiDA Database Setup
-++++++++++++++++++++
-
-To start using AiiDA-gromacs to track the inputs and outputs of GROMACS commands, AiiDA first requires for a profile to be set up for each project via verdi. Verdi is a command line tool in AiiDA used to interact with the AiiDA database. All commands run via the AiiDA-GROMACS plugin are tracked and stored in the AiiDA database. Initialise the AiiDA database via
-
-.. code-block:: bash
-
-    initdb -D ~/.aiida/aiida_db
-    pg_ctl -D ~/.aiida/aiida_db -l ~/.aiida/logfile start
-    rabbitmq-server -detached
-
-Then create a profile within the AiiDA database,
-
-.. code-block:: bash
-
-    verdi quicksetup
-        Info: enter "?" for help
-        Info: enter "!" to ignore the default and set no value
-        Profile name: username
-        Email Address (for sharing data): your@email.com
-        First name: Your
-        Last name: Name
-        Institution: where-you-work
-
 That is it. You have completed the installation steps to record simulation data provenance for GROMACS.
