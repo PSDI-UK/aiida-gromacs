@@ -50,6 +50,7 @@ An example provenance graph for the first eight steps of the :ref:`lysozyme tuto
 
 .. image:: ../images/53.dot.png
    :width: 600
+   :align: center
 
 Debugging
 +++++++++
