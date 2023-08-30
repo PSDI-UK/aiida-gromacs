@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Launch a calculation using the 'general-MD'
+"""Launch a calculation using the 'genericMD'
 
 This script allows the user to submit via AiiDA any command of a code that 
 is set up in AiiDA
@@ -25,8 +25,8 @@ code = helpers.get_code(entry_point="gromacs", computer=computer)
 code = helpers.get_code(entry_point="bash", computer=computer)
 
 
-def launch_generalMD(options):
-    """Run general-MD"""
+def launch_genericMD(options):
+    """Run genericMD"""
 
     code = options["code"]
     command = options["command"]
@@ -40,7 +40,7 @@ def launch_generalMD(options):
         raise exceptions.NonExistent("Code has not been set.")
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    # MyAppCalculation = CalculationFactory("general-MD")
+    # MyAppCalculation = CalculationFactory("genericMD")
 
     # Check if a previous calculation with the same input parameter
     # value has been stored by loading the QueryBuilder and append
@@ -71,12 +71,12 @@ def launch_generalMD(options):
         "input_files": input_files,
         "output_files": orm.List(output_files),
         "metadata": {
-            "label": "general-execute",
+            "label": "generic-execute",
             "description": "Run CLI job and save input and output file provenance.",
             "options": {
                 "output_filename": "file.out",
                 "output_dir": output_dir,
-                "parser_name": "general-MD",
+                "parser_name": "genericMD",
             },
         },
     }
@@ -89,10 +89,10 @@ def launch_generalMD(options):
     # Submit your calculation to the aiida daemon
     # pylint: disable=unused-variable
     if "PYTEST_CURRENT_TEST" in os.environ:
-        future = engine.run(CalculationFactory("general-MD"), 
+        future = engine.run(CalculationFactory("genericMD"), 
                                **process_inputs)
     else:
-        future = engine.submit(CalculationFactory("general-MD"), 
+        future = engine.submit(CalculationFactory("genericMD"), 
                                **process_inputs)
     # future = engine.submit(process)
     print(f"Submitted calculation: {future}\n")
@@ -124,11 +124,11 @@ def launch_generalMD(options):
     help="Absolute path of directory where files are saved.",
 )
 def cli(**kwargs):
-    """Run generalMD for use with general commands outside of gromacs
+    """Run genericMD for use with generic commands outside of gromacs
 
     Example usage for equivalent of running gmx_pdb2gmx:
 
-    $ ./generalMD.py --code gmx@localhost
+    $ ./genericMD.py --code gmx@localhost
     --command "pdb2gmx -i 1AKI_restraints.itp -o 1AKI_forcfield.gro
     -p 1AKI_topology.top -ff oplsaa -water spce -f 1AKI_clean.pdb"
     --inputs 1AKI_clean.pdb
@@ -136,9 +136,9 @@ def cli(**kwargs):
     --outputs 1AKI_topology.top
     --outputs 1AKI_forcefield.gro
 
-    Help: $ ./generalMD.py --help
+    Help: $ ./genericMD.py --help
     """
-    launch_generalMD(kwargs)
+    launch_genericMD(kwargs)
 
 
 if __name__ == "__main__":

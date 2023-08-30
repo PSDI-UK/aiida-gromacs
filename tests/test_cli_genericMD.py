@@ -1,4 +1,4 @@
-""" Test for generalMD cli script
+""" Test for genericMD cli script
 
 """
 
@@ -13,9 +13,9 @@ from aiida_gromacs.utils import searchprevious
 from . import TEST_DIR
 
 
-def test_launch_generalMD():
+def test_launch_genericMD():
     """
-    Run an instance of generalMD using the grompp gmx command
+    Run an instance of genericMD using the grompp gmx command
     as an example.
     """
     # get input file paths
@@ -26,7 +26,7 @@ def test_launch_generalMD():
         output_dir = os.path.join(TEST_DIR, temp_dir)
     subprocess.check_output(
         [
-            "generalMD",
+            "genericMD",
             "--code",
             "gmx@localhost",
             "--command",

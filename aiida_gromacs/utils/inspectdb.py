@@ -89,7 +89,7 @@ with profile_context(archive_profile):
 # from aiida.orm.querybuilder import QueryBuilder
 # from aiida.plugins import CalculationFactory
 
-# MyAppCalculation = CalculationFactory("general-MD")
+# MyAppCalculation = CalculationFactory("genericMD")
 
 # qb = QueryBuilder()
 # qb.append(MyAppCalculation) #, tag="calcjob")
