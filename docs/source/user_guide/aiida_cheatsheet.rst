@@ -46,10 +46,10 @@ Visualise your submitted jobs as a provenance graph outputted as a ``.pdf`` file
 
     verdi node graph generate <PK>
 
-An example provenance graph for the :ref:`lysozyme tutorial <tutorial>`, will look something like this:
+An example provenance graph for the first eight steps of the :ref:`lysozyme tutorial <tutorial>`, will look something like this:
 
-
-
+.. image:: ../images/53.dot.png
+   :width: 600
 
 Debugging
 +++++++++
