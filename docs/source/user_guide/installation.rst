@@ -49,7 +49,7 @@ To install the AiiDA-gromacs plugin, activate the conda environment created prev
 GROMACS Installation
 ++++++++++++++++++++
 
-If GROMACS is not already installed, here's a quick installation guide. Our plugin has been tested with GROMACS ``v22.4`` and ``v23.1`` and we suggest installation one of these versions. GROMACS requires the latest version of cmake, download the relevant `cmake installer <https://cmake.org/download/>`_ and install via the terminal with,
+If GROMACS is not already installed, here's a quick installation guide. Our plugin has been tested with GROMACS ``v22.4`` and ``v23.1`` and we suggest installation of one of these versions. GROMACS requires the latest version of cmake, download the relevant `cmake installer <https://cmake.org/download/>`_ and install via the terminal with,
 
 .. code-block:: bash
 

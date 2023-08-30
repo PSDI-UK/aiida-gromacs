@@ -19,6 +19,8 @@ If this is the first time you are using AiiDA, then initialise your AiiDA databa
 
     initdb -D ~/.aiida/aiida_db
 
+This creates a directory called ``~/.aiida``, where data created via AiiDA is stored.
+
 Starting AiiDA
 ++++++++++++++
 
@@ -89,8 +91,8 @@ Finally you can deactivate your conda environment:
 That is it, you now have fully disabled the AiiDA toolchain.
 
 
-Switching an AiiDA Database Profile
-+++++++++++++++++++++++++++++++++++
+Switching AiiDA Database Profile
+++++++++++++++++++++++++++++++++
 
 If you are working on multiple projects, you can create a :ref:`new profile <create-profile-label>` as before and view all created profiles:
 
@@ -98,7 +100,7 @@ If you are working on multiple projects, you can create a :ref:`new profile <cre
 
     verdi profile list
 
-If you want to switch to a different ```<PROFILE>``:
+If you want to switch to a different ``<PROFILE>``:
 
 .. code-block:: bash
 
