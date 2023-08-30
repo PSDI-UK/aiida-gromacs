@@ -1,4 +1,4 @@
-""" Test for generalMD calculation
+""" Test for genericMD calculation
 
 """
 import os
@@ -20,8 +20,8 @@ def check_output_path(output_dir):
         os.makedirs(output_dir)
 
 
-def run_generalMD(gromacs_code):
-    """Run an instance of generalMD and return the results."""
+def run_genericMD(gromacs_code):
+    """Run an instance of genericMD and return the results."""
 
     # input files used in pdb2gmx command
     inputs = ["pdb2gmx_1AKI_clean.pdb"]
@@ -55,28 +55,28 @@ def run_generalMD(gromacs_code):
         "input_files": input_files,
         "output_files": orm.List(output_files),
         "metadata": {
-            "label": "general-execute",
+            "label": "generic-execute",
             "description": "Run CLI job and save input and output file provenance.",
             "options": {
                 "output_filename": "file.out",
                 "output_dir": output_dir,
-                "parser_name": "general-MD",
+                "parser_name": "genericMD",
             },
         },
     }
 
-    result = run(CalculationFactory("general-MD"), **process_inputs)
+    result = run(CalculationFactory("genericMD"), **process_inputs)
 
     return result
 
 
 def test_process(gromacs_code):
-    """Test running a generalMD calculation using the pdb2gmx command as
+    """Test running a genericMD calculation using the pdb2gmx command as
     an example.
     Note: this does not test that the expected outputs are created of
     output parsing"""
 
-    result = run_generalMD(gromacs_code)
+    result = run_genericMD(gromacs_code)
 
     assert "pdb2gmx_1AKI_forcefield_gro" in result
     assert "pdb2gmx_1AKI_topology_top" in result
@@ -86,7 +86,7 @@ def test_process(gromacs_code):
 def test_file_name_match(gromacs_code):
     """Test that the file names returned match what was specified on inputs."""
 
-    result = run_generalMD(gromacs_code)
+    result = run_genericMD(gromacs_code)
 
     assert (
         result["pdb2gmx_1AKI_forcefield_gro"].list_object_names()[0]

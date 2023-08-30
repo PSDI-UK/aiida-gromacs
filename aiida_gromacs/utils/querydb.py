@@ -17,7 +17,7 @@ output_file = 'test.aiida'
 subprocess.run(['verdi', 'archive', 'create', '--all', output_file])
 
 
-MyAppCalculation = CalculationFactory("general-MD")
+MyAppCalculation = CalculationFactory("genericMD")
 
 qb = QueryBuilder()
 qb.append(MyAppCalculation) #, tag="calcjob")
