@@ -1,10 +1,8 @@
-================
-AiiDA Cheatsheet
-================
+====================
+AiiDA CLI Cheatsheet
+====================
 
-Here we will list some useful commands for working with AiiDa.
-
-Have a look `here <https://aiida.readthedocs.io/projects/aiida-core/en/latest/reference/command_line.html?highlight=verdi%20process%20list>`_ to explore all AiiDA command line subcommands.
+Here we will list some useful commands for working with AiiDa. Have a look `here <https://aiida.readthedocs.io/projects/aiida-core/en/latest/reference/command_line.html?highlight=verdi%20process%20list>`_ to explore all available AiiDA command line subcommands.
 
 Monitoring submitted processes
 ++++++++++++++++++++++++++++++
@@ -39,16 +37,22 @@ View attributes of a process node (such as retrieved files and find the path on 
 
     verdi node attributes <PK>
 
+Visualise data provenance
++++++++++++++++++++++++++
+
 Visualise your submitted jobs as a provenance graph outputted as a ``.pdf`` file. Select the latest ``<PK>`` to include all previous nodes in the graph:
 
 .. code-block:: bash
 
     verdi node graph generate <PK>
 
+An example provenance graph for the :ref:`lysozyme tutorial <tutorial>`, will look something like this:
+
+
+
 
 Debugging
 +++++++++
-
 
 Any aiida errors are logged in ``.aiida/daemon/log/``.
 
