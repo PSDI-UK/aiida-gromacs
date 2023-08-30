@@ -1,5 +1,5 @@
 """
-General calculation used to track input and output files of a 
+Generic calculation used to track input and output files of a 
 generic command.
 """
 from aiida.common import datastructures
@@ -7,7 +7,7 @@ from aiida.engine import CalcJob
 from aiida.orm import List, SinglefileData, Str
 
 
-class GeneralCalculation(CalcJob):
+class GenericCalculation(CalcJob):
     """
     AiiDA calculation plugin wrapping an executable with user defined
     input and output files.
@@ -59,9 +59,9 @@ class GeneralCalculation(CalcJob):
                 }
         # set name of the default parser.
         spec.inputs['metadata']['options']['parser_name'].default = \
-                'general-MD'
+                'genericMD'
         # spec.input('metadata.options.parser_name',
-        #         valid_type=Str, required=False, default=Str('general-MD'),
+        #         valid_type=Str, required=False, default=Str('genericMD'),
         #         help='The name of the parser to use.')
 
         # ensure code is set

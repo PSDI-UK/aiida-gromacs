@@ -7,7 +7,6 @@ import re
 import time
 import sys
 from aiida import orm
-from aiida.orm.querybuilder import QueryBuilder
 from aiida.orm.nodes.process.process import ProcessState
 
 
@@ -80,13 +79,19 @@ def check_prev_process(qb):
         # Get the most recently process that was already submitted to the
         # daemon and check if it has finished, wait 10s if not.
         prev_calc = qb.first()[0]
-        timeout = time.time() + 60*5 # 5 minutes from now
-        while prev_calc.process_state != ProcessState.FINISHED:
-            print(f"Previous process status: {prev_calc.process_state}")
-            print("Waiting for previous process to finish...")
-            time.sleep(10)
-            if time.time() > timeout:
-                sys.exit("Wait time exceeded for previous process to complete")
+        if prev_calc.process_state != ProcessState.EXCEPTED:  
+            timeout = time.time() + 60*5 # 5 minutes from now
+            while prev_calc.process_state != ProcessState.FINISHED:
+                print(f"Previous process status: {prev_calc.process_state}")
+                print("Waiting for previous process to finish...")
+                time.sleep(10)
+                if time.time() > timeout:
+                    sys.exit("Wait time exceeded for previous "
+                             "process to complete")
+        else:
+            sys.exit("Previous process did not complete successfully, "
+                     "please check")
+
 
 
 def append_prev_nodes(qb, inputs, process_inputs, INPUT_DIR):
