@@ -13,7 +13,7 @@ Currently there are a number of special considerations given to the data types t
 
 **code**
 
-You will need to provide an AiiDA code object that will ultimately point to the real GROMACS install that you are going to use either on your system or via an HPC resource or similar. You can configure codes manually following steps outlined in the `AiiDA <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/run_codes.html>`_ documentation, or you can use the helpers provided with the plugin to set this up for you, for example::
+You will need to provide an AiiDA code object that will ultimately point to the real GROMACS install that you are going to use either on your system or via an HPC resource or similar. You can configure codes manually following steps outlined in the `AiiDA <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/run_codes.html>`__ documentation, or you can use the helpers provided with the plugin to set this up for you, for example::
 
     # import the helper functions.
     from aiida_gromacs import helpers
@@ -113,7 +113,7 @@ Jas to insert her docs.
 editconf
 ++++++++
 
-The editconf calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-editconf.html>`_. Here is an example of how to script calling the editconf class with examples from the Lemkul Lysozyme tutorial.
+The editconf calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-editconf.html>`__. Here is an example of how to script calling the editconf class with examples from the Lemkul Lysozyme tutorial.
 
 .. code-block:: bash
 
@@ -154,7 +154,7 @@ The editconf calculation class supports all parameters that the native gromacs a
 genion
 ++++++
 
-The genion calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-genion.html>`_
+The genion calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-genion.html>`__
 
 The genion class is slightly different in the way that the application being called underneath is bash and not gromacs directly, this is to satisfy the fact that gmx genion requires piped input for some parameters that cannot be given on the commandline.
 
@@ -202,7 +202,7 @@ Here is an example of how to script calling the genion class with examples from 
 grompp
 ++++++
 
-The grompp calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html>`_. Here is an example of how to script calling the grompp class with examples from the Lemkul Lysozyme tutorial.
+The grompp calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html>`__. Here is an example of how to script calling the grompp class with examples from the Lemkul Lysozyme tutorial.
 
 .. code-block:: bash
 
@@ -245,7 +245,7 @@ The grompp calculation class supports all parameters that the native gromacs app
 mdrun
 +++++
 
-The mdrun calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-mdrun.html>`_. Here is an example of how to script calling the mdrun class with examples from the Lemkul Lysozyme tutorial.
+The mdrun calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-mdrun.html>`__. Here is an example of how to script calling the mdrun class with examples from the Lemkul Lysozyme tutorial.
 
 .. code-block:: bash
 
@@ -288,7 +288,7 @@ The mdrun calculation class supports all parameters that the native gromacs appl
 pdb2gmx
 +++++++
 
-The pdb2gmx calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-pdb2gmx.html>`_. Here is an example of how to script calling the pdb2gmx class with examples from the Lemkul Lysozyme tutorial.
+The pdb2gmx calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-pdb2gmx.html>`__. Here is an example of how to script calling the pdb2gmx class with examples from the Lemkul Lysozyme tutorial.
 
 .. code-block:: bash
 
@@ -331,7 +331,7 @@ The pdb2gmx calculation class supports all parameters that the native gromacs ap
 solvate
 +++++++
 
-The solvate calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-solvate.html>`_. Here is an example of how to script calling the solvate class with examples from the Lemkul Lysozyme tutorial.
+The solvate calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-solvate.html>`__. Here is an example of how to script calling the solvate class with examples from the Lemkul Lysozyme tutorial.
 
 .. code-block:: bash
 
