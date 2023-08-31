@@ -13,9 +13,14 @@ Submitting a ``pdb2gmx`` process using ``gmx_pdb2gmx``::
 
     gmx_pdb2gmx -f 1AKI_clean.pdb -ff oplsaa -water spce -o 1AKI_forcefield.gro -p 1AKI_topology.top -i 1AKI_restraints.itp
 
-Submitting the equivalent process with ``genericMD``::
+Submitting the equivalent process with ``genericMD``
 
-    genericMD --code gmx@localhost --command "pdb2gmx -i 1AKI_restraints.itp -o 1AKI_forcefield.gro -p 1AKI_topology.top -ff oplsaa -water spce -f 1AKI_clean.pdb" --inputs 1AKI_clean.pdb --outputs 1AKI_restraints.itp --outputs 1AKI_topology.top --outputs 1AKI_forcefield.gro
+.. code-block:: bash
+
+    genericMD --code gmx@localhost \
+    --command "pdb2gmx -i 1AKI_restraints.itp -o 1AKI_forcefield.gro -p 1AKI_topology.top -ff oplsaa -water spce -f 1AKI_clean.pdb" \
+    --inputs 1AKI_clean.pdb \
+    --outputs 1AKI_restraints.itp --outputs 1AKI_topology.top --outputs 1AKI_forcefield.gro
 
 As you can see, using the genericMD CLI is more verbose, but it does allow for submitting any command you want to keep track of with AiiDA.
 

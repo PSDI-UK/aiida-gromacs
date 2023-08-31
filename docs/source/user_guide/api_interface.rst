@@ -105,10 +105,68 @@ This method is not blocking, which means that your workload is submitted to a ru
 
 You should carefully consider which of the two execution methodologies are more appropriate based on the workflow you are writing tools for.
 
-genericmd
+genericMD
 +++++++++
 
-Jas to insert her docs.
+The genericMD class is flexible, with no set required inputs or outputs, instead any number of inputs and outputs can be dynamically defined. Below is an example of using the genericMD class to run the equivalent of the ``gmx pdb2gmx`` command:
+
+.. code-block:: bash
+
+    import os
+
+    from aiida import engine, orm
+    from aiida.plugins import CalculationFactory
+
+    from aiida_gromacs import helpers
+
+    # Computer and code object set up.
+    computer = helpers.get_computer()
+    gromacs_code = helpers.get_code(entry_point="gromacs", computer=computer)
+
+    # input files used in pdb2gmx command
+    inputs = ["1AKI_clean.pdb"]
+    input_files = {}
+    for filename in list(inputs):
+        file_path = os.path.join(os.getcwd(), filename)
+        input_files["pdbfile"] = orm.SinglefileData(file=file_path)
+
+    # output files produced from pdb2gmx command
+    output_files = [
+        "1AKI_restraints.itp",
+        "1AKI_topology.top",
+        "1AKI_forcefield.gro",
+    ]
+
+    # full pdb2gmx command to run
+    command = (
+        "pdb2gmx -i 1AKI_restraints.itp "
+        "-o 1AKI_forcefield.gro -p 1AKI_topology.top "
+        "-ff oplsaa -water spce -f 1AKI_clean.pdb"
+    )
+
+    # set path to output dir
+    output_dir = os.path.join(os.getcwd(), "outputs")
+
+
+    # create input dictionary for calculation.
+    process_inputs = {
+        "code": gromacs_code,
+        "command": orm.Str(command),
+        "input_files": input_files,
+        "output_files": orm.List(output_files),
+        "metadata": {
+            "label": "generic-execute",
+            "description": "Run CLI job and save input and output file provenance.",
+            "options": {
+                "output_filename": "file.out",
+                "output_dir": output_dir,
+                "parser_name": "genericMD",
+            },
+        },
+    }
+
+    result = engine.run(CalculationFactory("genericMD"), **process_inputs)
+
 
 editconf
 ++++++++
