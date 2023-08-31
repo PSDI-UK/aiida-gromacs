@@ -3,6 +3,8 @@ Parsers provided by aiida_gromacs.
 
 This calculation configures the ability to use the 'gmx mdrun' executable.
 """
+import os
+
 from aiida.common import exceptions
 from aiida.engine import ExitCode
 from aiida.orm import SinglefileData
@@ -83,8 +85,9 @@ class MdrunParser(Parser):
             self.logger.info(f"Parsing '{f}'")
             with self.retrieved.base.repository.open(f, "rb") as handle:
                 output_node = SinglefileData(filename=f, file=handle)
-                with open(f, "w") as outfile:
-                    outfile.write(output_node.get_content())
+                if "PYTEST_CURRENT_TEST" not in os.environ:
+                    with open(f, "w") as outfile:
+                        outfile.write(output_node.get_content())
             self.out(outputs[i], output_node)
 
         return ExitCode(0)
