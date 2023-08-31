@@ -58,6 +58,8 @@ class SolvateParser(Parser):
             self.logger.info(f"Parsing '{thing}'")
             with self.retrieved.base.repository.open(thing, "rb") as handle:
                 output_node = SinglefileData(filename=thing, file=handle)
+                with open(f, "w") as outfile:
+                    outfile.write(output_node.get_content())
             self.out(outputs[index], output_node)
 
         return ExitCode(0)

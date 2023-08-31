@@ -69,6 +69,8 @@ class Pdb2gmxParser(Parser):
             self.logger.info(f"Parsing '{f}'")
             with self.retrieved.base.repository.open(f, "rb") as handle:
                 output_node = SinglefileData(filename=f, file=handle)
+                with open(f, "w") as outfile:
+                    outfile.write(output_node.get_content())
             self.out(outputs[i], output_node)
 
         return ExitCode(0)
