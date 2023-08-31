@@ -11,7 +11,7 @@ Data types
 
 Currently there are a number of special considerations given to the data types that are provided as inputs into the calculation classes made available via this plugin.
 
-**code**
+**Code**
 
 You will need to provide an AiiDA code object that will ultimately point to the real GROMACS install that you are going to use either on your system or via an HPC resource or similar. You can configure codes manually following steps outlined in the `AiiDA <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/run_codes.html>`__ documentation, or you can use the helpers provided with the plugin to set this up for you, for example::
 
@@ -59,7 +59,7 @@ Flags for parameters setting properties or naming output files should be provide
                                     'o': '1AKI_newbox.gro'
                                     })
 
-Please note, you do not need to provide input files to this, since they have to be given special treatment so that provenance is properly tracked.
+Please note, you do not need to provide input files to this parameters dictionary, since they have to be given special treatment so that provenance is properly tracked.
 
 **Prepare data dict**
 
@@ -115,6 +115,17 @@ editconf
 
 The editconf calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-editconf.html>`__. Here is an example of how to script calling the editconf class with examples from the Lemkul Lysozyme tutorial.
 
+Required input files:
+
+* grofile
+
+Required parameters:
+
+* centre - shift geometrical centre
+* d - distance from solute and box
+* bt - box type
+* o - output file name
+
 .. code-block:: bash
 
     from os import path
@@ -160,6 +171,18 @@ The genion class is slightly different in the way that the application being cal
 
 Here is an example of how to script calling the genion class with examples from the Lemkul Lysozyme tutorial.
 
+Required input files:
+
+* tprfile
+* topfile
+
+Required parameters:
+
+* o - output file name
+* pname - positive ion
+* nname - negative ion
+* neutral - neutralise charge
+
 .. code-block:: bash
 
     from os import path
@@ -204,6 +227,16 @@ grompp
 
 The grompp calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html>`__. Here is an example of how to script calling the grompp class with examples from the Lemkul Lysozyme tutorial.
 
+Required input files:
+
+* mdpfile
+* grofile
+* topfile
+
+Required parameters:
+
+* o - output tpr file name
+
 .. code-block:: bash
 
     from os import path
@@ -246,6 +279,17 @@ mdrun
 +++++
 
 The mdrun calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-mdrun.html>`__. Here is an example of how to script calling the mdrun class with examples from the Lemkul Lysozyme tutorial.
+
+Required input files:
+
+* tprfile
+
+Required parameters:
+
+* c - output structure file name
+* e - output energy file name
+* g - output log file name
+* o - output trajectory file name
 
 .. code-block:: bash
 
@@ -290,6 +334,18 @@ pdb2gmx
 
 The pdb2gmx calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-pdb2gmx.html>`__. Here is an example of how to script calling the pdb2gmx class with examples from the Lemkul Lysozyme tutorial.
 
+Required input files:
+
+* pdbfile
+
+Required parameters:
+
+* ff - forcefield
+* water - water model
+* o - output file name
+* p - topology file name
+* i - itp file name
+
 .. code-block:: bash
 
     from os import path
@@ -332,6 +388,16 @@ solvate
 +++++++
 
 The solvate calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-solvate.html>`__. Here is an example of how to script calling the solvate class with examples from the Lemkul Lysozyme tutorial.
+
+Required input files:
+
+* grofile
+* topfile
+
+Required parameters:
+
+* cs - water model
+* o - output file name
 
 .. code-block:: bash
 
