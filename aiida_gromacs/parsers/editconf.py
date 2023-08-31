@@ -4,7 +4,6 @@ Parsers provided by aiida_gromacs.
 This parser adds the ability to parse the outputs of the 'gmx editconf' executable.
 """
 import os
-
 from aiida.common import exceptions
 from aiida.engine import ExitCode
 from aiida.orm import SinglefileData
@@ -68,8 +67,12 @@ class EditconfParser(Parser):
             with self.retrieved.base.repository.open(f, "rb") as handle:
                 output_node = SinglefileData(filename=f, file=handle)
                 if "PYTEST_CURRENT_TEST" not in os.environ:
-                    with open(f, "w") as outfile:
-                        outfile.write(output_node.get_content())
+                    try:
+                        with open(f, "w") as outfile:
+                            outfile.write(output_node.get_content())
+                    except UnicodeDecodeError:
+                        with open(f, "wb") as outfile:
+                            outfile.write(output_node.get_content())
             self.out(outputs[i], output_node)
 
         return ExitCode(0)
