@@ -32,6 +32,10 @@ def test_launch_mdrun():
             "1AKI_minimised.log",
             "-o",
             "1AKI_minimised.trr",
+            "-ntomp",
+            "5",
+            "-ntmpi",
+            "1",
         ]
     )
     # append run process to qb

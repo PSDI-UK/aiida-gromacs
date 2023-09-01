@@ -70,7 +70,11 @@ def launch(params):
 
     itpfile = posres(inputs["mdpfile"], inputs["topfile"])
     if itpfile is not False:
-        inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), itpfile))
+        # set correct itpfile path for tests
+        if "PYTEST_CURRENT_TEST" in os.environ:
+            inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), 'tests/input_files', itpfile))
+        else:
+            inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), itpfile))
 
     if "r" in params:
         inputs["r_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("r")))
@@ -98,7 +102,10 @@ def launch(params):
 
 
     # check if inputs are outputs from prev processes
-    inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile"])
+    if itpfile is not False:
+        inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile", "itpfile"])
+    else:
+        inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile"])
 
     # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
