@@ -14,12 +14,12 @@ from aiida.parsers.parser import Parser
 from aiida.plugins import CalculationFactory
 
 # entry point string under which the parser class is registered:
-GeneralCalculation = CalculationFactory("general-MD")
+GenericCalculation = CalculationFactory("genericMD")
 
 
-class GeneralParser(Parser):
+class GenericParser(Parser):
     """
-    Parser class for parsing output of general-MD calculation from which
+    Parser class for parsing output of genericMD calculation from which
     the retrieved outputs files from the calcjob and the nodes of finished
     calculation can be accessed.
     """
@@ -29,14 +29,14 @@ class GeneralParser(Parser):
         Initialize Parser instance
 
         Checks that the ProcessNode being passed was produced by a 
-        GeneralCalculation.
+        GenericCalculation.
 
         :param node: ProcessNode of calculation
         :param type node: :class:`aiida.orm.nodes.process.process.ProcessNode`
         """
         super().__init__(node)
-        if not issubclass(node.process_class, GeneralCalculation):
-            raise exceptions.ParsingError("Can only parse GeneralCalculation")
+        if not issubclass(node.process_class, GenericCalculation):
+            raise exceptions.ParsingError("Can only parse GenericCalculation")
 
     def parse(self, **kwargs):
         """

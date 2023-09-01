@@ -27,7 +27,7 @@ def test_qb_returns(gromacs_code):
     """
 
     # pylint: disable=unused-variable
-    result, output_dir = searchprevious.run_generalMD_pdb2gmx(gromacs_code)
+    result, output_dir = searchprevious.run_genericMD_pdb2gmx(gromacs_code)
     qb = searchprevious.build_query()
     expected_outputs = [
         "log",
@@ -51,7 +51,7 @@ def test_previous_input_retrieval(gromacs_code):
     """
 
     # pylint: disable=unused-variable
-    result, output_dir = searchprevious.run_generalMD_pdb2gmx(gromacs_code)
+    result, output_dir = searchprevious.run_genericMD_pdb2gmx(gromacs_code)
 
     qb = searchprevious.build_query()
 
@@ -80,12 +80,12 @@ def test_previous_input_retrieval(gromacs_code):
         "input_files": input_files,
         "output_files": orm.List(output_files),
         "metadata": {
-            "label": "general-execute",
+            "label": "generic-execute",
             "description": "Run CLI job and save input and output file provenance.",
             "options": {
                 "output_filename": "file.out",
                 "output_dir": output_dir,
-                "parser_name": "general-MD",
+                "parser_name": "genericMD",
             },
         },
     }

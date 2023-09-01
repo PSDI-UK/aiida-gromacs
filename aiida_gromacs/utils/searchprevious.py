@@ -29,13 +29,13 @@ def check_output_path(output_dir):
         os.makedirs(output_dir)
 
 
-def run_generalMD_pdb2gmx(gromacs_code):
-    """Run an instance of generalMD and return the results of the calculation.
+def run_genericMD_pdb2gmx(gromacs_code):
+    """Run an instance of genericMD and return the results of the calculation.
     Used as an example calculation for tests.
 
     :param gromacs_code: The query entries of previous processes in the AiiDA database
     :type gromacs_code: :py:class:`aiida.orm.nodes.data.code.installed.InstalledCode`
-    :returns: Results from generalMD calculation
+    :returns: Results from genericMD calculation
     :rtype: dict
     """
 
@@ -74,18 +74,18 @@ def run_generalMD_pdb2gmx(gromacs_code):
         "input_files": input_files,
         "output_files": orm.List(output_files),
         "metadata": {
-            "label": "general-execute",
+            "label": "generic-execute",
             "description": "Run CLI job and save input and output file provenance.",
             "options": {
                 "output_filename": "file.out",
                 "output_dir": output_dir,
-                "parser_name": "general-MD",
+                "parser_name": "genericMD",
             },
         },
     }
 
     # run calculation via aiida
-    result = run(CalculationFactory("general-MD"), **process_inputs)
+    result = run(CalculationFactory("genericMD"), **process_inputs)
 
     return result, output_dir
 
@@ -169,7 +169,7 @@ def check_prev_process(qb):
 
 
 def append_prev_nodes(qb, inputs, process_inputs, INPUT_DIR):
-    """Checks if previous processes exists for generalMD calcs and links the 
+    """Checks if previous processes exists for genericMD calcs and links the 
     most recent SinglefileData type output nodes from previous processs as 
     inputs to the new process if the file names match.
 
