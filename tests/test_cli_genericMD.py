@@ -1,4 +1,4 @@
-""" Test for generalMD cli script
+""" Test for genericMD cli script
 
 """
 
