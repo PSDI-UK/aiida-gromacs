@@ -25,64 +25,66 @@ A successfully finished process will exit with code ``[0]``.
 
 #. Next we will `create the box and solvate <http://www.mdtutorials.com/gmx/lysozyme/03_solvate.html>`_
 
-Firstly the box::
+    Firstly the box::
 
-    gmx_editconf -f 1AKI_forcefield.gro -center 0 -d 1.0 -bt cubic -o 1AKI_newbox.gro
+        gmx_editconf -f 1AKI_forcefield.gro -center 0 -d 1.0 -bt cubic -o 1AKI_newbox.gro
 
-Then solvate::
+    Then solvate::
 
-    gmx_solvate -cp 1AKI_newbox.gro -cs spc216.gro -p 1AKI_topology.top -o 1AKI_solvated.gro
+        gmx_solvate -cp 1AKI_newbox.gro -cs spc216.gro -p 1AKI_topology.top -o 1AKI_solvated.gro
 
 #. Add `ions <http://www.mdtutorials.com/gmx/lysozyme/04_ions.html>`_
 
-Firstly we will use the grompp preprocessor::
+    Firstly we will use the grompp preprocessor::
 
-    gmx_grompp -f ions.mdp -c 1AKI_solvated.gro -p 1AKI_topology.top -o 1AKI_ions.tpr
+        gmx_grompp -f ions.mdp -c 1AKI_solvated.gro -p 1AKI_topology.top -o 1AKI_ions.tpr
 
-Followed by genion::
+    Followed by genion::
 
-    gmx_genion -s 1AKI_ions.tpr -p 1AKI_topology.top -pname NA -nname CL -neutral true -o 1AKI_solvated_ions.gro
+        gmx_genion -s 1AKI_ions.tpr -p 1AKI_topology.top -pname NA -nname CL -neutral true -o 1AKI_solvated_ions.gro
 
 #. Then `minimise <http://www.mdtutorials.com/gmx/lysozyme/05_EM.html>`_ the structure
 
-Firstly we will use grompp::
+    Firstly we will use grompp::
 
-    gmx_grompp -f min.mdp -c 1AKI_solvated_ions.gro -p 1AKI_topology.top -o 1AKI_minimised.tpr
+        gmx_grompp -f min.mdp -c 1AKI_solvated_ions.gro -p 1AKI_topology.top -o 1AKI_minimised.tpr
 
-Then mdrun to minimise::
+    Then mdrun to minimise::
 
-    gmx_mdrun -s 1AKI_minimised.tpr -c 1AKI_minimised.gro -e 1AKI_minimised.edr -g 1AKI_minimised.log -o 1AKI_minimised.trr
+        gmx_mdrun -s 1AKI_minimised.tpr -c 1AKI_minimised.gro -e 1AKI_minimised.edr -g 1AKI_minimised.log -o 1AKI_minimised.trr
 
 #. Now we will equilibrate with `NVT <http://www.mdtutorials.com/gmx/lysozyme/06_equil.html>`_
 
-Firstly we will use grompp::
+    Firstly we will use grompp::
 
-    gmx_grompp -f nvt.mdp -c 1AKI_minimised.gro -r 1AKI_minimised.gro -p 1AKI_topology.top -o 1AKI_nvt.tpr
+        gmx_grompp -f nvt.mdp -c 1AKI_minimised.gro -r 1AKI_minimised.gro -p 1AKI_topology.top -o 1AKI_nvt.tpr
 
-Then mdrun to equilibrate NVT::
+    Then mdrun to equilibrate NVT::
 
-    gmx_mdrun -s 1AKI_nvt.tpr -c 1AKI_nvt.gro -e 1AKI_nvt.edr -g 1AKI_nvt.log -cpo 1AKI_nvt.cpt -o 1AKI_nvt.trr
+        gmx_mdrun -s 1AKI_nvt.tpr -c 1AKI_nvt.gro -e 1AKI_nvt.edr -g 1AKI_nvt.log -cpo 1AKI_nvt.cpt -o 1AKI_nvt.trr
 
 #. Followed by equilibration with `NPT <http://www.mdtutorials.com/gmx/lysozyme/07_equil2.html>`_
 
-Firstly we will use grompp::
+    Firstly we will use grompp::
 
-    gmx_grompp -f npt.mdp -c 1AKI_nvt.gro -r 1AKI_nvt.gro -t 1AKI_nvt.cpt -p 1AKI_topology.top -o 1AKI_npt.tpr
+        gmx_grompp -f npt.mdp -c 1AKI_nvt.gro -r 1AKI_nvt.gro -t 1AKI_nvt.cpt -p 1AKI_topology.top -o 1AKI_npt.tpr
 
-Then mdrun to equilibrate NPT::
+    Then mdrun to equilibrate NPT::
 
-    gmx_mdrun -s 1AKI_npt.tpr -c 1AKI_npt.gro -e 1AKI_npt.edr -g 1AKI_npt.log -cpo 1AKI_npt.cpt -o 1AKI_npt.trr
+        gmx_mdrun -s 1AKI_npt.tpr -c 1AKI_npt.gro -e 1AKI_npt.edr -g 1AKI_npt.log -cpo 1AKI_npt.cpt -o 1AKI_npt.trr
 
 #. We are now ready for `production <http://www.mdtutorials.com/gmx/lysozyme/08_MD.html>`_ MD.
 
-Firstly we will use grompp::
+    Firstly we will use grompp::
 
-    gmx_grompp -f md.mdp -c 1AKI_npt.gro -t 1AKI_npt.cpt -p 1AKI_topology.top -o 1AKI_prod.tpr
+        gmx_grompp -f md.mdp -c 1AKI_npt.gro -t 1AKI_npt.cpt -p 1AKI_topology.top -o 1AKI_prod.tpr
 
-Then mdrun for production run::
+    Then mdrun for production run::
 
-    gmx_mdrun -s 1AKI_prod.tpr -c 1AKI_production.gro -e 1AKI_production.edr -g 1AKI_production.log -o 1AKI_production.trr
+        gmx_mdrun -s 1AKI_prod.tpr -c 1AKI_production.gro -e 1AKI_production.edr -g 1AKI_production.log -o 1AKI_production.trr
 
-If running on GPU then something like::
+    If running on GPU then something like::
 
-    gmx_mdrun -s 1AKI_prod.tpr -c 1AKI_production.gro -e 1AKI_production.edr -g 1AKI_production.log -o 1AKI_production.trr -bonded gpu -nb gpu -pme gpu -ntmpi 1 -ntomp 5 -pin on
+        gmx_mdrun -s 1AKI_prod.tpr -c 1AKI_production.gro -e 1AKI_production.edr -g 1AKI_production.log -o 1AKI_production.trr -bonded gpu -nb gpu -pme gpu -ntmpi 1 -ntomp 5 -pin on
+
+That is it!
