@@ -67,7 +67,6 @@ jobs:
     - name: Report Coverage
       uses: coverallsapp/github-action@v2
 
-
   docs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
