@@ -59,13 +59,10 @@ class SolvateParser(Parser):
             self.logger.info(f"Parsing '{thing}'")
             with self.retrieved.base.repository.open(thing, "rb") as handle:
                 output_node = SinglefileData(filename=thing, file=handle)
-                if "PYTEST_CURRENT_TEST" not in os.environ:
-                    try:
-                        with open(thing, "w") as outfile:
-                            outfile.write(output_node.get_content())
-                    except UnicodeDecodeError:
-                        with open(thing, "wb") as outfile:
-                            outfile.write(output_node.get_content())
             self.out(outputs[index], output_node)
+
+        # If not in testing mode, then copy back the files.
+        if "PYTEST_CURRENT_TEST" not in os.environ:
+            self.retrieved.copy_tree(os.getcwd())
 
         return ExitCode(0)
