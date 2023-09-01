@@ -10,9 +10,6 @@ It is through this powerful interface that you will be able to build powerful wo
 
 The following utilities are available and have the following features.
 
-genericmd
-+++++++++
-
 gmx_editconf
 ++++++++++++
 
@@ -144,25 +141,3 @@ This utility has extra functionality, such as if you run the command with --help
 An example specifying gromacs on the local PC is below::
 
     gmx_solvate --code gmx@localhost -cp 1AKI_newbox.gro -cs spc216.gro -p 1AKI_topology.top -o 1AKI_solvated.gro
-
-
-
-
-
-
-
-
-
-
-Once simulation setup is complete, the AiiDA database and accompanying files inputted and outputted in each process can be `archived <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/share_data.html>`_ into a single file
-
-.. code-block:: bash
-
-    verdi archive create --all tutorial.aiida
-
-where the ``--all`` flag saves all the data in the AiiDA profile. To import an existing AiiDA archive file to a loaded profile
-
-
-.. code-block:: bash
-
-    verdi archive import archive_name.aiida
