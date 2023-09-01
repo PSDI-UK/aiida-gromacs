@@ -12,6 +12,7 @@ The aiida-gromacs plugin for `AiiDA`_
    :maxdepth: 2
 
    user_guide/index
+   tutorials/index
    developer_guide/index
    API documentation <apidoc/aiida_gromacs>
 

@@ -1,13 +1,6 @@
-.. _tutorial:
-
-=========
-Tutorials
-=========
-
-Here are some commonly available tutorial examples that you would adapt to run with this plugin. Before attempting the tutorials here, you need to have completed the steps in :doc:`installation` and started the verdi daemon as described in :doc:`aiida_sessions`.
-
+=================
 Lysozyme tutorial
-+++++++++++++++++
+=================
 
 This tutorial follows Justin Lemkuls `Lysozyme <http://www.mdtutorials.com/gmx/lysozyme/>`_ tutorial. We will not explain each individual step as this can be found on Justin's webpage, but we will link to each page and show the AiiDA equivalant command.
 
