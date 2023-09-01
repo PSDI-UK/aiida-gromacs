@@ -2,7 +2,20 @@
 Developer guide
 ===============
 
-To get up and running as a developer contributing to this plugin, you will need to have a working installation of AiiDA installed on your computer. If you are using conda, you will need this activated when running the below commands.
+As a project we are open to contributions from the wider community to help us add new features. To get up and running as a developer contributing to this plugin, you will need to have a working installation of AiiDA installed on your computer. You should follow the steps to install AiiDA on the following page, but don't run the pip install of the aiida-gromacs plugin :doc:`../user_guide/installation` you will also need to have the conda environment activated and the verdi daemon running :doc:`../user_guide/aiida_sessions`.
+
+Clone the repository
+++++++++++++++++++++
+
+The first step in getting going as a developer is to clone our git repository by either
+
+#. HTTPS::
+
+        git clone https://github.com/jimboid/aiida-gromacs.git
+
+#. SSH::
+
+        git clone git@github.com:jimboid/aiida-gromacs.git
 
 Running the tests
 +++++++++++++++++
@@ -54,13 +67,11 @@ Building the documentation
 
         pip install -e .[docs]
 
- #. Edit the individual documentation pages::
+ #. Edit the individual documentation pages in::
 
-        docs/source/index.rst
-        docs/source/developer_guide/index.rst
-        docs/source/user_guide/index.rst
-        docs/source/user_guide/get_started.rst
-        docs/source/user_guide/tutorial.rst
+        docs/source/user_guide/
+        or
+        docs/source/developer_guide/
 
  #. Use `Sphinx`_ to generate the html documentation::
 
@@ -68,5 +79,26 @@ Building the documentation
         make
 
 Check the result by opening ``build/html/index.html`` in your browser.
+
+Putting it all together
++++++++++++++++++++++++
+
+Putting all of the above together into the following install commands::
+
+        git clone git@github.com:jimboid/aiida-gromacs.git
+        cd aiida-gromacs
+        pip install -e .[docs,pre-commit,testing]
+        pre-commit install
+
+Will install the plugin from the git repository with all of the above features activated.
+
+Sending code contributions
+++++++++++++++++++++++++++
+
+We will always welcome code contributions for new features, but these should always be via the submission of a pull request. Upon receiving a PR, the CI workflow will automatically run our test suite, buld the docs and run the pre-commit checks. One of the core developers will review the code submitted and make a decision based upon the fit of the PR with the project goals and make an assessment of the quality of the contribution.
+
+We would always recommend reporting problems/bugs via the issue tracker even if you intend to attempt a fix, likewise we would recommend contacting a member of the core team if developing features of your own so they can advise on the direction of the project.
+
+Happy coding!
 
 .. _Sphinx: https://www.sphinx-doc.org/en/master/

@@ -13,4 +13,4 @@ build/
 dist/
 pip-wheel-metadata/
 .tox/
-tests/output_files/
+docs/source/apidoc/
