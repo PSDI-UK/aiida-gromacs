@@ -99,6 +99,11 @@ We will always welcome code contributions for new features, but these should alw
 
 We would always recommend reporting problems/bugs via the issue tracker even if you intend to attempt a fix, likewise we would recommend contacting a member of the core team if developing features of your own so they can advise on the direction of the project.
 
+Version Numbering
++++++++++++++++++
+
+We will align our version numbering against the AiiDA major series that the plugin release supports. So our first release will be 2.0.0, where the x in x.y.z corresponds to the AiiDA major series that the plugin is supporting. So 2.0.0 will support AiiDA 2.x.x. The remaining two numbers in our versioning will represent major and minor changes to the plugin respectively. A minor release can be expected to be version compatible with no breaking changes, whilst a major release will be expected to cause changes that are breaking in nature.
+
 Happy coding!
 
 .. _Sphinx: https://www.sphinx-doc.org/en/master/
