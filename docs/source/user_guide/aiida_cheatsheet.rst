@@ -62,3 +62,19 @@ If any changes to the plugin code are made, after an update for example, restart
 .. code-block:: bash
 
     verdi daemon restart --reset
+
+Sharing Data
+++++++++++++
+
+When you are ready to share data, the AiiDA database and accompanying files inputted and outputted in each process can be `archived <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/share_data.html>`_ into a single file
+
+.. code-block:: bash
+
+    verdi archive create --all archive_name.aiida
+
+where the ``--all`` flag saves all the data in the AiiDA profile. To import an existing AiiDA archive file to a loaded profile
+
+
+.. code-block:: bash
+
+    verdi archive import archive_name.aiida
