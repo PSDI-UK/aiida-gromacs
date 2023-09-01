@@ -21,40 +21,9 @@ conda environment, along with modifying your command lines very slightly.
 This means that you should gain access to powerful FAIR data practices without
 wholesale cultural or usage pattern shifts in your daily work.
 
-## Features
+## Documentation
 
-TODO: include some features.
-
-## Installation
-
-You will need a fully functional working copy of AiiDA installed and if using
-conda, you will need to have the AiiDA environment active, before running:
-
-```shell
-pip install aiida-gromacs
-verdi quicksetup  # better to set up a new profile
-```
-
-
-## Usage
-
-TODO: quick example.
-
-## Development
-
-To set up a full development environment, you will require a fully functional
-AiiDA installation, and if using using conda, have the AiiDA environment active
-before running:
-
-```shell
-git clone https://github.com/jimboid/aiida-gromacs .
-cd aiida-gromacs
-pip install -e .[pre-commit,testing,docs]  # install extra dependencies
-pre-commit install  # install pre-commit hooks
-pytest -v  # discover and run all tests
-```
-
-See the [developer guide](http://aiida-gromacs.readthedocs.io/en/latest/developer_guide/index.html) for more information.
+See [here](https://aiida-gromacs.readthedocs.io/en/latest/) for documentation for users and developers.
 
 ## License
 
