@@ -50,3 +50,41 @@ A few things to consider when using genericMD, firstly the inputs and ouputs of 
 
 .. warning::
     Any inputs/outputs not included in the genericMD submission with ``--inputs`` and ``--outputs`` flags repectively, will not be included as a node in the provenance graph!!
+
+
+
+Another example to submit a process with genericMD
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The example above for tracking the ``diff`` command may be useful for tracking changes to files made on non-command line based programs, for example when using a GUI to add or delete atoms in a ``.pdb`` file. Here's another example for tracking a command outside of GROMACS using `Packmol <https://m3g.github.io/packmol/userguide.shtml>`_ to create the initial system geometry for MD simulations.
+
+First, we add the packmol code::
+
+    verdi code create core.code.installed --label packmol --computer localhost --filepath-executable ~/packmol-20.14.2/packmol
+        Report: enter ? for help.
+        Report: enter ! to ignore the default and set no value.
+        Description: Initial configurations for Molecular Dynamics Simulations by packing optimization
+        Default `CalcJob` plugin: genericMD
+        Escape using double quotes [y/N]: y
+        Success: Created InstalledCode<3>
+
+This assumes that Packmol is already installed on your computer in the path ``~/packmol-20.14.2/packmol``, if not then follow the Packmol installation guide or follow the summarised guide below.
+
+#. `Download <http://m3g.iqm.unicamp.br/packmol>`_ the ``packmol-20.13.0.tar.gz`` file
+#.  Expand the files with ``tar -xvzf packmol-20.13.0.tar.gz``
+#.  Build the executable with ``cd packmol; make``
+
+You can check the Packmol code is added with::
+
+    verdi code list
+        Full label           Pk  Entry point
+        -----------------  ----  -------------------
+        gmx@localhost         1  core.code
+        bash@localhost        2  core.code
+        packmol@localhost     3  core.code.installed
+
+Once the Packmol is added as a code, we can track a Packmol code with the ``genericMD`` calculation with::
+
+    genericMD --code packmol@localhost --command "< packmol.inp" --inputs packmol.inp --inputs input.pdb --outputs output.pdb
+
+That's it, you can track a command from code installed on your computer external to GROMACS.
