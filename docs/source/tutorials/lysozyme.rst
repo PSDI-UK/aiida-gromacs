@@ -2,7 +2,7 @@
 Lysozyme tutorial
 =================
 
-This tutorial follows Justin Lemkuls `Lysozyme <http://www.mdtutorials.com/gmx/lysozyme/>`_ tutorial. We will not explain each individual step as this can be found on Justin's webpage, but we will link to each page and show the AiiDA equivalant command.
+This tutorial follows Justin Lemkul's `lysozyme <http://www.mdtutorials.com/gmx/lysozyme/>`_ tutorial. We will not explain each individual step as this can be found on Justin's webpage, but we will link to each page and show the AiiDA equivalant command.
 
 Please also note the slight differences in commands between the tutorial and that by Justin Lemkul is simply down to the way we are recording provenance requires non-interactive input into the gromacs tools.
 

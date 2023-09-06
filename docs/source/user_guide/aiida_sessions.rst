@@ -10,8 +10,8 @@ The first step in starting AiiDA is to activate your conda environment, for exam
 
     conda activate aiida-2.4.0
 
-Initialising AiiDA database
-+++++++++++++++++++++++++++
+Initialising the AiiDA database
++++++++++++++++++++++++++++++++
 
 If this is the first time you are using AiiDA, then initialise your AiiDA database:
 
@@ -24,7 +24,7 @@ This creates a directory called ``~/.aiida``, where data created via AiiDA is st
 Starting AiiDA
 ++++++++++++++
 
-The next step is to start the aiida database:
+The next step is to start the AiiDA database:
 
 .. code-block:: bash
 

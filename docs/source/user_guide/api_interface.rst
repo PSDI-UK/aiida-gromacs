@@ -29,7 +29,7 @@ You can just use the above code if you are unsure how to set up this yourself an
 
 **Input Files**
 
-Input files for each calculation are required to be marked as AiiDA SinglefileData type, this is to make sure that the file is correctly added to the AiiDA file repository and its provenance tracked. You would do this by the flags for these will be added correctly by the calculation class and do not need to be specified as CLI parameters::
+Input files for each calculation are required to be marked as the AiiDA SinglefileData type, this is to make sure that the file is correctly added to the AiiDA file repository and its provenance tracked. You would do this by the flags for these, which will be added correctly by the calculation class and do not need to be specified as CLI parameters::
 
     # import AiiDA DataFactory and OS for paths
     from aiida.plugins import DataFactory
@@ -52,7 +52,7 @@ Flags for parameters setting properties or naming output files should be provide
     # Doing this brings with it full validation for parameters based on the specific functionality.
     EditconfParameters = DataFactory('gromacs.editconf')
 
-    # Now you can provide the commandline flags you would normally give to the gromacs execs.
+    # Now you can provide the commandline flags you would normally give to the gromacs executables.
     parameters = EditconfParameters({'center': '0',
                                     'd': '1.0',
                                     'bt': 'cubic',
@@ -79,7 +79,7 @@ You should create this as a dictionary, for example::
         },
     }
 
-Where the paramters 'gromacs_code' and 'parameters' are described above.
+Where the parameters 'gromacs_code' and 'parameters' are described above.
 
 For each different gromacs executable that this plugin supports, there will then be a number of input files that you will need to specify.
 
@@ -171,7 +171,7 @@ The genericMD class is flexible, with no set required inputs or outputs, instead
 editconf
 ++++++++
 
-The editconf calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-editconf.html>`__. Here is an example of how to script calling the editconf class with examples from the Lemkul Lysozyme tutorial.
+The editconf calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-editconf.html>`__. Here is an example of how to script calling the editconf class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
@@ -227,7 +227,7 @@ The genion calculation class supports all parameters that the native gromacs app
 
 The genion class is slightly different in the way that the application being called underneath is bash and not gromacs directly, this is to satisfy the fact that gmx genion requires piped input for some parameters that cannot be given on the commandline.
 
-Here is an example of how to script calling the genion class with examples from the Lemkul Lysozyme tutorial.
+Here is an example of how to script calling the genion class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
@@ -283,7 +283,7 @@ Required parameters:
 grompp
 ++++++
 
-The grompp calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html>`__. Here is an example of how to script calling the grompp class with examples from the Lemkul Lysozyme tutorial.
+The grompp calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html>`__. Here is an example of how to script calling the grompp class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
@@ -336,7 +336,7 @@ Required parameters:
 mdrun
 +++++
 
-The mdrun calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-mdrun.html>`__. Here is an example of how to script calling the mdrun class with examples from the Lemkul Lysozyme tutorial.
+The mdrun calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-mdrun.html>`__. Here is an example of how to script calling the mdrun class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
@@ -390,7 +390,7 @@ Required parameters:
 pdb2gmx
 +++++++
 
-The pdb2gmx calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-pdb2gmx.html>`__. Here is an example of how to script calling the pdb2gmx class with examples from the Lemkul Lysozyme tutorial.
+The pdb2gmx calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-pdb2gmx.html>`__. Here is an example of how to script calling the pdb2gmx class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
@@ -445,7 +445,7 @@ Required parameters:
 solvate
 +++++++
 
-The solvate calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-solvate.html>`__. Here is an example of how to script calling the solvate class with examples from the Lemkul Lysozyme tutorial.
+The solvate calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-solvate.html>`__. Here is an example of how to script calling the solvate class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
