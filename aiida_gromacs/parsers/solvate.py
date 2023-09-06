@@ -3,6 +3,7 @@ Parsers provided by aiida_gromacs.
 
 This parser adds the ability to parse the outputs of the 'gmx solvate' executable.
 """
+import os
 from aiida.common import exceptions
 from aiida.engine import ExitCode
 from aiida.orm import SinglefileData
@@ -59,5 +60,9 @@ class SolvateParser(Parser):
             with self.retrieved.base.repository.open(thing, "rb") as handle:
                 output_node = SinglefileData(filename=thing, file=handle)
             self.out(outputs[index], output_node)
+
+        # If not in testing mode, then copy back the files.
+        if "PYTEST_CURRENT_TEST" not in os.environ:
+            self.retrieved.copy_tree(os.getcwd())
 
         return ExitCode(0)

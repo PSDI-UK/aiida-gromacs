@@ -2,7 +2,7 @@
 Helper functions for setting up
 
  1. An AiiDA localhost computer
- 2. A "diff" code on localhost
+ 2. A "gmx" code on localhost
 
 Note: Point 2 is made possible by the fact that the ``diff`` executable is
 available in the PATH on almost any UNIX system.

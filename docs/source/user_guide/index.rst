@@ -18,5 +18,3 @@ This means that you should gain access to powerful FAIR data practices without w
     aiida_cheatsheet
     cli_interface
     api_interface
-    tutorial
-    genericMD_tutorial
