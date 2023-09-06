@@ -18,7 +18,7 @@ The aiida-gromacs plugin for `AiiDA`_
 
 If you use this plugin for your research, please cite the following work:
 
-.. highlights:: Author Name1, Author Name2, *Paper title*, Jornal Name XXX, YYYY (Year).
+.. highlights:: TBD, watch this space.
 
 If you use AiiDA for your research, please cite the following work:
 

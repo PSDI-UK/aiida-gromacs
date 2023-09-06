@@ -19,10 +19,16 @@ Submitting the equivalent process with ``genericMD``
 
     genericMD --code gmx@localhost \
     --command "pdb2gmx -i 1AKI_restraints.itp -o 1AKI_forcefield.gro -p 1AKI_topology.top -ff oplsaa -water spce -f 1AKI_clean.pdb" \
-    --inputs 1AKI_clean.pdb \
+    --inputs path/to/1AKI_clean.pdb \
     --outputs 1AKI_restraints.itp --outputs 1AKI_topology.top --outputs 1AKI_forcefield.gro
 
 As you can see, using the genericMD CLI is more verbose, but it does allow for submitting any command you want to keep track of with AiiDA.
+
+.. note::
+    The quoted command text for the ``--command`` flag does not need to include the path to the input files, instead you include the paths to files in the ``--inputs`` flag.
+
+.. note::
+    By default, the outputs produced from the command are saved in a ``output_dir`` in the current working directory. To change where the output files are saved, set the path with the ``--output_dir`` flag.
 
 
 How to submit a process with genericMD
@@ -85,6 +91,8 @@ You can check the Packmol code is added with::
 
 Once the Packmol is added as a code, we can track a Packmol code with the ``genericMD`` calculation with::
 
-    genericMD --code packmol@localhost --command "< packmol.inp" --inputs packmol.inp --inputs input.pdb --outputs output.pdb
+    genericMD --code packmol@localhost --command "< packmol.inp" \
+    --inputs path/to/packmol.inp --inputs path/to/input.pdb \
+    --outputs path/to/output.pdb
 
 That's it, you can track a command from code installed on your computer external to GROMACS.
