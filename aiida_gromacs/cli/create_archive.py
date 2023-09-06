@@ -8,7 +8,7 @@ import subprocess
 import click
 import os
 
-def create_db(options):
+def create_archive(options):
     """
     Create .aiida file of archived database.
     https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/share_data.html
