@@ -82,6 +82,8 @@ class GenericCalculation(CalcJob):
                         'output files.')
         spec.exit_code(301, 'ERROR_UNTRACKED_OUTPUT_FILES',
                 message='Specified output file not produced by command.')
+        spec.exit_code(301, 'ERROR_UNTRACKED_OUTPUT_FILES',
+                message='Specified output file not produced by command.')
 
 
     def prepare_for_submission(self, folder):
@@ -104,7 +106,14 @@ class GenericCalculation(CalcJob):
         # (allows gmx genion to be run for example)
         if self.inputs.code.label == "bash":
             codeinfo.cmdline_params = ["-c", self.inputs.command.value]
-
+        # If an input redirection is included in the command, then remove 
+        # this and set the stdin_name as the filename used in the command
+        if "<" in self.inputs.command.value:
+            stdin_file = self.inputs.command.value.split()[-1]
+            codeinfo.stdin_name = stdin_file
+            codeinfo.cmdline_params = []
+                    
+        
         # the UUID of the AbstractCode to run
         codeinfo.code_uuid = self.inputs.code.uuid
 
