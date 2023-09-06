@@ -82,6 +82,8 @@ class GenericCalculation(CalcJob):
                         'output files.')
         spec.exit_code(301, 'ERROR_UNTRACKED_OUTPUT_FILES',
                 message='Specified output file not produced by command.')
+        spec.exit_code(301, 'ERROR_UNTRACKED_OUTPUT_FILES',
+                message='Specified output file not produced by command.')
 
 
     def prepare_for_submission(self, folder):
