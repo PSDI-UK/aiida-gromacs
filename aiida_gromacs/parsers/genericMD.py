@@ -14,7 +14,7 @@ from aiida.parsers.parser import Parser
 from aiida.plugins import CalculationFactory
 
 # entry point string under which the parser class is registered:
-GenericCalculation = CalculationFactory("genericMD")
+GenericCalculation = CalculationFactory("gromacs.genericMD")
 
 
 class GenericParser(Parser):
