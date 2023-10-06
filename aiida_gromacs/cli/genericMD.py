@@ -40,7 +40,7 @@ def launch_genericMD(options):
         raise exceptions.NonExistent("Code has not been set.")
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    # MyAppCalculation = CalculationFactory("genericMD")
+    # MyAppCalculation = CalculationFactory("gromacs.genericMD")
 
     # Check if a previous calculation with the same input parameter
     # value has been stored by loading the QueryBuilder and append
@@ -76,7 +76,7 @@ def launch_genericMD(options):
             "options": {
                 "output_filename": "file.out",
                 "output_dir": output_dir,
-                "parser_name": "genericMD",
+                "parser_name": "gromacs.genericMD",
             },
         },
     }
@@ -91,10 +91,10 @@ def launch_genericMD(options):
     # Submit your calculation to the aiida daemon
     # pylint: disable=unused-variable
     if "PYTEST_CURRENT_TEST" in os.environ:
-        future = engine.run(CalculationFactory("genericMD"), 
+        future = engine.run(CalculationFactory("gromacs.genericMD"), 
                                **process_inputs)
     else:
-        future = engine.submit(CalculationFactory("genericMD"), 
+        future = engine.submit(CalculationFactory("gromacs.genericMD"), 
                                **process_inputs)
     # future = engine.submit(process)
     print(f"Submitted calculation: {future}\n")

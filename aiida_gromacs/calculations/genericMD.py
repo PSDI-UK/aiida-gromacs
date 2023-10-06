@@ -59,7 +59,7 @@ class GenericCalculation(CalcJob):
                 }
         # set name of the default parser.
         spec.inputs['metadata']['options']['parser_name'].default = \
-                'genericMD'
+                'gromacs.genericMD'
         # spec.input('metadata.options.parser_name',
         #         valid_type=Str, required=False, default=Str('genericMD'),
         #         help='The name of the parser to use.')

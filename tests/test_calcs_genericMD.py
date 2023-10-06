@@ -76,13 +76,13 @@ def run_genericMD_pdb2gmx(gromacs_code):
             "options": {
                 "output_filename": "file.out",
                 "output_dir": output_dir,
-                "parser_name": "genericMD",
+                "parser_name": "gromacs.genericMD",
             },
         },
     }
 
     # run calculation via aiida
-    result = run(CalculationFactory("genericMD"), **process_inputs)
+    result = run(CalculationFactory("gromacs.genericMD"), **process_inputs)
 
     return result, output_dir
 

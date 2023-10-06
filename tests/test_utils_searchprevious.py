@@ -87,7 +87,7 @@ def test_previous_input_retrieval(gromacs_code):
             "options": {
                 "output_filename": "file.out",
                 "output_dir": output_dir,
-                "parser_name": "genericMD",
+                "parser_name": "gromacs.genericMD",
             },
         },
     }
