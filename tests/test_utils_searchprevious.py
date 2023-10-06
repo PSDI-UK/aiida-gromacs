@@ -7,6 +7,8 @@ from aiida import orm
 
 from aiida_gromacs.utils import searchprevious
 
+from . import test_calcs_genericMD
+
 
 def test_link_formats():
     """
@@ -27,7 +29,7 @@ def test_qb_returns(gromacs_code):
     """
 
     # pylint: disable=unused-variable
-    result, output_dir = searchprevious.run_genericMD_pdb2gmx(gromacs_code)
+    result, output_dir = test_calcs_genericMD.run_genericMD_pdb2gmx(gromacs_code)
     qb = searchprevious.build_query()
     expected_outputs = [
         "log",
@@ -51,7 +53,7 @@ def test_previous_input_retrieval(gromacs_code):
     """
 
     # pylint: disable=unused-variable
-    result, output_dir = searchprevious.run_genericMD_pdb2gmx(gromacs_code)
+    result, output_dir = test_calcs_genericMD.run_genericMD_pdb2gmx(gromacs_code)
 
     qb = searchprevious.build_query()
 
