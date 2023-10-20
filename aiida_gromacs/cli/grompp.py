@@ -4,9 +4,9 @@
 Usage: gmx_grompp --help
 """
 
-import os
-
 import click
+import os
+import re
 
 from aiida import cmdline, engine
 from aiida.plugins import CalculationFactory, DataFactory
@@ -15,26 +15,59 @@ from aiida_gromacs import helpers
 from aiida_gromacs.utils import searchprevious
 
 
-def posres(mdpfile, topfile):
-    """ Test if position restraints are activated in the MDP file.
+def itp_finder(mdpfile, topfile):
+    """ Extract included files from the topology file.
     
-    If it is then read the topology file for the itp.
+    This method will grab a list of all includes and then try to sort them
+    based on if they are in C directive tags and if flags in the MDP affect
+    them.
     """
-    import re
-    
-    # Grab mdp file contents
+
+    # Grab the file contents.
+    top = topfile.get_content()
     mdp = mdpfile.get_content()
 
-    # If position restraints are active
-    if "DPOSRES" in mdp:
-        # Grab topology file contents
-        top = topfile.get_content()
-        # Find the position restraints include.
-        find_include = re.search(r'#ifdef POSRES\n([\S\s]*?)#endif', top, re.DOTALL).group()
-        # Find the itp file in quotes.
-        itpfile = re.search(r'"([A-Za-z0-9_\./\\-]*)"', find_include).group().strip('"')
-        return itpfile
-    # If not active then return FALSE.
+    # find all include statements in top
+    found_include = re.findall(r'#include ([\S\s]*?)\n', top, re.DOTALL)
+
+    # find ifdef and define statements in top
+    found_ifdef = re.findall(r'#ifdef ([\S\s]*?)\n', top, re.DOTALL)
+    defines = re.findall(r'#define ([\S\s]*?)\n', top, re.DOTALL)
+
+    # find defines in mdp file.
+    found_def = re.search(r'define([\S\s]*?)\n', mdp, re.DOTALL)
+    if (found_def is not None): 
+        found_def = re.findall(r'-D([\S\s]*?) ', found_def.group(), re.DOTALL)
+        defines.extend(found_def)
+
+    # find ifndef and undefine statements in top
+    found_ifndef = re.findall(r'#ifndef ([\S\s]*?)\n', top, re.DOTALL)
+    undefines = re.findall(r'#undef ([\S\s]*?)\n', top, re.DOTALL)
+
+    # Extract includes between ifdefs and tag them against vars. 
+    for item in found_ifdef:
+
+        # Find the directive
+        ifdef_tag = re.search(f'#ifdef {item}([\S\s]*?)#endif', top, re.DOTALL)
+
+        # Find the includes
+        if (ifdef_tag is not None) and ((item not in defines) or (item in undefines)):
+            ifdef_includes = re.findall(r'#include ([\S\s]*?)\n', ifdef_tag.group(), re.DOTALL)
+            found_include = set(found_include) - set(ifdef_includes)
+
+    # Extract includes between ifndefs and tag them against vars.
+    for item in found_ifndef:
+
+        # Find the directive
+        ifndef_tag = re.search(f'#ifndef {item}([\S\s]*?)#endif', top, re.DOTALL)
+
+        # Find the includes
+        if (ifndef_tag is not None) and ((item in defines) and (item not in undefines)):
+            ifndef_includes = re.findall(r'#include ([\S\s]*?)\n', ifndef_tag.group(), re.DOTALL)
+            found_include = set(found_include) - set(ifndef_includes)
+
+    if found_include:
+        return found_include
     else:
         return False
 
