@@ -28,7 +28,7 @@ def itp_finder(mdpfile, topfile):
     mdp = mdpfile.get_content()
 
     # find all include statements in top
-    found_include = re.findall(r'#include ([\S\s]*?)\n', top, re.DOTALL)
+    found_include = re.findall(r'#include "([\S\s]*?)"', top, re.DOTALL)
 
     # find ifdef and define statements in top
     found_ifdef = re.findall(r'#ifdef ([\S\s]*?)\n', top, re.DOTALL)
@@ -52,8 +52,8 @@ def itp_finder(mdpfile, topfile):
 
         # Find the includes
         if (ifdef_tag is not None) and ((item not in defines) or (item in undefines)):
-            ifdef_includes = re.findall(r'#include ([\S\s]*?)\n', ifdef_tag.group(), re.DOTALL)
-            found_include = set(found_include) - set(ifdef_includes)
+            ifdef_includes = re.findall(r'#include "([\S\s]*?)"', ifdef_tag.group(), re.DOTALL)
+            found_include = list(set(found_include) - set(ifdef_includes))
 
     # Extract includes between ifndefs and tag them against vars.
     for item in found_ifndef:
@@ -63,13 +63,41 @@ def itp_finder(mdpfile, topfile):
 
         # Find the includes
         if (ifndef_tag is not None) and ((item in defines) and (item not in undefines)):
-            ifndef_includes = re.findall(r'#include ([\S\s]*?)\n', ifndef_tag.group(), re.DOTALL)
-            found_include = set(found_include) - set(ifndef_includes)
+            ifndef_includes = re.findall(r'#include "([\S\s]*?)"', ifndef_tag.group(), re.DOTALL)
+            found_include = list(set(found_include) - set(ifndef_includes))
 
     if found_include:
-        return found_include
+        return gmx_blacklist(found_include)
     else:
         return False
+
+
+def gmx_blacklist(includes):
+    """Remove itp files that are part of gromacs itself."""
+
+    blacklist = [
+        "amber03.ff",
+        "amber94.ff",
+        "oplsaa.ff",
+        "gromos53a5.ff",
+        "amber96.ff",
+        "gromos43a2.ff",
+        "amber99sb.ff",
+        "amber99.ff",
+        "gromos54a7.ff",
+        "gromos43a1.ff",
+        "amberGS.ff",
+        "charmm27.ff",
+        "amber99sb-ildn.ff",
+        "gromos53a6.ff",
+        "gromos45a3.ff"
+    ]
+
+    # Remove banned directory substrings
+    for banned_ipt in blacklist:
+        includes = [ x for x in includes if banned_ipt not in x ]
+
+    return includes
 
 
 def launch(params):
@@ -101,13 +129,20 @@ def launch(params):
     inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("c")))
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
-    itpfile = posres(inputs["mdpfile"], inputs["topfile"])
-    if itpfile is not False:
+    # Find itp files.
+    itp_files = itp_finder(inputs["mdpfile"], inputs["topfile"])
+
+    # If we have itps then tag them.
+    if itp_files is not False:
         # set correct itpfile path for tests
         if "PYTEST_CURRENT_TEST" in os.environ:
-            inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), 'tests/input_files', itpfile))
+            inputs["itpfiles"] = SinglefileData(file=os.path.join(os.getcwd(), 'tests/input_files', itpfile))
         else:
-            inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), itpfile))
+            inputs["itp_files"] = {}
+
+            # Iterate files to assemble a dict of names and paths.
+            for i, itpfile in enumerate(itp_files):
+                inputs["itp_files"][f"itpfile{i}"] = SinglefileData(file=os.path.join(os.getcwd(), itpfile))
 
     if "r" in params:
         inputs["r_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("r")))
@@ -133,12 +168,8 @@ def launch(params):
     GromppParameters = DataFactory("gromacs.grompp")
     inputs["parameters"] = GromppParameters(params)
 
-
     # check if inputs are outputs from prev processes
-    if itpfile is not False:
-        inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile", "itpfile"])
-    else:
-        inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile"])
+    inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile"])
 
     # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
