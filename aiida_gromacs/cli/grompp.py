@@ -132,16 +132,19 @@ def launch(params):
     # Find itp files.
     itp_files = itp_finder(inputs["mdpfile"], inputs["topfile"])
 
-    # If we have itps then tag them.
+    # If we have itp's then tag them.
     if itp_files is not False:
-        # set correct itpfile path for tests
-        if "PYTEST_CURRENT_TEST" in os.environ:
-            inputs["itpfiles"] = SinglefileData(file=os.path.join(os.getcwd(), 'tests/input_files', itpfile))
-        else:
-            inputs["itp_files"] = {}
 
-            # Iterate files to assemble a dict of names and paths.
-            for i, itpfile in enumerate(itp_files):
+        inputs["itp_files"] = {}
+
+        # Iterate files to assemble a dict of names and paths.
+        for i, itpfile in enumerate(itp_files):
+
+            # set correct itpfile path for tests
+            if "PYTEST_CURRENT_TEST" in os.environ:
+                inputs["itp_files"][f"itpfile{i}"] = SinglefileData(file=os.path.join(os.getcwd(), 'tests/input_files', itpfile))
+            else:
+
                 inputs["itp_files"][f"itpfile{i}"] = SinglefileData(file=os.path.join(os.getcwd(), itpfile))
 
     if "r" in params:
