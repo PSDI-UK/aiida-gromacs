@@ -121,7 +121,7 @@ def launch_genericMD(options):
 )
 @click.option(
     "--output_dir",
-    default=os.path.join(os.getcwd()) + "/outputs",
+    default=os.path.join(os.getcwd()),
     type=str,
     help="Absolute path of directory where files are saved.",
 )
