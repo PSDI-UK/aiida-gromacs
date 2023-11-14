@@ -35,7 +35,7 @@ class Make_ndxParameters(Dict):  # pylint: disable=too-many-ancestors
         """
         Constructor for the data class
 
-        Usage: ``MdrunParameters(dict{'ignore-case': True})``
+        Usage: ``Make_ndxParameters(dict{'ignore-case': True})``
 
         :param parameters_dict: dictionary with commandline parameters
         :param type parameters_dict: dict
@@ -49,13 +49,13 @@ class Make_ndxParameters(Dict):  # pylint: disable=too-many-ancestors
 
         Uses the voluptuous package for validation. Find out about allowed keys using::
 
-            print(MdrunParameters).schema.schema
+            print(Make_ndxParameters).schema.schema
 
         :param parameters_dict: dictionary with commandline parameters
         :param type parameters_dict: dict
         :returns: validated dictionary
         """
-        return MdrunParameters.schema(parameters_dict)
+        return Make_ndxParameters.schema(parameters_dict)
 
     def cmdline_params(self, input_files):
         """Synthesize command line parameters.
@@ -69,9 +69,8 @@ class Make_ndxParameters(Dict):  # pylint: disable=too-many-ancestors
         parameters = []
 
         parameters.append("make_ndx")
-        # parameters.extend(["-s", input_files["tprfile"]])
         if "grofile" in input_files: parameters.extend(["-f", input_files["grofile"]])
-        if "indexfile" in input_files: parameters.extend(["-n", input_files["indexfile"]])
+        if "n_file" in input_files: parameters.extend(["-n", input_files["n_file"]])
 
         parm_dict = self.get_dict()
 

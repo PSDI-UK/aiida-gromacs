@@ -8,7 +8,7 @@ from aiida.engine import CalcJob
 from aiida.orm import SinglefileData
 from aiida.plugins import DataFactory
 
-MdrunParameters = DataFactory("gromacs.make_ndx")
+Make_ndxParameters = DataFactory("gromacs.make_ndx")
 
 
 class Make_ndxCalculation(CalcJob):
@@ -38,15 +38,23 @@ class Make_ndxCalculation(CalcJob):
         # Required inputs.
         spec.inputs['metadata']['options']['parser_name'].default = 'gromacs.make_ndx'
         spec.input('metadata.options.output_filename', valid_type=str, default='make_ndx.out')
-        spec.input('parameters', valid_type=MdrunParameters, help='Command line parameters for gmx make_ndx')
+        spec.input('parameters', valid_type=Make_ndxParameters, help='Command line parameters for gmx make_ndx')
+        spec.input(
+            'metadata.options.filename_stdin',
+            valid_type=str,
+            required=False,
+            help='Filename that should be redirected to the shell command using the stdin file descriptor.',
+        )
 
         # Optional inputs.
         spec.input('grofile', valid_type=SinglefileData, required=False, help='Structure file: gro g96 pdb brk ent esp tpr')
-        spec.input('ndx_file', valid_type=SinglefileData, required=False, help='Index file')
+        spec.input('n_file', valid_type=SinglefileData, required=False, help='Index file')
+        spec.input('instructions_file', valid_type=SinglefileData, required=False, help='Instructions for generating index file')
+        spec.input('metadata.options.stdin_filename', valid_type=str, help='name of file used in stdin.')
 
         # Required outputs.
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
-        spec.output('ndx_file', valid_type=SinglefileData, help='Index file')
+        spec.output('n_file', valid_type=SinglefileData, help='Index file')
 
         # Include Optional outputs here.
 
@@ -63,8 +71,8 @@ class Make_ndxCalculation(CalcJob):
         codeinfo = CodeInfo()
 
         # Setup data structures for files.
-        input_options = ["tprfile", "cpi_file", "table_file", "tableb_file", "tablep_file", "rerun_file", "ei_file", "multidir_file", "awh_file", "membed_file", "mp_file", "mn_file"]
-        output_options = ["c", "e", "g", "o", "x", "cpo", "dhdl", "field", "tpi", "tpid", "eo", "px", "pf", "ro", "ra", "rs", "rt", "mtx", "if", "swap"]
+        input_options = ["grofile", "n_file", "instructions_file"]
+        output_options = ["o"]
         cmdline_input_files = {}
         input_files = []
         output_files = []
@@ -87,6 +95,9 @@ class Make_ndxCalculation(CalcJob):
 
         # Form the commandline.
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(cmdline_input_files)
+
+        # Form stdin file for index instructions
+        codeinfo.stdin_name = self.inputs['metadata']['options'].get('stdin_filename', None)
         
         codeinfo.code_uuid = self.inputs.code.uuid
         codeinfo.stdout_name = self.metadata.options.output_filename
