@@ -56,9 +56,35 @@ def itp_finder(mdpfile, topfile):
             found_include = list(set(found_include) - set(ifndef_includes))
 
     if found_include:
-        return gmx_blacklist(found_include)
+
+        # First check blacklisted files.
+        files = gmx_blacklist(found_include)
+
+        # Now check which ones are in dirs and which are in PWD.
+        pwd, subdirs = filepath_check(files)
+
+        return pwd, subdirs
     else:
-        return False
+        return False, False
+
+
+def filepath_check(files):
+    """Seperate files in PWD and those in subdirs."""
+
+    subdirs = []
+
+    # Iterate all found files and check if they are in subdirs.
+    for item in files:
+
+        # paths containing dirs will have slashes in them.
+        if "/" in item:
+
+            subdirs.append(item)
+
+    # Remove the ones containing dirs from the original list of files
+    files = list(set(files) - set(subdirs))
+
+    return files, subdirs
 
 
 def gmx_blacklist(includes):

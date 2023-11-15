@@ -5,7 +5,7 @@ This calculation configures the ability to use the 'gmx grompp' executable.
 """
 from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
-from aiida.orm import SinglefileData
+from aiida.orm import SinglefileData, FolderData
 from aiida.plugins import DataFactory
 
 GromppParameters = DataFactory("gromacs.grompp")
@@ -42,6 +42,7 @@ class GromppCalculation(CalcJob):
 
         # Optional inputs.
         spec.input_namespace('itp_files', valid_type=SinglefileData, required=False, dynamic=True, help='Restraint files')
+        spec.input_namespace('itp_dirs', valid_type=FolderData, required=False, dynamic=True, help='Forcefield descriptions')
 
         spec.input('r_file', valid_type=SinglefileData, required=False, help='Structure file')
         spec.input('rb_file', valid_type=SinglefileData, required=False, help='Structure file')
@@ -50,7 +51,6 @@ class GromppCalculation(CalcJob):
         spec.input('e_file', valid_type=SinglefileData, required=False, help='Energy file')
         spec.input('qmi_file', valid_type=SinglefileData, required=False, help='QM input file')
         spec.input('ref_file', valid_type=SinglefileData, required=False, help='Full precision trajectory file')
-
 
         # Default outputs.
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
@@ -74,7 +74,7 @@ class GromppCalculation(CalcJob):
         codeinfo = CodeInfo()
 
         # Setup data structures for files.
-        input_options = ["mdpfile", "grofile", "topfile", "itp_files", "r_file", "rb_file", "n_file", "t_file", "e_file", "qmi_file", "ref_file"]
+        input_options = ["mdpfile", "grofile", "topfile", "itp_files", "itp_dirs", "r_file", "rb_file", "n_file", "t_file", "e_file", "qmi_file", "ref_file"]
         output_options = ["o", "po", "pp", "imd"] 
         cmdline_input_files = {}
         input_files = []
@@ -90,6 +90,13 @@ class GromppCalculation(CalcJob):
                             obj.uuid,
                             obj.filename,
                             obj.filename,
+                        ))
+                elif item == "itp_dirs":
+                    for directory, obj in self.inputs[item].items():
+                        input_files.append((
+                            obj.uuid,
+                            '.',
+                            directory,
                         ))        
                 else:
                     cmdline_input_files[item] = self.inputs[item].filename

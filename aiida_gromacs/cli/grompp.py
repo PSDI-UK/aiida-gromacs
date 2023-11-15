@@ -40,14 +40,15 @@ def launch(params):
 
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
+    FolderData = DataFactory("core.folder")
     inputs["mdpfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
     inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("c")))
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
-    # Find itp files.
-    itp_files = topfile_utils.itp_finder(inputs["mdpfile"], inputs["topfile"])
+    # Find itp files and FF reference files.
+    itp_files, itp_dirs = topfile_utils.itp_finder(inputs["mdpfile"], inputs["topfile"])
 
-    # If we have itp's then tag them.
+    # If we have itp's or FF include files then tag them.
     if itp_files is not False:
 
         inputs["itp_files"] = {}
@@ -61,6 +62,23 @@ def launch(params):
             else:
 
                 inputs["itp_files"][f"itpfile{i}"] = SinglefileData(file=os.path.join(os.getcwd(), itpfile))
+
+    # If we have included files in subdirs then process these.
+    if itp_dirs is not False:
+
+        inputs["itp_dirs"] = {}
+
+        # for each entry establish dir path and build file tree.
+        for itp_file in itp_dirs:
+
+            # Create a folder that is empty.
+            if itp_file.split("/")[0] not in inputs["itp_dirs"].keys():
+            
+                inputs["itp_dirs"][itp_file.split("/")[0]] = FolderData()
+
+            # Now fill it with files referenced in the topology.
+            inputs["itp_dirs"][itp_file.split("/")[0]].put_object_from_file(
+                os.path.join(os.getcwd(), itp_file), path=itp_file.split("/")[-1])
 
     if "r" in params:
         inputs["r_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("r")))
@@ -95,7 +113,7 @@ def launch(params):
     if "PYTEST_CURRENT_TEST" in os.environ:
         future = engine.run(CalculationFactory("gromacs.grompp"), **inputs)
     else:
-        future = engine.submit(CalculationFactory("gromacs.grompp"), **inputs)
+        future = engine.run(CalculationFactory("gromacs.grompp"), **inputs)
 
 
 @click.command()
