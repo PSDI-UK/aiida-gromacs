@@ -113,7 +113,7 @@ def launch(params):
     if "PYTEST_CURRENT_TEST" in os.environ:
         future = engine.run(CalculationFactory("gromacs.grompp"), **inputs)
     else:
-        future = engine.run(CalculationFactory("gromacs.grompp"), **inputs)
+        future = engine.submit(CalculationFactory("gromacs.grompp"), **inputs)
 
 
 @click.command()
