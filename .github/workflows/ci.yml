@@ -17,7 +17,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:10
+        image: postgres:15.1
         env:
           POSTGRES_DB: test_aiida
           POSTGRES_PASSWORD: ''
@@ -49,7 +49,7 @@ jobs:
 
     - name: Install GROMACS
       shell: bash -el {0}
-      run: conda install -c conda-forge gromacs
+      run: conda install -c conda-forge 'gromacs=2022.3=nompi_hca75aac_100'
 
     - name: Install aiida-gromacs and dependencies
       shell: bash -el {0}
