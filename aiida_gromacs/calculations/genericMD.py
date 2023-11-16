@@ -109,7 +109,8 @@ class GenericCalculation(CalcJob):
         if "<" in self.inputs.command.value:
             stdin_file = self.inputs.command.value.split()[-1]
             codeinfo.stdin_name = stdin_file
-            codeinfo.cmdline_params = []
+            codeinfo.cmdline_params = str(self.inputs.command.value.split('<')[0]).split()
+            #codeinfo.cmdline_params = []
                     
         
         # the UUID of the AbstractCode to run

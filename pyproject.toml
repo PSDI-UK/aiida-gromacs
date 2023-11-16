@@ -59,6 +59,7 @@ gmx_genion = "aiida_gromacs.cli.genion:cli"
 gmx_grompp = "aiida_gromacs.cli.grompp:cli"
 gmx_mdrun = "aiida_gromacs.cli.mdrun:cli"
 gmx_solvate = "aiida_gromacs.cli.solvate:cli"
+gmx_make_ndx = "aiida_gromacs.cli.make_ndx:cli"
 genericMD = "aiida_gromacs.cli.genericMD:cli"
 createarchive = "aiida_gromacs.cli.createarchive:cli"
 
@@ -69,6 +70,7 @@ createarchive = "aiida_gromacs.cli.createarchive:cli"
 "gromacs.grompp" = "aiida_gromacs.data.grompp:GromppParameters"
 "gromacs.mdrun" = "aiida_gromacs.data.mdrun:MdrunParameters"
 "gromacs.solvate" = "aiida_gromacs.data.solvate:SolvateParameters"
+"gromacs.make_ndx" = "aiida_gromacs.data.make_ndx:Make_ndxParameters"
 
 [project.entry-points."aiida.calculations"]
 "gromacs.pdb2gmx" = "aiida_gromacs.calculations.pdb2gmx:Pdb2gmxCalculation"
@@ -77,6 +79,7 @@ createarchive = "aiida_gromacs.cli.createarchive:cli"
 "gromacs.grompp" = "aiida_gromacs.calculations.grompp:GromppCalculation"
 "gromacs.mdrun" = "aiida_gromacs.calculations.mdrun:MdrunCalculation"
 "gromacs.solvate" = "aiida_gromacs.calculations.solvate:SolvateCalculation"
+"gromacs.make_ndx" = "aiida_gromacs.calculations.make_ndx:Make_ndxCalculation"
 "gromacs.genericMD" = "aiida_gromacs.calculations.genericMD:GenericCalculation"
 
 [project.entry-points."aiida.parsers"]
@@ -86,6 +89,7 @@ createarchive = "aiida_gromacs.cli.createarchive:cli"
 "gromacs.grompp" = "aiida_gromacs.parsers.grompp:GromppParser"
 "gromacs.mdrun" = "aiida_gromacs.parsers.mdrun:MdrunParser"
 "gromacs.solvate" = "aiida_gromacs.parsers.solvate:SolvateParser"
+"gromacs.make_ndx" = "aiida_gromacs.parsers.make_ndx:Make_ndxParser"
 "gromacs.genericMD" = "aiida_gromacs.parsers.genericMD:GenericParser"
 
 [project.entry-points."aiida.workflows"]

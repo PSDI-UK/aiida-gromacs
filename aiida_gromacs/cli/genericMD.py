@@ -33,6 +33,7 @@ def launch_genericMD(options):
     inputs = options["inputs"]
     outputs = options["outputs"]
     output_dir = options["output_dir"]
+    submit = options["submit"]
 
     print(f"command: {command}")
 
@@ -50,7 +51,8 @@ def launch_genericMD(options):
     # qb.order_by({MyAppCalculation: {"ctime": "desc"}})
 
     # Wait for previous process to finish if running
-    searchprevious.check_prev_process(qb)
+    if submit:
+        searchprevious.check_prev_process(qb)
 
     # Save list of input files to a dict with keys that are formatted
     # file names and values that are SinglefileData.
@@ -94,8 +96,13 @@ def launch_genericMD(options):
         future = engine.run(CalculationFactory("gromacs.genericMD"), 
                                **process_inputs)
     else:
-        future = engine.submit(CalculationFactory("gromacs.genericMD"), 
-                               **process_inputs)
+        if submit:
+            future = engine.submit(CalculationFactory("gromacs.genericMD"), 
+                                **process_inputs)
+        else:
+            future = engine.run(CalculationFactory("gromacs.genericMD"), 
+                                **process_inputs)
+
     # future = engine.submit(process)
     print(f"Submitted calculation: {future}\n")
 
@@ -121,10 +128,16 @@ def launch_genericMD(options):
 )
 @click.option(
     "--output_dir",
-    default=os.path.join(os.getcwd()) + "/outputs",
+    default=os.path.join(os.getcwd()),
     type=str,
     help="Absolute path of directory where files are saved.",
 )
+@click.option(
+    "--submit", 
+    is_flag=True, 
+    show_default=True, 
+    default=False, 
+    help="Submit to daemon rather than blocking mode.")
 def cli(**kwargs):
     """Run genericMD for use with generic commands outside of gromacs
 
