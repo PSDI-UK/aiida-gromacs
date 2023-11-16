@@ -4,39 +4,15 @@
 Usage: gmx_grompp --help
 """
 
-import os
-
 import click
+import os
 
 from aiida import cmdline, engine
 from aiida.plugins import CalculationFactory, DataFactory
 
 from aiida_gromacs import helpers
 from aiida_gromacs.utils import searchprevious
-
-
-def posres(mdpfile, topfile):
-    """ Test if position restraints are activated in the MDP file.
-    
-    If it is then read the topology file for the itp.
-    """
-    import re
-    
-    # Grab mdp file contents
-    mdp = mdpfile.get_content()
-
-    # If position restraints are active
-    if "DPOSRES" in mdp:
-        # Grab topology file contents
-        top = topfile.get_content()
-        # Find the position restraints include.
-        find_include = re.search(r'#ifdef POSRES\n([\S\s]*?)#endif', top, re.DOTALL).group()
-        # Find the itp file in quotes.
-        itpfile = re.search(r'"([A-Za-z0-9_\./\\-]*)"', find_include).group().strip('"')
-        return itpfile
-    # If not active then return FALSE.
-    else:
-        return False
+from aiida_gromacs.utils import topfile_utils
 
 
 def launch(params):
@@ -64,17 +40,45 @@ def launch(params):
 
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
+    FolderData = DataFactory("core.folder")
     inputs["mdpfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
     inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("c")))
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
-    itpfile = posres(inputs["mdpfile"], inputs["topfile"])
-    if itpfile is not False:
-        # set correct itpfile path for tests
-        if "PYTEST_CURRENT_TEST" in os.environ:
-            inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), 'tests/input_files', itpfile))
-        else:
-            inputs["itpfile"] = SinglefileData(file=os.path.join(os.getcwd(), itpfile))
+    # Find itp files and FF reference files.
+    itp_files, itp_dirs = topfile_utils.itp_finder(inputs["mdpfile"], inputs["topfile"])
+
+    # If we have itp's or FF include files then tag them.
+    if itp_files is not False:
+
+        inputs["itp_files"] = {}
+
+        # Iterate files to assemble a dict of names and paths.
+        for i, itpfile in enumerate(itp_files):
+
+            # set correct itpfile path for tests
+            if "PYTEST_CURRENT_TEST" in os.environ:
+                inputs["itp_files"][f"itpfile{i}"] = SinglefileData(file=os.path.join(os.getcwd(), 'tests/input_files', itpfile))
+            else:
+
+                inputs["itp_files"][f"itpfile{i}"] = SinglefileData(file=os.path.join(os.getcwd(), itpfile))
+
+    # If we have included files in subdirs then process these.
+    if itp_dirs is not False:
+
+        inputs["itp_dirs"] = {}
+
+        # for each entry establish dir path and build file tree.
+        for itp_file in itp_dirs:
+
+            # Create a folder that is empty.
+            if itp_file.split("/")[0] not in inputs["itp_dirs"].keys():
+            
+                inputs["itp_dirs"][itp_file.split("/")[0]] = FolderData()
+
+            # Now fill it with files referenced in the topology.
+            inputs["itp_dirs"][itp_file.split("/")[0]].put_object_from_file(
+                os.path.join(os.getcwd(), itp_file), path=itp_file.split("/")[-1])
 
     if "r" in params:
         inputs["r_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("r")))
@@ -100,12 +104,8 @@ def launch(params):
     GromppParameters = DataFactory("gromacs.grompp")
     inputs["parameters"] = GromppParameters(params)
 
-
     # check if inputs are outputs from prev processes
-    if itpfile is not False:
-        inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile", "itpfile"])
-    else:
-        inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile"])
+    inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile"])
 
     # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
