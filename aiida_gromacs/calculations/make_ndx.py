@@ -45,16 +45,16 @@ class Make_ndxCalculation(CalcJob):
             required=False,
             help='Filename that should be redirected to the shell command using the stdin file descriptor.',
         )
-
-        # Optional inputs.
         spec.input('grofile', valid_type=SinglefileData, required=False, help='Structure file: gro g96 pdb brk ent esp tpr')
-        spec.input('n_file', valid_type=SinglefileData, required=False, help='Index file')
         spec.input('instructions_file', valid_type=SinglefileData, required=False, help='Instructions for generating index file')
         spec.input('metadata.options.stdin_filename', valid_type=str, help='name of file used in stdin.')
 
+        # Optional inputs.
+        spec.input('n_file', valid_type=SinglefileData, required=False, help='Index file')
+
         # Required outputs.
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
-        spec.output('n_file', valid_type=SinglefileData, help='Index file')
+        spec.output('n_file_out', valid_type=SinglefileData, help='Index file')
 
         # Include Optional outputs here.
 

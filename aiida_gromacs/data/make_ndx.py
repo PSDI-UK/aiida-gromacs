@@ -12,7 +12,7 @@ from aiida.orm import Dict
 
 # A subset of make_ndx command line options
 cmdline_options = {
-    Optional("o"): str,
+    Required("o", default="index.ndx"): str,
     Optional("natoms"): str,
     Optional("notwin"): str,
     Optional("twin"): str,

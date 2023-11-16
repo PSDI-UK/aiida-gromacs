@@ -40,7 +40,7 @@ class Make_ndxParser(Parser):
         # Map output files to how they are named.
         outputs = ["stdout"]
         output_template = {
-                "o": "n_file",
+                "o": "n_file_out",
             }
 
         for item in output_template:
