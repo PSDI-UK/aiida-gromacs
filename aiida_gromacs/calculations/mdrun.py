@@ -5,7 +5,7 @@ This calculation configures the ability to use the 'gmx mdrun' executable.
 """
 from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
-from aiida.orm import SinglefileData
+from aiida.orm import SinglefileData, Dict
 from aiida.plugins import DataFactory
 
 MdrunParameters = DataFactory("gromacs.mdrun")
@@ -79,6 +79,10 @@ class MdrunCalculation(CalcJob):
         spec.output('if_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
         spec.output('swap_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
 
+        # Outputs outside of gromacs
+        spec.output('logfile_metadata', valid_type=Dict, help='metadata exracted from gromacs logfile')
+        #spec.output('test', valid_type=Dict)
+
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 
     def prepare_for_submission(self, folder):
@@ -93,7 +97,7 @@ class MdrunCalculation(CalcJob):
 
         # Setup data structures for files.
         input_options = ["tprfile", "cpi_file", "table_file", "tableb_file", "tablep_file", "rerun_file", "ei_file", "multidir_file", "awh_file", "membed_file", "mp_file", "mn_file"]
-        output_options = ["c", "e", "g", "o", "x", "cpo", "dhdl", "field", "tpi", "tpid", "eo", "px", "pf", "ro", "ra", "rs", "rt", "mtx", "if", "swap"]
+        output_options = ["c", "e", "g", "o", "x", "cpo", "dhdl", "field", "tpi", "tpid", "eo", "px", "pf", "ro", "ra", "rs", "rt", "mtx", "if", "swap", "logfile_metadata"]
         cmdline_input_files = {}
         input_files = []
         output_files = []

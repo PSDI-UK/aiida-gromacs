@@ -4,11 +4,13 @@ Parsers provided by aiida_gromacs.
 This calculation configures the ability to use the 'gmx mdrun' executable.
 """
 import os
+import json
 from aiida.common import exceptions
 from aiida.engine import ExitCode
-from aiida.orm import SinglefileData
+from aiida.orm import SinglefileData, Dict
 from aiida.parsers.parser import Parser
 from aiida.plugins import CalculationFactory
+from aiida_gromacs.utils import fileparsers
 
 MdrunCalculation = CalculationFactory("gromacs.mdrun")
 
@@ -90,4 +92,17 @@ class MdrunParser(Parser):
         if "PYTEST_CURRENT_TEST" not in os.environ:
             self.retrieved.copy_tree(os.getcwd())
 
+        # Include file parsers here
+        for f in files_retrieved:
+            if f[-4:] == ".log":
+                MdrunParser.parse_logfile(self, f)
+
         return ExitCode(0)
+    
+    def parse_logfile(self, f):
+        metadata_dict = fileparsers.gromacs_logfile_parser(f)
+        metadata_node = Dict(metadata_dict)
+        self.out("logfile_metadata", metadata_node)
+        file_path = os.path.join(os.getcwd(), f"{f[:-4]}_logfile_metadata.json")
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(metadata_dict, f, ensure_ascii=False, indent=4)
