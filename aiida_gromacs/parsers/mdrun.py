@@ -107,6 +107,7 @@ class MdrunParser(Parser):
         :param f: the name of the file node outputted from mdrun for parsing
         :type f: str
         :param parser_func: the function used to parse the file f
+        :type parser_func: `class 'function'`
         :param node_name: the name of the outputted Dict node
         :type node_name: str
         """
