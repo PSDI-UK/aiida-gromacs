@@ -34,7 +34,7 @@ jobs:
     - name: Check Daemons are running
       shell: bash
       run: verdi status
-      
+
     - name: Install aiida-gromacs and its testing dependencies
       shell: bash
       run: pip install -e .[testing]
@@ -43,8 +43,8 @@ jobs:
       shell: bash
       run: pytest --cov aiida_gromacs --cov-report term-missing --cov-append .
 
-    #- name: Report Coverage
-    #  uses: coverallsapp/github-action@v2
+    - name: Report Coverage
+      uses: coverallsapp/github-action@v2
 
   docs:
     runs-on: ubuntu-latest
