@@ -10,62 +10,41 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    strategy:
-      matrix:
-        python-version: [3.11]
-        backend: ['stable']
-
-    services:
-      postgres:
-        image: postgres:15.1
-        env:
-          POSTGRES_DB: test_aiida
-          POSTGRES_PASSWORD: ''
-          POSTGRES_HOST_AUTH_METHOD: trust
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-      rabbitmq:
-        image: rabbitmq:latest
-        ports:
-          - 5672:5672
-
+    container:
+        image: harbor.stfc.ac.uk/biosimulation-cloud/aiida-testenv:0.1
     steps:
     - uses: actions/checkout@v4
 
-    - uses: conda-incubator/setup-miniconda@v2
-      with:
-        miniconda-version: "latest"
-        python-version: 3.11
-        channels: conda-forge, defaults
-        use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
-        auto-update-conda: true
-        auto-activate-base: true
-      name: Pull miniconda and autoactivate.
+    - name: Start PostGRES DB
+      shell: bash
+      run: pg_ctl -D /home/aiida/.aiida/aiida_db -l /home/aiida/.aiida/logfile start
 
-    - name: Install GROMACS
-      shell: bash -el {0}
-      run: conda install -c conda-forge 'gromacs=2022.3=nompi_hca75aac_100'
+    - name: Start RabbitMQ
+      shell: bash
+      run: rabbitmq-server -detached
 
-    - name: Install aiida-gromacs and dependencies
-      shell: bash -el {0}
-      run: |
-        pip install --upgrade pip
-        pip install -e .[testing]
+    - name: Setup AiiDA profile
+      shell: bash
+      run: printf '%s\n' testing test@test.com testy tester testorg | verdi quicksetup
+
+    - name: Start AiiDA Daemon set
+      shell: bash
+      run: verdi daemon start 2
+
+    - name: Check Daemons are running
+      shell: bash
+      run: verdi status
+      
+    - name: Install aiida-gromacs and its testing dependencies
+      shell: bash
+      run: pip install -e .[testing]
 
     - name: Run test suite
-      env:
-        # show timings of tests
-        PYTEST_ADDOPTS: "--durations=0"
-      shell: bash -el {0}
+      shell: bash
       run: pytest --cov aiida_gromacs --cov-report term-missing --cov-append .
 
-    - name: Report Coverage
-      uses: coverallsapp/github-action@v2
+    #- name: Report Coverage
+    #  uses: coverallsapp/github-action@v2
 
   docs:
     runs-on: ubuntu-latest
