@@ -15,6 +15,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Initialise PostGRES DB
+      shell: bash
+      run: initdb -D /home/aiida/.aiida/aiida_db
+
     - name: Start PostGRES DB
       shell: bash
       run: pg_ctl -D /home/aiida/.aiida/aiida_db -l /home/aiida/.aiida/logfile start
