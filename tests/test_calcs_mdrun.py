@@ -71,4 +71,4 @@ def test_file_name_match(gromacs_code):
     assert result["grofile"].list_object_names()[0] == "mdrun_1AKI_minimised.gro"
     assert result["logfile"].list_object_names()[0] == "mdrun_1AKI_minimised.log"
     assert result["enfile"].list_object_names()[0] == "mdrun_1AKI_minimised.edr"
-    assert isinstance(result["logfile_metadata"]) == Dict
+    assert isinstance(result["logfile_metadata"], Dict)
