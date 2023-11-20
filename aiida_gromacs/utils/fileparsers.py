@@ -6,11 +6,19 @@ metadata into a dictionary.
 import re
 import json
 
-def nested_dict_extractor(i, j, lines, input_dict, split_with, leading_space, 
+def extract_nested_dict(i, j, lines, input_dict, split_with, leading_space, 
             leading_space_check_list):
     """
     For each of the input parameers defined in the gromacs log file, output
     each indented section into dictionary format.
+
+    :param i: line number in file
+    :param j: line number from line i in file
+    :param lines: lines in file
+    :param input_dict: dictionary for storing parsed data
+    :param split_with: the delimiter used to split contents in a file
+    :param leading_space: the number of spaces at the start of a line
+    :param leading_space_check_list: list of acceptable number of starting spaces in a line
     """
     for k, line3 in enumerate(lines[i+j+1:]):
         if line3 == '\n':
@@ -24,11 +32,18 @@ def nested_dict_extractor(i, j, lines, input_dict, split_with, leading_space,
                 input_dict[l[0].strip()] = l[1].strip()
     return input_dict
 
-def gromacs_logfile_parser(handle):
+def parse_gromacs_logfile(self, f):
+    """
+    Parse a logfile outputted from the gromacs mdrun command and save data
+    into a dictionary
+
+    :param f: name of file in output node 
+    :return: dictionary of logfile metadata
+    """
     input_params = {}
     averages = {}
-    with open(handle, 'r') as file:
-        lines = file.readlines()
+    with self.retrieved.base.repository.open(f, "r") as handle:
+        lines = handle.readlines()
         for i, line in enumerate(lines):
             if re.match(r"(?i)Executable:", line):
                 for j, line2 in enumerate(lines[i:]):
@@ -60,23 +75,23 @@ def gromacs_logfile_parser(handle):
                     if ":" in line2 and leading_space == 0:
                         top = line2.strip().split(':')[0]
                         input_params[top] = {}
-                        nested_dict_extractor(i, j, lines, input_params[top], 
+                        extract_nested_dict(i, j, lines, input_params[top], 
                                 "=", leading_space, [0,3])
                     if ":" in line2 and leading_space == 3:
                         top2 = line2.strip().split(':')[0]
                         input_params[top][top2] = {}
-                        nested_dict_extractor(i, j, lines, input_params[top][top2], 
+                        extract_nested_dict(i, j, lines, input_params[top][top2], 
                                 "=", leading_space, [3,5])
                     if ":" in line2 and leading_space == 5:
                         top3 = line2.strip().split(':')[0]
                         input_params[top][top2][top3] = {}
-                        nested_dict_extractor(i, j, lines, 
+                        extract_nested_dict(i, j, lines, 
                                 input_params[top][top2][top3], "=", leading_space, 
                                 [5,7])
                     if ":" in line2 and leading_space == 7:
                         top4 = line2.strip().split(':')[0]
                         input_params[top][top2][top3][top4] = {}
-                        nested_dict_extractor(i, j, lines, 
+                        extract_nested_dict(i, j, lines, 
                                 input_params[top][top2][top3][top4], 
                                 "=", leading_space, [7])
             if "A V E R A G E S" in line:

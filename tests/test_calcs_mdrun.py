@@ -4,6 +4,7 @@
 import os
 
 from aiida.engine import run
+from aiida.orm import Dict
 from aiida.plugins import CalculationFactory, DataFactory
 
 from . import TEST_DIR
@@ -57,6 +58,7 @@ def test_process(gromacs_code):
     assert "grofile" in result
     assert "logfile" in result
     assert "enfile" in result
+    assert "logfile_metadata" in result
 
 
 def test_file_name_match(gromacs_code):
@@ -69,3 +71,4 @@ def test_file_name_match(gromacs_code):
     assert result["grofile"].list_object_names()[0] == "mdrun_1AKI_minimised.gro"
     assert result["logfile"].list_object_names()[0] == "mdrun_1AKI_minimised.log"
     assert result["enfile"].list_object_names()[0] == "mdrun_1AKI_minimised.edr"
+    assert isinstance(result["logfile_metadata"]) == Dict
