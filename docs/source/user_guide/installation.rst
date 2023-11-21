@@ -8,13 +8,9 @@ Python Virtual Environment
 ++++++++++++++++++++++++++
 
 We recommend setting up a Python virtual environment via Conda, which can be installed by downloading the relevant installer `here <https://docs.conda.io/en/latest/miniconda.html>`_.
-If you're using Linux or Mac OS, install conda via the terminal with::
+If you're using Linux, install conda via the terminal with::
 
     bash Miniconda3-latest-Linux-x86_64.sh
-
-Or::
-
-    bash Miniconda3-latest-MacOSX-arm64.sh
 
 Then add the conda path to the bash environment by appending the following to your ``.bashrc`` file::
 
@@ -29,10 +25,6 @@ Our AiiDA plugin has been tested with AiiDA ``v2.4.0``, we recommend to `install
 
     conda install -c conda-forge mamba
     mamba create --name aiida-2.4.0 -c conda-forge aiida-core=2.4.0 aiida-core.services=2.4.0
-
-This installation method may not work on Macs with M2 chips, if this is the case, try to install directly from conda instead::
-
-    conda create -yn aiida-2.4.0 -c conda-forge aiida-core=2.4.0
 
 Plugin Installation
 +++++++++++++++++++
