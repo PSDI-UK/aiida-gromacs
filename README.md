@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/jimboid/aiida-gromacs/workflows/ci/badge.svg?branch=master)](https://github.com/jimboid/aiida-gromacs/actions)
+[![Build Status](https://github.com/jimboid/aiida-gromacs/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/jimboid/aiida-gromacs/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/jimboid/aiida-gromacs/badge.svg?branch=master)](https://coveralls.io/github/jimboid/aiida-gromacs?branch=master)
 [![Docs status](https://readthedocs.org/projects/aiida-gromacs/badge)](http://aiida-gromacs.readthedocs.io/)
 [![PyPI version](https://badge.fury.io/py/aiida-gromacs.svg)](https://badge.fury.io/py/aiida-gromacs)
