@@ -4,7 +4,6 @@ Functions for parsing various gromacs input/output files and extracting
 metadata into a dictionary.
 """
 import re
-import json
 
 def extract_nested_dict(i, j, lines, input_dict, split_with, leading_space, 
             leading_space_check_list):
@@ -21,10 +20,10 @@ def extract_nested_dict(i, j, lines, input_dict, split_with, leading_space,
     :param leading_space_check_list: list of acceptable number of starting spaces in a line
     """
     for k, line3 in enumerate(lines[i+j+1:]):
-        if line3 == '\n':
+        if line3 == "\n":
             break
-        leading_space_check = re.search('\S', line3).start()
-        if ':' in line3 and leading_space_check in leading_space_check_list:
+        leading_space_check = re.search(r"\S", line3).start()
+        if ":" in line3 and leading_space_check in leading_space_check_list:
             break
         if split_with in line3:
             l = line3.strip().split(split_with)
@@ -45,55 +44,99 @@ def parse_gromacs_logfile(self, f):
     with self.retrieved.base.repository.open(f, "r") as handle:
         lines = handle.readlines()
         for i, line in enumerate(lines):
+            # find line containing executable and save subsequent lines with
+            # zero leading spaces
             if re.match(r"(?i)Executable:", line):
                 for j, line2 in enumerate(lines[i:]):
                     if line2 == "\n":
                         break
-                    leading_space = re.search('\S', line2).start()
+                    leading_space = re.search(r"\S", line2).start()
                     if ":" in line2 and leading_space == 0:
-                        top = line2.strip().split(':')[0].strip()
-                        val = line2.strip().split(':')[1].strip()
+                        top = line2.strip().split(":")[0].strip()
+                        val = line2.strip().split(":")[1].strip()
                         input_params[top] = val
+            # find line containing command, assumes the command is on next line
             if "Command line:" in line:
                 if i + 1 < len(lines):
                     command = lines[i+1].strip()
                     input_params["Command line"] = rf"{command}"
+            # save subsequent lines with zero leading spaces
             if re.match(r"(?i)GROMACS version:", line):
                 for j, line2 in enumerate(lines[i:]):
                     if line2 == "\n":
                         break
-                    leading_space = re.search('\S', line2).start()
+                    leading_space = re.search(r"\S", line2).start()
                     if ":" in line2 and leading_space == 0:
-                        top = line2.strip().split(':')[0].strip()
-                        val = line2.strip().split(':')[1].strip()
+                        top = line2.strip().split(":")[0].strip()
+                        val = line2.strip().split(":")[1].strip()
                         input_params[top] = val
+            # extract compute from line containing "Running"
+            if re.match(r"(?i)Running", line):
+                compute_info = line.split()
+                top = " ".join(compute_info[:2])
+                input_params[top] = {}
+                input_params[top][compute_info[3]] = compute_info[2] #nodes
+                input_params[top][compute_info[7][:-1]] = compute_info[6] #cores
+                input_params[top][" ".join(compute_info[-2:])] = compute_info[8] #PUs
+            # Extract Hardware info, delimiters are not like input params
+            if re.match(r"(?i)Hardware detected:", line):
+                for j, line2 in enumerate(lines[i:]):
+                    if line2 == "\n":
+                        break
+                    leading_space = re.search(r"\S", line2).start()
+                    if ":" in line2 and leading_space == 0:
+                        top = line2.strip().split(":")[0]
+                        input_params[top] = {}
+                    if ":" in line2 and leading_space == 2:
+                        top2 = line2.strip().split(r":")[0]
+                        top2_val = line2.strip().split(r":")[1]
+                        input_params[top][top2] = {}
+                    if ":" in line2 and leading_space == 4:
+                        top3 = line2.strip()
+                        top3 = re.split(r"\s{3}", top3)
+                        for pair in top3:
+                            key_val = pair.split(r":")
+                            key = key_val[0].strip()
+                            val = key_val[1].strip()
+                            if len(key_val) == 2:
+                                if val != "":
+                                    input_params[top][top2][key] = val
+                                else:
+                                    input_params[top][top2][key] = {}
+                    if ":" in line2 and leading_space == 6:
+                        key_val2 = line2.split(r":")
+                        key2 = key_val2[0].strip()
+                        val2 = key_val2[1].strip()
+                        input_params[top][top2][key][key2] = val2
+            # extract input params
             if re.match(r"(?i)Input\sParameters", line):
                 for j, line2 in enumerate(lines[i:]):
                     if line2 == "\n":
                         break
-                    leading_space = re.search('\S', line2).start()
+                    leading_space = re.search(r"\S", line2).start()
                     if ":" in line2 and leading_space == 0:
-                        top = line2.strip().split(':')[0]
+                        top = line2.strip().split(":")[0]
                         input_params[top] = {}
                         extract_nested_dict(i, j, lines, input_params[top], 
                                 "=", leading_space, [0,3])
                     if ":" in line2 and leading_space == 3:
-                        top2 = line2.strip().split(':')[0]
+                        top2 = line2.strip().split(":")[0]
                         input_params[top][top2] = {}
                         extract_nested_dict(i, j, lines, input_params[top][top2], 
                                 "=", leading_space, [3,5])
                     if ":" in line2 and leading_space == 5:
-                        top3 = line2.strip().split(':')[0]
+                        top3 = line2.strip().split(":")[0]
                         input_params[top][top2][top3] = {}
                         extract_nested_dict(i, j, lines, 
                                 input_params[top][top2][top3], "=", leading_space, 
                                 [5,7])
                     if ":" in line2 and leading_space == 7:
-                        top4 = line2.strip().split(':')[0]
+                        top4 = line2.strip().split(":")[0]
                         input_params[top][top2][top3][top4] = {}
                         extract_nested_dict(i, j, lines, 
                                 input_params[top][top2][top3][top4], 
                                 "=", leading_space, [7])
+            # extract ensemble averages
             if "A V E R A G E S" in line:
                 for j, line2 in enumerate(lines[i:]):
                     if "Statistics" in line2:
@@ -102,25 +145,25 @@ def parse_gromacs_logfile(self, f):
                         averages["total-frames"] = l[5]
                     if "M E G A - F L O P S" in line2:
                         break
-                    numbers = re.findall(r'\d+\.\d+e[\+|-]\d+', line2, re.DOTALL)
+                    numbers = re.findall(r"\d+\.\d+e[\+|-]\d+", line2, re.DOTALL)
                     if len(numbers) != 0:
                         possible_header = lines[i+j-1].strip() #remove \n
                         if re.match(r"[a-z,A-Z]", possible_header):    
-                            header = re.split('\s{2}+', possible_header)
-                            header = list(filter(None, header)) # remove '' entries          
+                            header = re.split(r"\s{2}+", possible_header)
+                            header = list(filter(None, header)) # remove "" entries          
                             if len(numbers) == len(header):
                                 for hn in range(len(header)):
                                     averages[header[hn].strip()] = numbers[hn]
             if "Time:" in line:
                 averages["Time"] = {}
                 l = line.strip().split()[1:]
-                head = list(filter(None, lines[i-1].strip().split('  ')))
+                head = list(filter(None, lines[i-1].strip().split("  ")))
                 for hn in range(len(header)):
                     averages["Time"][head[hn]] = l[hn]
             if "Performance:" in line:
                 averages["Performance"] = {}
                 l = line.strip().split()[1:]
-                head = list(filter(None, lines[i-1].strip().split('  ')))
+                head = list(filter(None, lines[i-1].strip().split("  ")))
                 for hn in range(len(header)):
                     averages["Performance"][head[hn]] = l[hn]
                         
