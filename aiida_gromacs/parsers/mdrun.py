@@ -4,11 +4,13 @@ Parsers provided by aiida_gromacs.
 This calculation configures the ability to use the 'gmx mdrun' executable.
 """
 import os
+import json
 from aiida.common import exceptions
 from aiida.engine import ExitCode
-from aiida.orm import SinglefileData
+from aiida.orm import SinglefileData, Dict
 from aiida.parsers.parser import Parser
 from aiida.plugins import CalculationFactory
+from aiida_gromacs.utils import fileparsers
 
 MdrunCalculation = CalculationFactory("gromacs.mdrun")
 
@@ -85,9 +87,46 @@ class MdrunParser(Parser):
             with self.retrieved.base.repository.open(f, "rb") as handle:
                 output_node = SinglefileData(filename=f, file=handle)
             self.out(outputs[i], output_node)
+            # Include file parsers here
+            if outputs[i] == "logfile":
+                MdrunParser.parse_file_contents(self, f, 
+                                    fileparsers.parse_gromacs_logfile, 
+                                    node_name="logfile_metadata")
 
         # If not in testing mode, then copy back the files.
         if "PYTEST_CURRENT_TEST" not in os.environ:
             self.retrieved.copy_tree(os.getcwd())
 
         return ExitCode(0)
+    
+    def parse_file_contents(self, f, parser_func, node_name):
+        """
+        Read in the gromacs output file, save into a dictionary node and 
+        output dictionary as a json file.
+
+        :param f: the name of the file node outputted from mdrun for parsing
+        :type f: str
+        :param parser_func: the function used to parse the file f
+        :type parser_func: `class 'function'`
+        :param node_name: the name of the outputted Dict node
+        :type node_name: str
+        """
+        metadata_dict = parser_func(self, f)
+        metadata_node = Dict(metadata_dict)
+        self.out(node_name, metadata_node)
+        MdrunParser.output_parsed_metadata(f, metadata_dict)
+
+
+    def output_parsed_metadata(f, metadata_dict):
+        """
+        Save a dictionary into a json file if not in testing mode.
+
+        :param f: the name of the file node outputted from mdrun
+        :param metadata_dict: the aiida dictionary containing metadata
+        """
+        # If not in testing mode, then copy back dict as json file.
+        if "PYTEST_CURRENT_TEST" not in os.environ:
+            f_prefix = f.split(".")[0]
+            file_path = os.path.join(os.getcwd(), f"{f_prefix}_metadata.json")
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(metadata_dict, f, ensure_ascii=False, indent=4)
