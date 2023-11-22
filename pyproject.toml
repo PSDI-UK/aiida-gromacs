@@ -28,7 +28,7 @@ dependencies = [
 ]
 
 [project.urls]
-Source = "https://github.com/jimboid/aiida-gromacs"
+Source = "https://github.com/PSDI-Biomolecular-team/aiida-gromacs"
 
 [project.optional-dependencies]
 testing = [
