@@ -11,11 +11,11 @@ The first step in getting going as a developer is to clone our git repository by
 
 #. HTTPS::
 
-        git clone https://github.com/jimboid/aiida-gromacs.git
+        git clone https://github.com/PSDI-Biomolecular-team/aiida-gromacs.git
 
 #. SSH::
 
-        git clone git@github.com:jimboid/aiida-gromacs.git
+        git clone git@github.com:PSDI-Biomolecular-team/aiida-gromacs.git
 
 Running the tests
 +++++++++++++++++
@@ -85,7 +85,7 @@ Putting it all together
 
 Putting all of the above together into the following install commands::
 
-        git clone git@github.com:jimboid/aiida-gromacs.git
+        git clone git@github.com:PSDI-Biomolecular-team/aiida-gromacs.git
         cd aiida-gromacs
         pip install -e .[docs,pre-commit,testing]
         pre-commit install
