@@ -39,6 +39,8 @@ class MdrunParser(Parser):
 
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
+        # the directory for storing parsed output files
+        output_dir = self.node.get_option("output_dir")
         # Map output files to how they are named.
         outputs = ["stdout"]
         output_template = {
@@ -89,23 +91,24 @@ class MdrunParser(Parser):
             self.out(outputs[i], output_node)
             # Include file parsers here
             if outputs[i] == "logfile":
-                MdrunParser.parse_file_contents(self, f, 
+                MdrunParser.parse_file_contents(self, f, output_dir,
                                     fileparsers.parse_gromacs_logfile, 
                                     node_name="logfile_metadata")
 
         # If not in testing mode, then copy back the files.
         if "PYTEST_CURRENT_TEST" not in os.environ:
-            self.retrieved.copy_tree(os.getcwd())
+            self.retrieved.copy_tree(output_dir)
 
         return ExitCode(0)
     
-    def parse_file_contents(self, f, parser_func, node_name):
+    def parse_file_contents(self, f, output_dir, parser_func, node_name):
         """
         Read in the gromacs output file, save into a dictionary node and 
         output dictionary as a json file.
 
         :param f: the name of the file node outputted from mdrun for parsing
         :type f: str
+        :param output_dir: path to where json file should be saved
         :param parser_func: the function used to parse the file f
         :type parser_func: `class 'function'`
         :param node_name: the name of the outputted Dict node
@@ -114,19 +117,20 @@ class MdrunParser(Parser):
         metadata_dict = parser_func(self, f)
         metadata_node = Dict(metadata_dict)
         self.out(node_name, metadata_node)
-        MdrunParser.output_parsed_metadata(f, metadata_dict)
+        MdrunParser.output_parsed_metadata(f, output_dir, metadata_dict)
 
 
-    def output_parsed_metadata(f, metadata_dict):
+    def output_parsed_metadata(f, output_dir, metadata_dict):
         """
         Save a dictionary into a json file if not in testing mode.
 
         :param f: the name of the file node outputted from mdrun
+        :param output_dir: path to where json file should be saved
         :param metadata_dict: the aiida dictionary containing metadata
         """
         # If not in testing mode, then copy back dict as json file.
         if "PYTEST_CURRENT_TEST" not in os.environ:
             f_prefix = f.split(".")[0]
-            file_path = os.path.join(os.getcwd(), f"{f_prefix}_metadata.json")
+            file_path = os.path.join(output_dir, f"{f_prefix}_metadata.json")
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(metadata_dict, f, ensure_ascii=False, indent=4)

@@ -3,6 +3,8 @@ Calculations provided by aiida_gromacs.
 
 This calculation configures the ability to use the 'gmx mdrun' executable.
 """
+import os
+
 from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
 from aiida.orm import SinglefileData, Dict
@@ -40,6 +42,8 @@ class MdrunCalculation(CalcJob):
         spec.input('metadata.options.output_filename', valid_type=str, default='mdrun.out')
         spec.input('tprfile', valid_type=SinglefileData, help='Input structure.')
         spec.input('parameters', valid_type=MdrunParameters, help='Command line parameters for gmx mdrun')
+        spec.input('metadata.options.output_dir', valid_type=str, default=os.getcwd(),
+                help='Directory where output files will be saved when parsed.')
 
         # Optional inputs.
         spec.input('cpi_file', valid_type=SinglefileData, required=False, help='Checkpoint file')

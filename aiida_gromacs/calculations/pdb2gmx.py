@@ -37,6 +37,8 @@ class Pdb2gmxCalculation(CalcJob):
         spec.input('metadata.options.output_filename', valid_type=str, default='pdb2gmx.out')
         spec.input('pdbfile', valid_type=SinglefileData, help='Input structure.')
         spec.input('parameters', valid_type=Pdb2gmxParameters, help='Command line parameters for gmx pdb2gmx')
+        spec.input('metadata.options.output_dir', valid_type=str,
+                help='Directory where output files will be saved when parsed.')
 
         # Default outputs.
         spec.output('stdout', valid_type=SinglefileData, help='stdout')

@@ -7,7 +7,6 @@ is set up in AiiDA
 """
 
 import os
-from pathlib import Path
 import click
 
 from aiida import cmdline, engine, orm, load_profile
@@ -18,7 +17,6 @@ from aiida_gromacs import helpers
 from aiida_gromacs.utils import searchprevious
 
 # set base path for input files.
-INPUT_DIR = os.path.join(os.getcwd())
 profile = load_profile()
 computer = helpers.get_computer()
 code = helpers.get_code(entry_point="gromacs", computer=computer)
@@ -32,14 +30,12 @@ def launch_genericMD(options):
     command = options["command"]
     inputs = options["inputs"]
     outputs = options["outputs"]
-    output_dir = options["output_dir"]
     submit = options["submit"]
 
     print(f"command: {command}")
 
     if not code:
         raise exceptions.NonExistent("Code has not been set.")
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     # MyAppCalculation = CalculationFactory("gromacs.genericMD")
 
@@ -58,7 +54,7 @@ def launch_genericMD(options):
     # file names and values that are SinglefileData.
     input_files = {}
     for filename in list(inputs):
-        file_path = os.path.join(INPUT_DIR, filename)
+        file_path = os.path.join(os.getcwd(), filename)
         stripped_input = filename.split("/")[-1]
         input_files[searchprevious.format_link_label(stripped_input)] = \
             orm.SinglefileData(file=file_path)
@@ -77,7 +73,7 @@ def launch_genericMD(options):
             "description": "Run CLI job and save input and output file provenance.",
             "options": {
                 "output_filename": "file.out",
-                "output_dir": output_dir,
+                #"output_dir": os.getcwd(),
                 "parser_name": "gromacs.genericMD",
             },
         },
@@ -87,7 +83,7 @@ def launch_genericMD(options):
     # as inputs for new process if file names match
     if qb.count() > 0:
         process_inputs = searchprevious.append_prev_nodes(qb, inputs, 
-                        process_inputs, INPUT_DIR)
+                        process_inputs, os.getcwd())
 
     # check if a pytest test is running, if so run rather than submit aiida job
     # Submit your calculation to the aiida daemon
@@ -125,12 +121,6 @@ def launch_genericMD(options):
 @click.option(
     "--outputs", multiple=True, type=str, 
     help="Output file name used in the command."
-)
-@click.option(
-    "--output_dir",
-    default=os.path.join(os.getcwd()),
-    type=str,
-    help="Absolute path of directory where files are saved.",
 )
 @click.option(
     "--submit", 

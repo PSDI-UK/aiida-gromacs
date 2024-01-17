@@ -27,6 +27,9 @@ def launch(params):
     inputs = {
         "metadata": {
             "description": params.pop("description"),
+            "options": {
+                "output_dir": os.getcwd(),
+            },
         },
     }
 

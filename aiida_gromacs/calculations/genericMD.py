@@ -2,9 +2,12 @@
 Generic calculation used to track input and output files of a 
 generic command.
 """
+import os
+
 from aiida.common import datastructures
 from aiida.engine import CalcJob
 from aiida.orm import List, SinglefileData, Str
+
 
 
 class GenericCalculation(CalcJob):
@@ -48,8 +51,9 @@ class GenericCalculation(CalcJob):
         # define the schema for metadata.options
         spec.input('metadata.options.output_filename', valid_type=str,
                 default='file.out', help='name of file produced by default.')
-        spec.input('metadata.options.output_dir', valid_type=str,
-                help='The directory where output files will be saved '
+        spec.input('metadata.options.output_dir', valid_type=str, 
+                default=os.getcwd(),
+                help='Directory where output files will be saved '
                     'when parsed.')
 
         # set the computational resources used for this calculation.
