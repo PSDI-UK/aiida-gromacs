@@ -60,8 +60,8 @@ def test_file_name_match(gromacs_code):
 
     result = run_make_ndx(gromacs_code)
 
-    assert result["stdout"].list_object_names()[0] == "make_ndx.out"
-    assert result["n_file_out"].list_object_names()[0] == "index.ndx"
+    assert result["stdout"].base.repository.list_object_names()[0] == "make_ndx.out"
+    assert result["n_file_out"].base.repository.list_object_names()[0] == "index.ndx"
 
     # check index file produced is the same in tests/input_files
     ref_n_file = os.path.join(TEST_DIR, "input_files", "make_ndx_index.ndx")

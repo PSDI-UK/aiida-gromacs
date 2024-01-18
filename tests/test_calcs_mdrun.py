@@ -66,9 +66,21 @@ def test_file_name_match(gromacs_code):
 
     result = run_mdrun(gromacs_code)
 
-    assert result["stdout"].list_object_names()[0] == "mdrun.out"
-    assert result["trrfile"].list_object_names()[0] == "mdrun_1AKI_minimised.trr"
-    assert result["grofile"].list_object_names()[0] == "mdrun_1AKI_minimised.gro"
-    assert result["logfile"].list_object_names()[0] == "mdrun_1AKI_minimised.log"
-    assert result["enfile"].list_object_names()[0] == "mdrun_1AKI_minimised.edr"
+    assert result["stdout"].base.repository.list_object_names()[0] == "mdrun.out"
+    assert (
+        result["trrfile"].base.repository.list_object_names()[0]
+        == "mdrun_1AKI_minimised.trr"
+    )
+    assert (
+        result["grofile"].base.repository.list_object_names()[0]
+        == "mdrun_1AKI_minimised.gro"
+    )
+    assert (
+        result["logfile"].base.repository.list_object_names()[0]
+        == "mdrun_1AKI_minimised.log"
+    )
+    assert (
+        result["enfile"].base.repository.list_object_names()[0]
+        == "mdrun_1AKI_minimised.edr"
+    )
     assert isinstance(result["logfile_metadata"], Dict)

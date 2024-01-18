@@ -52,5 +52,8 @@ def test_file_name_match(gromacs_code):
 
     result = run_editconf(gromacs_code)
 
-    assert result["stdout"].list_object_names()[0] == "editconf.out"
-    assert result["grofile"].list_object_names()[0] == "editconf_1AKI_newbox.gro"
+    assert result["stdout"].base.repository.list_object_names()[0] == "editconf.out"
+    assert (
+        result["grofile"].base.repository.list_object_names()[0]
+        == "editconf_1AKI_newbox.gro"
+    )

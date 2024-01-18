@@ -61,8 +61,8 @@ def test_file_name_match(gromacs_code):
     
     result = run_pdb2gmx(gromacs_code)
 
-    assert result["stdout"].list_object_names()[0] == "pdb2gmx.out"
-    assert result["grofile"].list_object_names()[0] == "pdb2gmx_1AKI_forcefield.gro"
-    assert result["topfile"].list_object_names()[0] == "pdb2gmx_1AKI_topology.top"
-    assert result["itpfile"].list_object_names()[0] == "pdb2gmx_1AKI_restraints.itp"
+    assert result["stdout"].base.repository.list_object_names()[0] == "pdb2gmx.out"
+    assert result["grofile"].base.repository.list_object_names()[0] == "pdb2gmx_1AKI_forcefield.gro"
+    assert result["topfile"].base.repository.list_object_names()[0] == "pdb2gmx_1AKI_topology.top"
+    assert result["itpfile"].base.repository.list_object_names()[0] == "pdb2gmx_1AKI_restraints.itp"
 

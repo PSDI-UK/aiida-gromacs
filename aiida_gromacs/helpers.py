@@ -11,7 +11,7 @@ import shutil
 import tempfile
 
 from aiida.common.exceptions import NotExistent
-from aiida.orm import Code, Computer
+from aiida.orm import InstalledCode, Computer
 
 LOCALHOST_NAME = "localhost"
 
@@ -48,7 +48,7 @@ def get_computer(name=LOCALHOST_NAME, workdir=None):
     """
 
     try:
-        computer = Computer.objects.get(label=name)
+        computer = Computer.collection.get(label=name)
     except NotExistent:
         if workdir is None:
             workdir = tempfile.mkdtemp()
@@ -75,7 +75,7 @@ def get_code(entry_point, computer):
     :param entry_point: Entry point of calculation plugin
     :param computer: (local) AiiDA computer
     :return: The code node
-    :rtype: :py:class:`aiida.orm.nodes.data.code.portable.PortableCode`
+    :rtype: :py:class:`aiida.orm.nodes.data.code.installed.InstalledCode`
     """
 
     try:
@@ -85,16 +85,18 @@ def get_code(entry_point, computer):
             f"Entry point '{entry_point}' not recognized. Allowed values: {list(executables.keys())}"
         ) from exc
 
-    codes = Code.objects.find(
+    codes = InstalledCode.collection.find(
         filters={"label": executable}
     )  # pylint: disable=no-member
     if codes:
         return codes[0]
 
     path = get_path_to_executable(executable)
-    code = Code(
-        input_plugin_name=entry_point,
-        remote_computer_exec=[computer, path],
+    code = InstalledCode(
+        label = executable,
+        default_calc_job_plugin=entry_point,
+        computer=computer,
+        filepath_executable=path,
     )
-    code.label = executable
+
     return code.store()

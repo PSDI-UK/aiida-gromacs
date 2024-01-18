@@ -136,7 +136,7 @@ def append_prev_nodes(qb, inputs, process_inputs, INPUT_DIR):
 
                 # check if the output node is a file.
                 if isinstance(previous_output_node, orm.SinglefileData):
-                    prev_output_filename = previous_output_node.get_attribute(
+                    prev_output_filename = previous_output_node.base.attributes.get(
                         "filename"
                     ) # get filename of the node
                     # check if output file is an input for new process and

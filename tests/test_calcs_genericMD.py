@@ -108,14 +108,14 @@ def test_file_name_match(gromacs_code):
     result, output_dir = run_genericMD_pdb2gmx(gromacs_code)
 
     assert (
-        result["pdb2gmx_1AKI_forcefield_gro"].list_object_names()[0]
+        result["pdb2gmx_1AKI_forcefield_gro"].base.repository.list_object_names()[0]
         == "pdb2gmx_1AKI_forcefield.gro"
     )
     assert (
-        result["pdb2gmx_1AKI_topology_top"].list_object_names()[0]
+        result["pdb2gmx_1AKI_topology_top"].base.repository.list_object_names()[0]
         == "pdb2gmx_1AKI_topology.top"
     )
     assert (
-        result["pdb2gmx_1AKI_restraints_itp"].list_object_names()[0]
+        result["pdb2gmx_1AKI_restraints_itp"].base.repository.list_object_names()[0]
         == "pdb2gmx_1AKI_restraints.itp"
     )
