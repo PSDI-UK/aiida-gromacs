@@ -13,6 +13,8 @@ from aiida.orm import SinglefileData
 from aiida.parsers.parser import Parser
 from aiida.plugins import CalculationFactory
 
+from aiida_gromacs.utils import fileparsers
+
 # entry point string under which the parser class is registered:
 GenericCalculation = CalculationFactory("gromacs.genericMD")
 
@@ -84,10 +86,7 @@ class GenericParser(Parser):
                 output_node = SinglefileData(file=handle, filename=thing)
             self.out(self.format_link_label(thing), output_node)
 
-
-        # If not in testing mode, then copy back the files.
-        if "PYTEST_CURRENT_TEST" not in os.environ:
-            self.retrieved.copy_tree(output_dir)
+        fileparsers.parse_process_files(self, files_retrieved, output_dir)
 
         return ExitCode(0)
     
@@ -112,4 +111,3 @@ class GenericParser(Parser):
         link_label = re.sub("_[_]+", "_", alphanumeric)
 
         return link_label
-

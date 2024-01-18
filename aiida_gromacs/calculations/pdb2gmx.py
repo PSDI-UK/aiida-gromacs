@@ -3,6 +3,8 @@ Calculations provided by aiida_gromacs.
 
 This calculation configures the ability to use the 'gmx pdb2gmx' executable.
 """
+import os
+
 from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
 from aiida.orm import SinglefileData
@@ -37,7 +39,7 @@ class Pdb2gmxCalculation(CalcJob):
         spec.input('metadata.options.output_filename', valid_type=str, default='pdb2gmx.out')
         spec.input('pdbfile', valid_type=SinglefileData, help='Input structure.')
         spec.input('parameters', valid_type=Pdb2gmxParameters, help='Command line parameters for gmx pdb2gmx')
-        spec.input('metadata.options.output_dir', valid_type=str,
+        spec.input('metadata.options.output_dir', valid_type=str, default=os.getcwd(),
                 help='Directory where output files will be saved when parsed.')
 
         # Default outputs.
