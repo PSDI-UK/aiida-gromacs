@@ -58,6 +58,6 @@ def test_file_name_match(gromacs_code):
     
     result = run_grompp(gromacs_code)
 
-    assert result["stdout"].list_object_names()[0] == "grompp.out"
-    assert result["tprfile"].list_object_names()[0] == "grompp_1AKI_ions.tpr"
+    assert result["stdout"].base.repository.list_object_names()[0] == "grompp.out"
+    assert result["tprfile"].base.repository.list_object_names()[0] == "grompp_1AKI_ions.tpr"
 

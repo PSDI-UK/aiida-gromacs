@@ -63,6 +63,12 @@ def test_file_name_match(bash_code):
 
     result = run_genion(bash_code)
 
-    assert result["stdout"].list_object_names()[0] == "genion.out"
-    assert result["grofile"].list_object_names()[0] == "genion_1AKI_solvated_ions.gro"
-    assert result["topfile"].list_object_names()[0] == "genion_1AKI_topology.top"
+    assert result["stdout"].base.repository.list_object_names()[0] == "genion.out"
+    assert (
+        result["grofile"].base.repository.list_object_names()[0]
+        == "genion_1AKI_solvated_ions.gro"
+    )
+    assert (
+        result["topfile"].base.repository.list_object_names()[0]
+        == "genion_1AKI_topology.top"
+    )

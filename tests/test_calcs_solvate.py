@@ -58,6 +58,12 @@ def test_file_name_match(gromacs_code):
 
     result = run_solvate(gromacs_code)
 
-    assert result["stdout"].list_object_names()[0] == "solvate.out"
-    assert result["grofile"].list_object_names()[0] == "solvate_1AKI_solvated.gro"
-    assert result["topfile"].list_object_names()[0] == "solvate_1AKI_topology.top"
+    assert result["stdout"].base.repository.list_object_names()[0] == "solvate.out"
+    assert (
+        result["grofile"].base.repository.list_object_names()[0]
+        == "solvate_1AKI_solvated.gro"
+    )
+    assert (
+        result["topfile"].base.repository.list_object_names()[0]
+        == "solvate_1AKI_topology.top"
+    )

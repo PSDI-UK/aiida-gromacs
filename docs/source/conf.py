@@ -14,14 +14,9 @@ import os
 import sys
 import time
 
-from aiida.manage.configuration import load_documentation_profile
-
 import aiida_gromacs
 
 # -- AiiDA-related setup --------------------------------------------------
-
-# Load the dummy documentation profile
-load_documentation_profile()
 
 # If we are not on READTHEDOCS load the Sphinx theme manually
 if not os.environ.get("READTHEDOCS", None):
