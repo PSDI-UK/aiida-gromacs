@@ -3,6 +3,8 @@ Calculations provided by aiida_gromacs.
 
 This calculation configures the ability to use the 'gmx editconf' executable.
 """
+import os 
+
 from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
 from aiida.orm import SinglefileData
@@ -37,6 +39,8 @@ class EditconfCalculation(CalcJob):
         spec.input('metadata.options.output_filename', valid_type=str, default='editconf.out')
         spec.input('grofile', valid_type=SinglefileData, help='Input structure file.')
         spec.input('parameters', valid_type=EditconfParameters, help='Command line parameters for gmx editconf.')
+        spec.input('metadata.options.output_dir', valid_type=str, default=os.getcwd(),
+                help='Directory where output files will be saved when parsed.')
 
         # Optional inputs.
         spec.input('n_file', required=False, valid_type=SinglefileData, help='Index file.')

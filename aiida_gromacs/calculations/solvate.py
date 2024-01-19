@@ -3,6 +3,8 @@ Calculations provided by aiida_gromacs.
 
 This calculation configures the ability to use the 'gmx solvate' executable.
 """
+import os
+
 from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
 from aiida.orm import SinglefileData
@@ -36,6 +38,8 @@ class SolvateCalculation(CalcJob):
         spec.input('grofile', valid_type=SinglefileData, help='Input structure')
         spec.input('topfile', valid_type=SinglefileData, help='Input topology')
         spec.input('parameters', valid_type=SolvateParameters, help='Command line parameters for gmx solvate.')
+        spec.input('metadata.options.output_dir', valid_type=str, default=os.getcwd(),
+                help='Directory where output files will be saved when parsed.')
 
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
         spec.output('grofile', valid_type=SinglefileData, help='Output solvated gro file.')

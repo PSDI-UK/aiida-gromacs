@@ -3,6 +3,8 @@ Calculations provided by aiida_gromacs.
 
 This calculation configures the ability to use the 'gmx make_ndx' executable.
 """
+import os
+
 from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
 from aiida.orm import SinglefileData
@@ -48,6 +50,8 @@ class Make_ndxCalculation(CalcJob):
         spec.input('grofile', valid_type=SinglefileData, required=False, help='Structure file: gro g96 pdb brk ent esp tpr')
         spec.input('instructions_file', valid_type=SinglefileData, required=False, help='Instructions for generating index file')
         spec.input('metadata.options.stdin_filename', valid_type=str, help='name of file used in stdin.')
+        spec.input('metadata.options.output_dir', valid_type=str, default=os.getcwd(),
+                help='Directory where output files will be saved when parsed.')
 
         # Optional inputs.
         spec.input('n_file', valid_type=SinglefileData, required=False, help='Index file')

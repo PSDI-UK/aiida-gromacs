@@ -13,6 +13,8 @@ from aiida.orm import SinglefileData
 from aiida.parsers.parser import Parser
 from aiida.plugins import CalculationFactory
 
+from aiida_gromacs.utils import fileparsers
+
 # entry point string under which the parser class is registered:
 GenericCalculation = CalculationFactory("gromacs.genericMD")
 
@@ -84,78 +86,10 @@ class GenericParser(Parser):
                 output_node = SinglefileData(file=handle, filename=thing)
             self.out(self.format_link_label(thing), output_node)
 
-        # parse retrieved files and write them to where command was run
-        for thing in files_retrieved:
-            self.logger.info(f"Parsing '{thing}'")
-            file_path = os.path.join(output_dir, thing)
-            # file_path3 = os.path.join(output_dir, f'{thing}-test2.txt')
-            try:
-                with self.retrieved.open(thing, "rb") as handle:
-                    with open(file_path, "wb") as f_out:
-                        while True:
-                            chunk = handle.read(1024)
-                            if not chunk:
-                                break
-                            f_out.write(chunk)
-
-                # not used yet.
-                # test below for parsing log file and saving output as dict
-                '''if re.search('.log$', thing):
-                    start_string = 'Input Parameters:' #'A ?V ?E ?R ?A ?G ?E ?S'
-                    end_string = 'compressibility' #'M ?E ?G ?A ?- ?F ?L ?O ?P ?S'
-                    with self.retrieved.open(thing, "r") as file:
-                        file_content = file.read()
-                        pattern = rf"{start_string}(.*?){end_string}"
-                        matches = re.findall(pattern, file_content, re.DOTALL)
-                    file_path3 = os.path.join(output_dir, f'{thing}-matched.txt')
-                    # matched_text = self._parse_gromacs_top(thing)
-                    with open(file_path3, "w") as f_out:
-                        f_out.write('matched text:')
-                        for match in matches:
-                            lines = match.splitlines()
-                            for line in lines:
-                                f_out.write(f'{line}\n')
-                    with open(file_path3, "rb") as f_out:
-                        # output_node = SinglefileData(file=f_out, filename=f'{thing}-matched.txt')
-                        # output_node = Dict(file={"test": "test"}, filename='dict.txt')
-                        output_node = Dict({"test": "test"})
-                        output_node.label = 'test-dict'
-                    self.out(self.format_link_label('test-dict'), output_node)'''
-
-            except UnicodeDecodeError:
-                with self.retrieved.open(thing, "r") as handle:
-                    with open(file_path, "w", encoding="utf-8") as f_out:
-                        for line in handle.read():
-                            f_out.write(line)
+        fileparsers.parse_process_files(self, files_retrieved, output_dir)
 
         return ExitCode(0)
     
-    def _parse_gromacs_top(self, file_path):
-        """Not used yet, test for parsing the gromacs tpr file.
-        :param file_path: The path and name of gtomacs .log file
-        :returns: The required text from the parsed file
-        """
-
-        def _find_text_between_strings(file_path, start_string, end_string):
-            with self.retrieved.open(file_path, "r") as file:
-                file_content = file.read()
-            # use re.escape to escape special characters in the strings
-            # pattern = rf"{re.escape(start_string)}(.*?){re.escape(end_string)}"
-            pattern = rf"{start_string}(.*?){end_string}"
-            # use re.DOTALL to make the dot character match newline characters as well
-            matches = re.findall(pattern, file_content, re.DOTALL)
-            return matches
-
-        #file_path = '1AKI_production.log'
-        start_string = 'A ?V ?E ?R ?A ?G ?E ?S'
-        end_string = 'M ?E ?G ?A ?- ?F ?L ?O ?P ?S'
-        # start_string = '<======  ###############  ==>\n\t<====  A V E R A G E S  ====>\n\t<==  ###############  ======>\n\n' #'A V E R A G E S'
-        # end_string = 'M E G A - F L O P S   A C C O U N T I N G'
-        matched_text = _find_text_between_strings(file_path, start_string, end_string)
-        return matched_text
-    
-
-
     @staticmethod
     def format_link_label(filename: str) -> str:
         """
@@ -177,4 +111,3 @@ class GenericParser(Parser):
         link_label = re.sub("_[_]+", "_", alphanumeric)
 
         return link_label
-

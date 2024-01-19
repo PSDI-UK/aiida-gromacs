@@ -3,6 +3,8 @@ Calculations provided by aiida_gromacs.
 
 This calculation configures the ability to use the 'gmx grompp' executable.
 """
+import os
+
 from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
 from aiida.orm import SinglefileData, FolderData
@@ -39,6 +41,8 @@ class GromppCalculation(CalcJob):
         spec.input('grofile', valid_type=SinglefileData, help='Input structure')
         spec.input('topfile', valid_type=SinglefileData, help='Input topology')
         spec.input('parameters', valid_type=GromppParameters, help='Command line parameters for gmx grompp')
+        spec.input('metadata.options.output_dir', valid_type=str, default=os.getcwd(),
+                help='Directory where output files will be saved when parsed.')
 
         # Optional inputs.
         spec.input_namespace('itp_files', valid_type=SinglefileData, required=False, dynamic=True, help='Restraint files')

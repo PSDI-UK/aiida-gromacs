@@ -37,6 +37,8 @@ class EditconfParser(Parser):
 
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
+        # the directory for storing parsed output files
+        output_dir = self.node.get_option("output_dir")
         # Map output files to how they are named.
         outputs = ["stdout"]
         output_template = {
@@ -70,6 +72,6 @@ class EditconfParser(Parser):
 
         # If not in testing mode, then copy back the files.
         if "PYTEST_CURRENT_TEST" not in os.environ:
-            self.retrieved.copy_tree(os.getcwd())
+            self.retrieved.copy_tree(output_dir)
 
         return ExitCode(0)
