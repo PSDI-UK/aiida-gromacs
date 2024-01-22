@@ -25,6 +25,7 @@ jobs:
 
     - name: Set __VERSION__ to the GH tag
       env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           tag: ${{ github.ref_name }}
       run: |
         sed -i "s/__version__ =.*/__version__ = \"${tag}\"/g" aiida_gromacs/__init__.py
