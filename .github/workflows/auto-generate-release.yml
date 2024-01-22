@@ -3,7 +3,8 @@ name: Auto-generate release from tag
 on:
   push:
     tags:
-      - v*
+      # After vMajor.Minor.Patch _anything_ is allowed (without "/") !
+      - v[0-9]+.[0-9]+.[0-9]+*
 
 permissions:
   contents: write
@@ -11,7 +12,7 @@ permissions:
 jobs:
   release:
     name: Release pushed tag
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Create release
         env:
