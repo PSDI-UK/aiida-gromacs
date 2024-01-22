@@ -4,6 +4,7 @@ Parsers provided by aiida_gromacs.
 This calculation configures the ability to use the 'gmx mdrun' executable.
 """
 import os
+from pathlib import Path
 import json
 from aiida.common import exceptions
 from aiida.engine import ExitCode
@@ -40,7 +41,7 @@ class MdrunParser(Parser):
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
         # the directory for storing parsed output files
-        output_dir = self.node.get_option("output_dir")
+        output_dir = Path(self.node.get_option("output_dir"))
         # Map output files to how they are named.
         outputs = ["stdout"]
         output_template = {

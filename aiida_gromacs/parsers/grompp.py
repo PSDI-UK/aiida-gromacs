@@ -4,6 +4,7 @@ Parsers provided by aiida_gromacs.
 This parser adds the ability to parse the outputs of the 'gmx grompp' executable.
 """
 import os
+from pathlib import Path
 from aiida.common import exceptions
 from aiida.engine import ExitCode
 from aiida.orm import SinglefileData
@@ -38,7 +39,7 @@ class GromppParser(Parser):
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
         # the directory for storing parsed output files
-        output_dir = self.node.get_option("output_dir")
+        output_dir = Path(self.node.get_option("output_dir"))
         # Map output files to how they are named.
         outputs = ["stdout"]
         output_template = {
