@@ -1,0 +1,25 @@
+name: Auto-generate release from tag
+
+on:
+  push:
+    tags:
+      # After vMajor.Minor.Patch _anything_ is allowed (without "/") !
+      - v[0-9]+.[0-9]+.[0-9]+*
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release pushed tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="$tag" \
+              --generate-notes
