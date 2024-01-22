@@ -4,6 +4,7 @@ Parsers provided by aiida_gromacs.
 This calculation configures the ability to use the 'gmx make_ndx' executable.
 """
 import os
+from pathlib import Path
 from aiida.common import exceptions
 from aiida.engine import ExitCode
 from aiida.orm import SinglefileData
@@ -71,6 +72,6 @@ class Make_ndxParser(Parser):
 
         # If not in testing mode, then copy back the files.
         if "PYTEST_CURRENT_TEST" not in os.environ:
-            self.retrieved.copy_tree(output_dir)
+            self.retrieved.copy_tree(Path(output_dir))
 
         return ExitCode(0)
