@@ -21,8 +21,8 @@ from aiida_gromacs.utils import searchprevious
 INPUT_DIR = os.path.join(os.getcwd())
 profile = load_profile()
 computer = helpers.get_computer()
-code = helpers.get_code(entry_point="gromacs", computer=computer)
-code = helpers.get_code(entry_point="bash", computer=computer)
+# code = helpers.get_code(entry_point="gromacs", computer=computer)
+# code = helpers.get_code(entry_point="bash", computer=computer)
 
 
 def launch_genericMD(options):
