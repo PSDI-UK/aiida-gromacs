@@ -18,6 +18,7 @@ jobs:
     timeout-minutes: 30
     container:
         image: harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:${{ matrix.container }}
+    name: container = ${{ matrix.container }}, aiida = ${{ matrix.aiida }}, gmx = ${{ matrix.gmx }}
     steps:
     - uses: actions/checkout@v4
 
