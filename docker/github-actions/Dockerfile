@@ -127,15 +127,6 @@ RUN set -x && \
 # This require the package installed with `--user` flag in pip
 ENV PATH=${PATH}:/home/${NB_USER}/.local/bin
 
-# Install GROMACS and AIIDA.
-RUN mamba install gromacs=2023.1=nompi_h76c6bb2_100 aiida-core=2.4.0 aiida-core.services=2.4.0 -c conda-forge
-
-# Enable verdi autocompletion.
-RUN mkdir -p "${CONDA_DIR}/etc/conda/activate.d" && \
-     echo 'eval "$(_VERDI_COMPLETE=bash_source verdi)"' >> "${CONDA_DIR}/etc/conda/activate.d/activate_aiida_autocompletion.sh" && \
-     chmod +x "${CONDA_DIR}/etc/conda/activate.d/activate_aiida_autocompletion.sh" && \
-     fix-permissions "${CONDA_DIR}"
-
 # Switch back to USER aiida to avoid accidental container runs as root
 USER ${SYSTEM_UID}
 
