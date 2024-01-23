@@ -54,9 +54,9 @@ Continuous integration
 
 ``aiida-gromacs`` comes with a ``.github`` folder that contains continuous integration tests on every commit using `GitHub Actions <https://github.com/features/actions>`_. It will:
 
-#. run all tests
-#. build the documentation
-#. check coding style and version number (not required to pass by default)
+#. run all tests including against several package dependencies and their versions.
+#. build the documentation.
+#. check coding style and version number (not required to pass by default).
 
 We have these activated on github via the github actions platform. When version numbers are tagged, we will also automatically push a version to pypi.
 
@@ -102,7 +102,9 @@ We would always recommend reporting problems/bugs via the issue tracker even if 
 Version Numbering
 +++++++++++++++++
 
-We will align our version numbering against the AiiDA major series that the plugin release supports. So our first release will be 2.0.0, where the x in x.y.z corresponds to the AiiDA major series that the plugin is supporting. So 2.0.0 will support AiiDA 2.x.x. The remaining two numbers in our versioning will represent major and minor changes to the plugin respectively. A minor release can be expected to be version compatible with no breaking changes, whilst a major release will be expected to cause changes that are breaking in nature.
+We will align our version numbering against the AiiDA major series that the plugin release supports. So our first release will be v2.0.0, where the X in vX.Y.Z corresponds to the AiiDA major series that the plugin is supporting. So v2.0.0 will support AiiDA 2.x.x. The remaining two numbers in our versioning will represent major and minor changes to the plugin respectively. A minor release can be expected to be version compatible with no breaking changes, whilst a major release will be expected to cause changes that are breaking in nature.
+
+To make and release a new version, the procedure is triggered by pushing a new tag onto the master branch. This should be done after all relevant PRs for a particular release have been reviewed and merged to master and all the CI tests have completed and passed. You should make sure the tag contains the following format vX.Y.Z, the "v" is important for CI automation. Upon pushing a new tag, actions will be triggered to auto make a github release with a full changelog, tests will run against the tag and then a new version will be sent to PYPI for users to download.
 
 Happy coding!
 

@@ -8,12 +8,23 @@ on:
 jobs:
 
   tests:
+    strategy:
+      matrix:
+        container: [py3.11.0]
+        aiida: [2.4.0, 2.4.1, 2.4.2, 2.5.0]
+        gmx: [2023.1=nompi_h76c6bb2_100,
+              2022.4=nompi_hca75aac_100]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
-        image: harbor.stfc.ac.uk/biosimulation-cloud/aiida-testenv:0.2
+        image: harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:${{ matrix.container }}
+    name: container = ${{ matrix.container }}, aiida = ${{ matrix.aiida }}, gmx = ${{ matrix.gmx }}
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install conda packages
+      shell: bash
+      run: mamba install gromacs=${{ matrix.gmx }} aiida-core=${{ matrix.aiida }} aiida-core.services=${{ matrix.aiida }} -c conda-forge -yq
 
     - name: Initialise PostGRES DB
       shell: bash
