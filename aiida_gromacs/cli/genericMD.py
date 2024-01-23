@@ -36,6 +36,20 @@ def launch_genericMD(options):
     submit = options["submit"]
 
     print(f"command: {command}")
+    print(f"code: {code}")
+
+    # Create or load code
+    try:
+        code = orm.load_code(code)
+    except exceptions.NotExistent:
+        # Setting up code via python API (or use "verdi code setup")
+        executable = code.split('@')[0]
+        path = helpers.get_path_to_executable(executable)
+        code = orm.InstalledCode(
+            label=executable, computer=computer, 
+            filepath_executable=path, 
+            default_calc_job_plugin='genericMD'
+        )
 
     if not code:
         raise exceptions.NonExistent("Code has not been set.")
@@ -109,7 +123,12 @@ def launch_genericMD(options):
 
 @click.command()
 @cmdline.utils.decorators.with_dbenv()
-@cmdline.params.options.CODE()
+# @cmdline.params.options.CODE()
+@click.option(
+    "--code",
+    type=str,
+    help="The installed code, e.g. gmx@localhost",
+)
 @click.option(
     "--command",
     type=str,
