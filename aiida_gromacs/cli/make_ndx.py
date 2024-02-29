@@ -42,19 +42,25 @@ def launch(params):
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
 
+    input_file_labels = {} # dict used for finding previous nodes
     if "f" in params:
+        input_file_labels[params["f"]] = "grofile"
         inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
     if "n" in params:
+        input_file_labels[params["n"]] = "n_file"
         inputs["n_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("n")))
     if "instructions" in params:
+        input_file_labels[params["instructions"]] = "instructions_file"
         inputs["metadata"]["options"]["stdin_filename"] = str(params["instructions"])
         inputs["instructions_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("instructions")))
 
     Make_ndxParameters = DataFactory("gromacs.make_ndx")
     inputs["parameters"] = Make_ndxParameters(params)
 
-    # check if inputs are outputs from prev processes
+    # check if inputs are outputs from prev gmx_* processes
     inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "n_file"])
+    # check if inputs are outputs from prev genericMD processes
+    inputs = searchprevious.link_previous_file_nodes(input_file_labels, inputs)
 
     # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
