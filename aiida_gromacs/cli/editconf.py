@@ -32,11 +32,7 @@ def launch(params):
     }
 
     # If code is not initialised, then setup.
-    if "code" in inputs:
-        inputs["code"] = params.pop("code")
-    else:
-        computer = helpers.get_computer()
-        inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
+    inputs, params = helpers.setup_gmx_code(inputs, params)
 
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")

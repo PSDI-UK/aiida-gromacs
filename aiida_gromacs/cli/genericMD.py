@@ -39,17 +39,19 @@ def launch_genericMD(options):
     print(f"code: {code}")
 
     # Create or load code
-    try:
-        code = orm.load_code(code)
-    except exceptions.NotExistent:
-        # Setting up code via python API (or use "verdi code setup")
-        executable = code.split('@')[0]
-        path = helpers.get_path_to_executable(executable)
-        code = orm.InstalledCode(
-            label=executable, computer=computer, 
-            filepath_executable=path, 
-            default_calc_job_plugin='genericMD'
-        )
+    # try:
+    #     code = orm.load_code(code)
+    # except exceptions.NotExistent:
+    #     # Setting up code via python API (or use "verdi code setup")
+    #     executable = code.split('@')[0]
+    #     path = helpers.get_path_to_executable(executable)
+    #     code = orm.InstalledCode(
+    #         label=executable, computer=computer, 
+    #         filepath_executable=path, 
+    #         default_calc_job_plugin='genericMD'
+    #     )
+
+    code = helpers.setup_generic_code(code)
 
     if not code:
         raise exceptions.NonExistent("Code has not been set.")

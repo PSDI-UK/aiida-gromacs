@@ -11,7 +11,8 @@ import shutil
 import tempfile
 
 from aiida.common.exceptions import NotExistent
-from aiida.orm import InstalledCode, Computer
+from aiida.common import exceptions
+from aiida.orm import InstalledCode, Computer, load_code
 
 LOCALHOST_NAME = "localhost"
 
@@ -100,3 +101,42 @@ def get_code(entry_point, computer):
     )
 
     return code.store()
+
+
+
+def setup_gmx_code(inputs: dict, params: dict):
+    """If code is not initialised, then setup. Make sure the code isn't already 
+    installed and if it is, use existing code
+
+    :param inputs: input dict for aiida process
+    :param params: input parameters for aiida process
+    """
+    if "code" in inputs:
+        # use user provided code
+        inputs["code"] = params.pop("code")
+    else:
+        try:
+            computer = get_computer()
+            code = load_code(f"gmx@{computer.label}")
+        except exceptions.NotExistent:
+            computer = get_computer()
+            code = get_code(entry_point="gromacs", computer=computer)
+        inputs["code"] = code
+    return inputs, params
+
+def setup_generic_code(code):
+    """
+    """
+    # Create or load code
+    try:
+        code = load_code(code)
+    except exceptions.NotExistent:
+        # Setting up code via python API (or use "verdi code setup")
+        executable = code.split('@')[0]
+        path = get_path_to_executable(executable)
+        code = InstalledCode(
+            label=executable, computer= get_computer(), 
+            filepath_executable=path, 
+            default_calc_job_plugin='genericMD'
+        )
+    return code
