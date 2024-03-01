@@ -5,7 +5,7 @@
 The aiida-gromacs plugin for `AiiDA`_
 =====================================================
 
-``aiida-gromacs`` is available at http://github.com/PSDI-Biomolecular-team/aiida-gromacs
+``aiida-gromacs`` is available at http://github.com/PSDI-UK/aiida-gromacs
 
 
 .. toctree::

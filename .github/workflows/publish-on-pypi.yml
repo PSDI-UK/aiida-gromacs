@@ -12,7 +12,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: github.repository == 'PSDI-Biomolecular-team/aiida-gromacs' && startsWith(github.ref, 'refs/tags/v')
+    if: github.repository == 'PSDI-UK/aiida-gromacs' && startsWith(github.ref, 'refs/tags/v')
 
     steps:
     - name: Checkout repository
