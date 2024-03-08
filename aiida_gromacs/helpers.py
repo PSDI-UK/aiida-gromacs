@@ -11,7 +11,8 @@ import shutil
 import tempfile
 
 from aiida.common.exceptions import NotExistent
-from aiida.orm import InstalledCode, Computer
+from aiida.common import exceptions
+from aiida.orm import InstalledCode, Computer, load_code
 
 LOCALHOST_NAME = "localhost"
 
@@ -100,3 +101,23 @@ def get_code(entry_point, computer):
     )
 
     return code.store()
+
+
+def setup_generic_code(code):
+    """Try to set up any code for running a genericMD process
+
+    :param code: executable@computer of the code being run
+    """
+    # Create or load code
+    try:
+        code = load_code(code)
+    except exceptions.NotExistent:
+        # Setting up code via python API (or use "verdi code setup")
+        executable = code.split('@')[0]
+        path = get_path_to_executable(executable)
+        code = InstalledCode(
+            label=executable, computer= get_computer(), 
+            filepath_executable=path, 
+            default_calc_job_plugin='genericMD'
+        )
+    return code

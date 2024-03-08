@@ -29,9 +29,18 @@ def format_link_label(filename: str) -> str:
     return link_label
 
 
+def strip_path(input: str) -> str:
+    """For a given input, strip the path from the filename
+
+    :param input: path+filename of an input used for an aiida-gromacs input
+    """
+    return input.split("/")[-1]
+
+
 def build_query():
     """
-    Uses AiiDA querybuilder to find previously run processes
+    Uses AiiDA querybuilder to find previously run processes and order from
+    newest to oldest
 
     :returns: the query entries
     :rtype: :py:class:`aiida.orm.querybuilder.QueryBuilder`
@@ -40,31 +49,6 @@ def build_query():
     qb.append(orm.ProcessNode, tag='process')
     qb.order_by({orm.ProcessNode: {"ctime": "desc"}})
     return qb
-
-
-def get_prev_inputs(inputs, input_labels):
-    """Checks if input labels are output labels in previous processes
-    and if so, adds most recent previous nodes to the new process inputs
-
-    :param inputs: all inputs for the current process
-    :type inputs: dict
-    :param input_labels: input labels of the current process to search for in
-        previous processes.
-    :returns: updated inputs with links to previous nodes if applicable
-    :rtype: dict
-    """
-    qb = build_query()
-    added_files = []
-    if qb.count() > 0:
-        for entry in qb.all():
-            previous_calculation = entry[0]
-            for label in previous_calculation.outputs:
-                if label in input_labels and label not in added_files:
-                    added_files.append(label)
-                    previous_output_node = \
-                        previous_calculation.outputs[f"{label}"]
-                    inputs[label] = previous_output_node
-    return inputs
 
 
 def check_prev_process(qb):
@@ -92,7 +76,28 @@ def check_prev_process(qb):
         else:
             sys.exit("Previous process did not complete successfully, "
                      "please check")
+            
 
+def find_previous_file_nodes(qb):
+    """
+    For any previous processes, store nodes that are files into a list
+
+    :param qb: The queries of previous processes in the AiiDA database
+    :type qb: :py:class:`aiida.orm.querybuilder.QueryBuilder`
+    """
+    file_nodes = []
+    if qb.count() > 0:
+        for entry in qb.all():
+            # A previous calculation exists - use its output as input for the
+            # current calculation.
+            previous_calculation = entry[0]
+            for label in previous_calculation.outputs:
+                # Get the outputs from a previous process.
+                previous_output_node = previous_calculation.outputs[f"{label}"]
+                # check if the output node is a file.
+                if isinstance(previous_output_node, orm.SinglefileData):
+                    file_nodes.append(previous_output_node)
+    return file_nodes
 
 
 def append_prev_nodes(qb, inputs, process_inputs, INPUT_DIR):
@@ -110,49 +115,30 @@ def append_prev_nodes(qb, inputs, process_inputs, INPUT_DIR):
     :returns: Updated inputs for the current process
     :rtype: dict
     """
-
-    # if previous processes exist then check if input files are stored as
-    # previous nodes and use these nodes as inputs for new process.
-    if qb.count() > 0:
-        # get just the name of the file from the filepath.
+    file_nodes = find_previous_file_nodes(qb)
+    if file_nodes:
         stripped_inputs = []
-        for inp in inputs:  # strip input file names of any paths.
-            stripped_inputs.append(inp.split("/")[-1])
-
-        prev = {}
         prev_files = []  # list of previous files already saved.
-        wait_for = []
-        for entry in qb.all():
-            # A previous calculation exists - use its output as input for the
-            # current calculation.
-            previous_calculation = entry[0]
-            wait_for.append(previous_calculation)
-            for label in previous_calculation.outputs:
-                # Get the outputs from a previous process.
-                previous_output_node = previous_calculation.outputs[f"{label}"]
-                # (below 2 lines does the same as above)
-                # previous_output_node = orm.load_node(
-                #         previous_calculation.outputs[f"{label}"].pk)
-
-                # check if the output node is a file.
-                if isinstance(previous_output_node, orm.SinglefileData):
-                    prev_output_filename = previous_output_node.base.attributes.get(
-                        "filename"
-                    ) # get filename of the node
-                    # check if output file is an input for new process and
-                    # hasn't already been included as an input.
-                    if (
-                        prev_output_filename in stripped_inputs
-                        and prev_output_filename not in prev_files
-                    ):
-                        prev_files.append(prev_output_filename)
-                        prev[
-                            format_link_label(prev_output_filename)
-                        ] = previous_output_node
+        prev = {} # dict for genericMD inputs
+        for inp in inputs:  # strip input file names of any paths.
+            stripped_inputs.append(strip_path(inp))
+        for prev_file_node in file_nodes:
+            prev_output_filename = prev_file_node.base.attributes.get(
+                            "filename") # get filename of the node
+            # check if output file is an input for new process and
+            # hasn't already been included as an input.
+            if (
+                prev_output_filename in stripped_inputs
+                and prev_output_filename not in prev_files
+            ):
+                prev_files.append(prev_output_filename)
+                prev[
+                    format_link_label(prev_output_filename)
+                ] = prev_file_node
 
         # save input files not found in previous nodes too.
         for filename in list(inputs):
-            stripped_input = filename.split("/")[-1]
+            stripped_input = strip_path(filename)
             if stripped_input not in prev_files:
                 prev[format_link_label(stripped_input)] = orm.SinglefileData(
                     file=os.path.join(INPUT_DIR, filename)
@@ -162,3 +148,31 @@ def append_prev_nodes(qb, inputs, process_inputs, INPUT_DIR):
         # input files including nodes from previous processes.
         process_inputs["input_files"] = prev
     return process_inputs
+
+
+def link_previous_file_nodes(input_file_labels: dict, inputs: dict):
+    """
+    For an incoming process, check if an input file is an output of a previous
+    process. If this is the case, then rename the node with the new label
+
+    :param input_file_labels: dictionary with keys of filenames and values the
+        label for the node
+    :param inputs: dictionary used for all inputs for 
+    """
+    qb = build_query()
+    # if previous processes exist then check if input files are stored as
+    # previous nodes and use these nodes as inputs for new process.
+    file_nodes = find_previous_file_nodes(qb)
+    prev_files = []  # list of previous files already saved.
+    if file_nodes:
+        for prev_file_node in file_nodes:
+            prev_output_filename = prev_file_node.base.attributes.get(
+                            "filename") # get filename of the node
+            # save previous file nodes if the filenames match with current process
+            # input files
+            if (prev_output_filename in input_file_labels.keys() and 
+                    prev_output_filename not in prev_files):
+                prev_files.append(prev_output_filename)
+                label = input_file_labels[prev_output_filename]
+                inputs[label] = prev_file_node
+    return inputs

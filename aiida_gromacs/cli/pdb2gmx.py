@@ -12,6 +12,7 @@ from aiida import cmdline, engine
 from aiida.plugins import CalculationFactory, DataFactory
 
 from aiida_gromacs import helpers
+from aiida_gromacs.utils import searchprevious
 
 
 def launch(params):
@@ -37,12 +38,18 @@ def launch(params):
         computer = helpers.get_computer()
         inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
 
+    input_file_labels = {} # dict used for finding previous nodes
+    input_file_labels[params["f"]] = "pdbfile"
+
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
     inputs["pdbfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
 
     Pdb2gmxParameters = DataFactory("gromacs.pdb2gmx")
     inputs["parameters"] = Pdb2gmxParameters(params)
+
+    # check if inputs are outputs from prev processes
+    inputs = searchprevious.link_previous_file_nodes(input_file_labels, inputs)
 
     # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:

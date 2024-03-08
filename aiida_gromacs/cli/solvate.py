@@ -38,6 +38,10 @@ def launch(params):
         computer = helpers.get_computer()
         inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
 
+    input_file_labels = {} # dict used for finding previous nodes
+    input_file_labels[params["cp"]] = "grofile"
+    input_file_labels[params["p"]] = "topfile"
+
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
     inputs["grofile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("cp")))
@@ -51,7 +55,7 @@ def launch(params):
     inputs["parameters"] = SolvateParameters(params)
 
     # check if inputs are outputs from prev processes
-    inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile"])
+    inputs = searchprevious.link_previous_file_nodes(input_file_labels, inputs)
 
     # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
