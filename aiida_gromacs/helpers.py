@@ -103,29 +103,10 @@ def get_code(entry_point, computer):
     return code.store()
 
 
-
-def setup_gmx_code(inputs: dict, params: dict):
-    """If code is not initialised, then setup. Make sure the code isn't already 
-    installed and if it is, use existing code
-
-    :param inputs: input dict for aiida process
-    :param params: input parameters for aiida process
-    """
-    if "code" in inputs:
-        # use user provided code
-        inputs["code"] = params.pop("code")
-    else:
-        try:
-            computer = get_computer()
-            code = load_code(f"gmx@{computer.label}")
-        except exceptions.NotExistent:
-            computer = get_computer()
-            code = get_code(entry_point="gromacs", computer=computer)
-        inputs["code"] = code
-    return inputs, params
-
 def setup_generic_code(code):
-    """
+    """Try to set up any code for running a genericMD process
+
+    :param code: executable@computer of the code being run
     """
     # Create or load code
     try:

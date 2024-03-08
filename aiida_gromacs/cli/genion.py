@@ -39,6 +39,10 @@ def launch(params):
         inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
         inputs["code"] = helpers.get_code(entry_point="bash", computer=computer)
 
+    input_file_labels = {} # dict used for finding previous nodes
+    input_file_labels[params["s"]] = "tprfile"
+    input_file_labels[params["p"]] = "topfile"
+
 
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
@@ -52,7 +56,7 @@ def launch(params):
     inputs["parameters"] = GenionParameters(params)
 
     # check if inputs are outputs from prev processes
-    inputs = searchprevious.get_prev_inputs(inputs, ["tprfile", "topfile"])
+    inputs = searchprevious.link_previous_file_nodes(input_file_labels, inputs)
 
 
     # check if a pytest test is running, if so run rather than submit aiida job

@@ -100,32 +100,6 @@ def find_previous_file_nodes(qb):
     return file_nodes
 
 
-def get_prev_inputs(inputs, input_labels):
-    """For gmx_* processes, check if input labels are output labels in 
-    previous processes and if so, adds most recent previous nodes to the 
-    new process inputs
-
-    :param inputs: all inputs for the current process
-    :type inputs: dict
-    :param input_labels: input labels of the current process to search for in
-        previous processes.
-    :returns: updated inputs with links to previous nodes if applicable
-    :rtype: dict
-    """
-    qb = build_query()
-    added_files = []
-    if qb.count() > 0:
-        for entry in qb.all():
-            previous_calculation = entry[0]
-            for label in previous_calculation.outputs:
-                if label in input_labels and label not in added_files:
-                    added_files.append(label)
-                    previous_output_node = \
-                        previous_calculation.outputs[f"{label}"]
-                    inputs[label] = previous_output_node
-    return inputs
-
-
 def append_prev_nodes(qb, inputs, process_inputs, INPUT_DIR):
     """Checks if previous processes exists for genericMD calcs and links the 
     most recent SinglefileData type output nodes from previous processs as 

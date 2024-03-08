@@ -18,11 +18,9 @@ from aiida_gromacs import helpers
 from aiida_gromacs.utils import searchprevious
 
 # set base path for input files.
-INPUT_DIR = os.path.join(os.getcwd())
-profile = load_profile()
+INPUT_DIR = os.getcwd()
+profile = load_profile() # need to load profile first
 computer = helpers.get_computer()
-# code = helpers.get_code(entry_point="gromacs", computer=computer)
-# code = helpers.get_code(entry_point="bash", computer=computer)
 
 
 def launch_genericMD(options):
@@ -38,19 +36,6 @@ def launch_genericMD(options):
     print(f"command: {command}")
     print(f"code: {code}")
 
-    # Create or load code
-    # try:
-    #     code = orm.load_code(code)
-    # except exceptions.NotExistent:
-    #     # Setting up code via python API (or use "verdi code setup")
-    #     executable = code.split('@')[0]
-    #     path = helpers.get_path_to_executable(executable)
-    #     code = orm.InstalledCode(
-    #         label=executable, computer=computer, 
-    #         filepath_executable=path, 
-    #         default_calc_job_plugin='genericMD'
-    #     )
-
     code = helpers.setup_generic_code(code)
 
     if not code:
@@ -63,8 +48,6 @@ def launch_genericMD(options):
     # value has been stored by loading the QueryBuilder and append
     # all previous jobs ordered by newest first.
     qb = searchprevious.build_query()
-    # qb.append(MyAppCalculation, tag="calcjob")
-    # qb.order_by({MyAppCalculation: {"ctime": "desc"}})
 
     # Wait for previous process to finish if running
     if submit:
@@ -75,7 +58,7 @@ def launch_genericMD(options):
     input_files = {}
     for filename in list(inputs):
         file_path = os.path.join(INPUT_DIR, filename)
-        stripped_input = filename.split("/")[-1]
+        stripped_input = searchprevious.strip_path(filename) #.split("/")[-1]
         input_files[searchprevious.format_link_label(stripped_input)] = \
             orm.SinglefileData(file=file_path)
 
@@ -112,10 +95,10 @@ def launch_genericMD(options):
         future = engine.run(CalculationFactory("gromacs.genericMD"), 
                                **process_inputs)
     else:
-        if submit:
+        if submit: # submit to deamon and release interpretor
             future = engine.submit(CalculationFactory("gromacs.genericMD"), 
                                 **process_inputs)
-        else:
+        else: # blocking mode
             future = engine.run(CalculationFactory("gromacs.genericMD"), 
                                 **process_inputs)
 

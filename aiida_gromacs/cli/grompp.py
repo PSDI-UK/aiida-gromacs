@@ -11,8 +11,7 @@ from aiida import cmdline, engine
 from aiida.plugins import CalculationFactory, DataFactory
 
 from aiida_gromacs import helpers
-from aiida_gromacs.utils import searchprevious
-from aiida_gromacs.utils import topfile_utils
+from aiida_gromacs.utils import searchprevious, topfile_utils
 
 
 def launch(params):
@@ -37,6 +36,11 @@ def launch(params):
     else:
         computer = helpers.get_computer()
         inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
+
+    input_file_labels = {} # dict used for finding previous nodes
+    input_file_labels[params["f"]] = "mdpfile"
+    input_file_labels[params["c"]] = "grofile"
+    input_file_labels[params["p"]] = "topfile"
 
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
@@ -105,7 +109,7 @@ def launch(params):
     inputs["parameters"] = GromppParameters(params)
 
     # check if inputs are outputs from prev processes
-    inputs = searchprevious.get_prev_inputs(inputs, ["grofile", "topfile", "mdpfile"])
+    inputs = searchprevious.link_previous_file_nodes(input_file_labels, inputs)
 
     # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
