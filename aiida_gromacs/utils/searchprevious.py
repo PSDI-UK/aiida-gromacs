@@ -176,3 +176,20 @@ def link_previous_file_nodes(input_file_labels: dict, inputs: dict):
                 label = input_file_labels[prev_output_filename]
                 inputs[label] = prev_file_node
     return inputs
+
+
+
+def save_command(executable: str, params: dict, inputs: dict):
+    """
+    For a given cli command run via aiida-gromacs, save this as a string 
+    and use this as an attribute for the given process
+    """
+
+    # save the full command as a string in the inputs dict
+    str_params = ""
+    for k, v in params.items():
+        v_stripped = strip_path(v)
+        str_params += f"-{k} {v_stripped} "
+    command = f"{executable} {str_params}"
+    inputs["command"] = orm.Str(command)
+    return inputs

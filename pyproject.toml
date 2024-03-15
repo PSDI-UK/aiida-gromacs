@@ -62,6 +62,7 @@ gmx_solvate = "aiida_gromacs.cli.solvate:cli"
 gmx_make_ndx = "aiida_gromacs.cli.make_ndx:cli"
 genericMD = "aiida_gromacs.cli.genericMD:cli"
 createarchive = "aiida_gromacs.cli.createarchive:cli"
+print_provenance = "aiida_gromacs.cli.print_provenance:cli"
 
 [project.entry-points."aiida.data"]
 "gromacs.pdb2gmx" = "aiida_gromacs.data.pdb2gmx:Pdb2gmxParameters"
