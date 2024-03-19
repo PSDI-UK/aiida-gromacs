@@ -40,8 +40,6 @@ class GenericCalculation(CalcJob):
             dynamic=True, # can take num of values unknown at time of definition
         )
 
-        spec.output('log', valid_type=SinglefileData, required=False,
-                help='link to the default file.out.')
 
         # set the list of output file names as an input so that it can be
         # iterated over in the parser later.

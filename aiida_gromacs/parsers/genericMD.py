@@ -76,9 +76,6 @@ class GenericParser(Parser):
         with self.retrieved.open(output_filename, "rb") as handle:
             output_node = SinglefileData(file=handle)
 
-        # return stdout file 
-        self.out("log", output_node)
-
         # passing along all expected output file as SinglefileData nodes.
         for thing in files_expected:
             self.logger.info(f"Parsing '{thing}'")
