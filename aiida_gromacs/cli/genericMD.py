@@ -75,7 +75,7 @@ def launch_genericMD(options):
             "label": "generic-execute",
             "description": "Run CLI job and save input and output file provenance.",
             "options": {
-                "output_filename": "file.out",
+                "output_filename": f"{searchprevious.format_link_label(command.split()[0])}.out",
                 "output_dir": output_dir,
                 "parser_name": "gromacs.genericMD",
             },

@@ -7,7 +7,7 @@ Usage: gmx_grompp --help
 import click
 import os
 
-from aiida import cmdline, engine
+from aiida import cmdline, engine, orm
 from aiida.plugins import CalculationFactory, DataFactory
 
 from aiida_gromacs import helpers
@@ -36,6 +36,9 @@ def launch(params):
     else:
         computer = helpers.get_computer()
         inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
+
+    # save the full command as a string in the inputs dict
+    inputs = searchprevious.save_command("gmx grompp", params, inputs)
 
     input_file_labels = {} # dict used for finding previous nodes
     input_file_labels[params["f"]] = "mdpfile"

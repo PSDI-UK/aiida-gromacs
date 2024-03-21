@@ -7,7 +7,7 @@ import os
 
 from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
-from aiida.orm import SinglefileData
+from aiida.orm import SinglefileData, Str
 from aiida.plugins import DataFactory
 
 SolvateParameters = DataFactory("gromacs.solvate")
@@ -25,6 +25,11 @@ class SolvateCalculation(CalcJob):
         """Define inputs and outputs of the calculation."""
         # yapf: disable
         super().define(spec)
+
+        # Define inputs and outputs of the calculation.
+        spec.input('command',
+                valid_type=Str, required=False,
+                help='The command used to execute the job.')
 
         # set default values for AiiDA options
         # TODO: something changed about withmpi in aiida-2.4.0, needs investigation.
