@@ -77,6 +77,10 @@ class MdrunParser(Parser):
         # Grab list of files expected and remove the scheduler stdout and stderr files.
         files_expected = [files for files in self.node.get_option("retrieve_list") if files not in ["_scheduler-stdout.txt", "_scheduler-stderr.txt"]]
 
+        # check if a trajectory file is in files_retrieved
+        files_retrieved, files_expected = MdrunParser.check_trajectory_format(
+                files_retrieved, files_expected)
+
         # Check if the expected files are a subset of retrieved.
         if not set(files_expected) <= set(files_retrieved):
             self.logger.error(
@@ -135,3 +139,22 @@ class MdrunParser(Parser):
             file_path = os.path.join(output_dir, f"{f_prefix}_metadata.json")
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(metadata_dict, f, ensure_ascii=False, indent=4)
+
+    
+    def check_trajectory_format(files_retrieved, files_expected):
+        """
+        In the case where nstxout-compressed = >0, gromacs should produce a 
+        xtc file instead of what is requested for -o flag in mdrun. Check 
+        if an unexpected xtc file is produced, if so, add this to 
+        files_expected, and if a file defined from the -o file is not in the 
+        files_retrieved list, then remove it as we have the xtc file instead.
+        """
+        for file in files_retrieved:
+            if file.split(".")[-1] == "xtc":
+                if file not in files_expected:
+                    files_expected.append(file)
+                for file2 in files_expected:
+                    if (file2.split(".")[-1] in ["trr", "cpt", "tng"] and 
+                            file2 not in files_retrieved):
+                        files_expected.remove(file2)
+        return files_retrieved, files_expected
