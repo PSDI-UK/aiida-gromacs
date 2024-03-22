@@ -188,13 +188,14 @@ def parse_gromacs_logfile(self, f):
                 averages["Time"] = {}
                 l = line.strip().split()[1:]
                 head = list(filter(None, lines[i-1].strip().split("  ")))
-                for hn in range(len(header)):
+                for hn in range(len(head)):
                     averages["Time"][head[hn]] = l[hn]
             if "Performance:" in line:
                 averages["Performance"] = {}
                 l = line.strip().split()[1:]
-                head = list(filter(None, lines[i-1].strip().split("  ")))
-                for hn in range(len(header)):
+                # head = list(filter(None, lines[i-1].strip().split("  ")))
+                head = list(filter(None, re.split(r'\s{2,}', lines[i-1].strip())))
+                for hn in range(len(head)):
                     averages["Performance"][head[hn]] = l[hn]
                         
     averages = {"Summary": averages}
