@@ -28,6 +28,7 @@ def launch(params):
     inputs = {
         "metadata": {
             "description": params.pop("description"),
+            "options": {},
         },
     }
 
@@ -37,7 +38,7 @@ def launch(params):
     else:
         computer = helpers.get_computer()
         inputs["code"] = helpers.get_code(entry_point="gromacs", computer=computer)
-        inputs["code"] = helpers.get_code(entry_point="bash", computer=computer)
+        # inputs["code"] = helpers.get_code(entry_point="bash", computer=computer)
 
     # save the full command as a string in the inputs dict
     inputs = searchprevious.save_command("gmx genion", params, inputs)
@@ -45,10 +46,16 @@ def launch(params):
     input_file_labels = {} # dict used for finding previous nodes
     input_file_labels[params["s"]] = "tprfile"
     input_file_labels[params["p"]] = "topfile"
+    SinglefileData = DataFactory("core.singlefile")
+    if "instructions" in params:
+        inputs["metadata"]["options"]["stdin_filename"] = str(params["instructions"])
+        inputs["instructions_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("instructions")))
+    else:
+        # if no instructions given, then default to hard coded genion input
+        inputs["code"] = helpers.get_code(entry_point="bash", computer=computer)
 
 
     # Prepare input parameters in AiiDA formats.
-    SinglefileData = DataFactory("core.singlefile")
     inputs["tprfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("s")))
     inputs["topfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("p")))
 
@@ -80,6 +87,7 @@ def launch(params):
 @click.option("-s", default="topol.tpr", type=str, help="Input structure file")
 @click.option("-n", type=str, help="Index file")
 @click.option("-p", default="topol.top", type=str, help="Topology file")
+@click.option("--instructions", type=str, help="aiida-gromacs specific option: File containing interactive instructions for genion command, each instruction should be on a new line in the file.")
 # Output file options
 @click.option("-o", default="out.gro", type=str, help="Output structure file")
 # Other parameter options
@@ -102,12 +110,12 @@ def cli(*args, **kwargs):
 
     Example usage:
 
-    $ gmx_genion --code gmx@localhost -s 1AKI_ions.tpr -p 1AKI_topology.top -pname NA -nname CL -neutral true -o 1AKI_solvated_ions.gro
+    $ gmx_genion --code gmx@localhost -s 1AKI_ions.tpr -p 1AKI_topology.top -pname NA -nname CL -neutral true -o 1AKI_solvated_ions.gro --instructions instructions.txt
 
     Alternative (automatically tried to create gmx@localhost code, but requires
     gromacs to be installed and available in your environment path):
 
-    $ gmx_genion -s 1AKI_ions.tpr -p 1AKI_topology.top -pname NA -nname CL -neutral true -o 1AKI_solvated_ions.gro
+    $ gmx_genion -s 1AKI_ions.tpr -p 1AKI_topology.top -pname NA -nname CL -neutral true -o 1AKI_solvated_ions.gro --instructions instuctions.txt
 
     Help: $ gmx_genion --help
     """
