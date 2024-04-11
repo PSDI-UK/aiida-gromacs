@@ -49,6 +49,14 @@ class GenionCalculation(CalcJob):
                 help='Directory where output files will be saved when parsed.')
 
         # Optional inputs.
+        spec.input(
+            'metadata.options.filename_stdin',
+            valid_type=str,
+            required=False,
+            help='Filename that should be redirected to the shell command using the stdin file descriptor.',
+        )
+        spec.input('instructions_file', valid_type=SinglefileData, required=False, help='Instructions for generating index file')
+        spec.input('metadata.options.stdin_filename', valid_type=str, required=False, help='name of file used in stdin.')
         spec.input('n_file', required=False, valid_type=SinglefileData, help='Index file.')
 
         # Default outputs.
@@ -69,7 +77,7 @@ class GenionCalculation(CalcJob):
         codeinfo = CodeInfo()
 
         # Setup data structures for files.
-        input_options = ["tprfile", "topfile", "n_file"]
+        input_options = ["tprfile", "topfile", "n_file", "instructions_file"]
         cmdline_input_files = {}
         input_files = []
 
@@ -85,6 +93,9 @@ class GenionCalculation(CalcJob):
 
         # Form the commandline.
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(cmdline_input_files)
+
+        # Form stdin file for index instructions
+        codeinfo.stdin_name = self.inputs['metadata']['options'].get('stdin_filename', None)
         
         codeinfo.code_uuid = self.inputs.code.uuid
         codeinfo.stdout_name = self.metadata.options.output_filename
