@@ -73,21 +73,33 @@ class GenionParameters(Dict):  # pylint: disable=too-many-ancestors
         :param type pdbfile: str
 
         """
-        cmdline = "echo"
-        cmdline = cmdline + " " + "SOL"
-        cmdline = cmdline + " " + "| gmx genion"
-        cmdline = cmdline + " " + " -s " + input_files["tprfile"]
-        cmdline = cmdline + " " + " -p " + input_files["topfile"]
-        if "n_file" in input_files: cmdline = cmdline + " " + " -n " + input_files["n_file"]
-
         parameters = []
+        if "instructions_file" in input_files:
+            parameters.append("genion")
+            parameters.extend(["-s", input_files["tprfile"]])
+            parameters.extend(["-p", input_files["topfile"]])
+            if "n_file" in input_files: parameters.extend(["-n", input_files["n_file"]])
 
-        parm_dict = self.get_dict()
+            parm_dict = self.get_dict()
 
-        for key, value in parm_dict.items():
-            cmdline = cmdline + " -" + key + " " + value
+            for key, value in parm_dict.items():
+                parameters.extend(["-" + key, value])
 
-        parameters.extend(["-c", cmdline])
+        else:
+            # if no instructions given, then default to hard coded genion input
+            cmdline = "echo"
+            cmdline = cmdline + " " + "SOL"
+            cmdline = cmdline + " " + "| gmx genion"
+            cmdline = cmdline + " " + " -s " + input_files["tprfile"]
+            cmdline = cmdline + " " + " -p " + input_files["topfile"]
+            if "n_file" in input_files: cmdline = cmdline + " " + " -n " + input_files["n_file"]
+
+            parm_dict = self.get_dict()
+
+            for key, value in parm_dict.items():
+                cmdline = cmdline + " -" + key + " " + value
+
+            parameters.extend(["-c", cmdline])
 
         return [str(p) for p in parameters]
 
