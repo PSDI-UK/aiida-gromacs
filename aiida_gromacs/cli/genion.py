@@ -110,12 +110,12 @@ def cli(*args, **kwargs):
 
     Example usage:
 
-    $ gmx_genion --code gmx@localhost -s 1AKI_ions.tpr -p 1AKI_topology.top -pname NA -nname CL -neutral true -o 1AKI_solvated_ions.gro
+    $ gmx_genion --code gmx@localhost -s 1AKI_ions.tpr -p 1AKI_topology.top -pname NA -nname CL -neutral true -o 1AKI_solvated_ions.gro --instructions instructions.txt
 
     Alternative (automatically tried to create gmx@localhost code, but requires
     gromacs to be installed and available in your environment path):
 
-    $ gmx_genion -s 1AKI_ions.tpr -p 1AKI_topology.top -pname NA -nname CL -neutral true -o 1AKI_solvated_ions.gro
+    $ gmx_genion -s 1AKI_ions.tpr -p 1AKI_topology.top -pname NA -nname CL -neutral true -o 1AKI_solvated_ions.gro --instructions instuctions.txt
 
     Help: $ gmx_genion --help
     """
