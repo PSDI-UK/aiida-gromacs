@@ -29,6 +29,13 @@ jobs:
           tag: ${{ github.ref_name }}
       run: |
         sed -i "s/__version__ =.*/__version__ = \"${tag}\"/g" aiida_gromacs/__init__.py
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git checkout -b update-version-${tag}
+        git add .
+        git commit -m "update version number"
+        git push
+        gh pr create --title "Update version to ${tag}" --body "Automated version update by github actions bot"
 
     - name: Install flit
       run: |
