@@ -20,10 +20,10 @@ import aiida_gromacs
 
 # If we are not on READTHEDOCS load the Sphinx theme manually
 if not os.environ.get("READTHEDOCS", None):
-    import sphinx_rtd_theme
+    # import sphinx_rtd_theme
 
-    html_theme = "sphinx_rtd_theme"
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+    html_theme = "furo"  # "sphinx_rtd_theme"
+    # html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # -- General configuration ------------------------------------------------
 
@@ -139,10 +139,11 @@ pygments_style = "sphinx"
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {
-    "display_version": True,
-}
+# html_theme_options = {
+#     "display_version": True,
+# }
 
+html_theme = "furo"
 # Add any paths that contain custom themes here, relative to this directory.
 # ~ html_theme_path = ["."]
 
