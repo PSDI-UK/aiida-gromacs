@@ -1,36 +1,76 @@
-name: Auto update version number, make a GH release and push release to PyPI.
+name: Release a new version.
 
 on:
-  push:
-    tags:
-      # After vMajor.Minor.Patch _anything_ is allowed (without "/") !
-      - v[0-9]+.[0-9]+.[0-9]+*
+  pull_request:
+    types:
+      - closed
 
 permissions:
   contents: write
 
 jobs:
-  release:
-    name: Create GH release matching tagged version
+  version:
+    name: Version checks.
+    if: |
+      github.event.pull_request.merged == true &&
+      contains( github.event.pull_request.labels.*.name, 'tag-release' )
     runs-on: ubuntu-latest
-    if: github.repository == 'PSDI-UK/aiida-gromacs' && startsWith(github.ref, 'refs/tags/v')
+    outputs:
+      release-tag: ${{ steps.getrelease.outputs.release_tag }}
+
+    steps:
+    - name: Checkout repository
+      id: repo
+      uses: actions/checkout@v4
+
+    - name: Get version number from __init__.py
+      id: getrelease
+      run: |
+        RELEASE_VERSION=$(awk '/__version__ = /{print $NF}' aiida_gromacs/__init__.py | tr -d \")
+        echo "release_tag=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+        echo $RELEASE_VERSION
+
+  tag:
+    name: Create tagged commit.
+    needs: version
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ needs.version.outputs.release-tag }}
+      GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Create tag
+        run: |
+          echo $RELEASE_TAG
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag $RELEASE_TAG
+          git push origin tag $RELEASE_TAG
+
+  release:
+    name: Create GH release.
+    needs: tag
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ needs.version.outputs.release-tag }}
+      GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
     steps:
       - name: Create release
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          tag: ${{ github.ref_name }}
         run: |
-          gh release create "$tag" \
+          gh release create "$RELEASE_TAG" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="$tag" \
+              --title="v$RELEASE_TAG" \
               --generate-notes
 
   pypi:
-    name: Push the release to PyPI
+    name: Push release to PyPI
+    needs: tag
     runs-on: ubuntu-latest
-    if: github.repository == 'PSDI-UK/aiida-gromacs' && startsWith(github.ref, 'refs/tags/v')
-
+    env:
+      GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -39,13 +79,6 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: 3.11.6
-
-    - name: Set __VERSION__ to the GH tag
-      env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          tag: ${{ github.ref_name }}
-      run: |
-        sed -i "s/__version__ =.*/__version__ = \"${tag}\"/g" aiida_gromacs/__init__.py
 
     - name: Install flit
       run: |
@@ -58,31 +91,3 @@ jobs:
       env:
         FLIT_USERNAME: __token__
         FLIT_PASSWORD:  ${{ secrets.pypi_token }}
-
-  version:
-    name: Update version in number
-    runs-on: ubuntu-latest
-    if: github.repository == 'PSDI-UK/aiida-gromacs' && startsWith(github.ref, 'refs/tags/v')
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Set up Python 3.11.6
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.11.6
-
-    - name: Set __VERSION__ to the GH tag
-      env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          tag: ${{ github.ref_name }}
-      run: |
-        sed -i "s/__version__ =.*/__version__ = \"${tag}\"/g" aiida_gromacs/__init__.py
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        git checkout -b update-version-${tag}
-        git add aiida_gromacs/__init__.py
-        git commit -m "update version number"
-        git push --set-upstream origin update-version-${tag}
-        gh pr create --title "Update version to ${tag}" --body "Automated version update by github actions bot"
