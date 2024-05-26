@@ -19,11 +19,17 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release-tag: ${{ steps.getrelease.outputs.release_tag }}
+      pip-tag: ${{ steps.latestreleased.outputs.pip_tag }}
 
     steps:
     - name: Checkout repository
       id: repo
       uses: actions/checkout@v4
+
+    - name: Set up Python 3.11.6
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.11.6
 
     - name: Get version number from __init__.py
       id: getrelease
@@ -31,6 +37,20 @@ jobs:
         RELEASE_VERSION=$(awk '/__version__ = /{print $NF}' aiida_gromacs/__init__.py | tr -d \")
         echo "release_tag=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
         echo $RELEASE_VERSION
+
+    - name: Get latest release from pip
+      id: latestreleased
+      run: |
+        PREVIOUS_VERSION=$(python -m pip install --upgrade aiida-gromacs== 2>&1 | grep "from versions:" | sed "s/^.*from versions: \(.*\))/\1/" | awk -F ", " '{print $NF}')
+        echo "pip_tag=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
+        echo $PREVIOUS_VERSION
+
+    - name: version comparison
+      id: compare
+      run: |
+        pip3 install semver
+        output=$(pysemver compare ${{ steps.latestreleased.outputs.pip_tag }} ${{ steps.getrelease.outputs.release_tag }})
+        if [ $output -ge 0 ]; then exit 1; fi
 
   tag:
     name: Create tagged commit.
