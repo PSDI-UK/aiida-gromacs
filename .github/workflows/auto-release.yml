@@ -48,9 +48,9 @@ jobs:
     - name: version comparison
       id: compare
       run: |
-        pip3 install semver 
+        pip3 install semver
         output=$(pysemver compare ${{ steps.latestreleased.outputs.pip_tag }} ${{ steps.getrelease.outputs.release_tag }})
-        if [ $output -ge 0 ]; then exit 1; fi 
+        if [ $output -ge 0 ]; then exit 1; fi
 
   tag:
     name: Create tagged commit.
