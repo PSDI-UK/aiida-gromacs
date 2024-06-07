@@ -1,6 +1,6 @@
 # Install pre-commit hooks via:
 # pre-commit install
-exclude: ".*.gro|.*.top|.*.mdp|.*.top|.*.pdb"
+exclude: ".*.gro|.*.top|.*.mdp|.*.top|.*.pdb|insane_custom.py"
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.1.0
