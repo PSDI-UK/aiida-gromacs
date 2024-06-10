@@ -39,6 +39,5 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
 
 .. _AiiDA: http://www.aiida.net
