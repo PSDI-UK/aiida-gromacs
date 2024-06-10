@@ -13,51 +13,57 @@ Currently there are a number of special considerations given to the data types t
 
 **Code**
 
-You will need to provide an AiiDA code object that will ultimately point to the real GROMACS install that you are going to use either on your system or via an HPC resource or similar. You can configure codes manually following steps outlined in the `AiiDA <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/run_codes.html>`__ documentation, or you can use the helpers provided with the plugin to set this up for you, for example::
+You will need to provide an AiiDA code object that will ultimately point to the real GROMACS install that you are going to use either on your system or via an HPC resource or similar. You can configure codes manually following steps outlined in the `AiiDA <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/run_codes.html>`__ documentation, or you can use the helpers provided with the plugin to set this up for you, for example:
 
-    # import the helper functions.
-    from aiida_gromacs import helpers
+    .. code-block:: python
 
-    # First setup a computer, this will default to localhost (your pc).
-    computer = helpers.get_computer()
+        # import the helper functions.
+        from aiida_gromacs import helpers
 
-    # Setup or grab a configured gromacs install.
-    gromacs_code = helpers.get_code(entry_point='gromacs',
-                                    computer=computer)
+        # First setup a computer, this will default to localhost (your pc).
+        computer = helpers.get_computer()
+
+        # Setup or grab a configured gromacs install.
+        gromacs_code = helpers.get_code(entry_point='gromacs',
+                                        computer=computer)
 
 You can just use the above code if you are unsure how to set up this yourself and it will work. It relies on GROMACS being installed and available via the system path.
 
 **Input Files**
 
-Input files for each calculation are required to be marked as the AiiDA SinglefileData type, this is to make sure that the file is correctly added to the AiiDA file repository and its provenance tracked. You would do this by the flags for these, which will be added correctly by the calculation class and do not need to be specified as CLI parameters::
+Input files for each calculation are required to be marked as the AiiDA SinglefileData type, this is to make sure that the file is correctly added to the AiiDA file repository and its provenance tracked. You would do this by the flags for these, which will be added correctly by the calculation class and do not need to be specified as CLI parameters:
 
-    # import AiiDA DataFactory and OS for paths
-    from aiida.plugins import DataFactory
-    import os
+    .. code-block:: python
 
-    # Instantiate the SingleFileData class
-    SinglefileData = DataFactory('core.singlefile')
+        # import AiiDA DataFactory and OS for paths
+        from aiida.plugins import DataFactory
+        import os
 
-    # Now you can start mapping files.
-    somefile = SinglefileData(file=os.path.join(os.getcwd(), 'some.file'))
+        # Instantiate the SingleFileData class
+        SinglefileData = DataFactory('core.singlefile')
+
+        # Now you can start mapping files.
+        somefile = SinglefileData(file=os.path.join(os.getcwd(), 'some.file'))
 
 **CLI Parameters and Outputs**
 
-Flags for parameters setting properties or naming output files should be provided using the relevant Parameters data structures from the AiiDA DataFactory. An example of doing this is::
+Flags for parameters setting properties or naming output files should be provided using the relevant Parameters data structures from the AiiDA DataFactory. An example of doing this is:
 
-    # Import the DataFactory from AiiDA plugins.
-    from aiida.plugins import DataFactory
+    .. code-block:: python
 
-    # Instantiate the data class for parameters, in this case we choose editconf as an example.
-    # Doing this brings with it full validation for parameters based on the specific functionality.
-    EditconfParameters = DataFactory('gromacs.editconf')
+        # Import the DataFactory from AiiDA plugins.
+        from aiida.plugins import DataFactory
 
-    # Now you can provide the commandline flags you would normally give to the gromacs executables.
-    parameters = EditconfParameters({'center': '0',
-                                    'd': '1.0',
-                                    'bt': 'cubic',
-                                    'o': '1AKI_newbox.gro'
-                                    })
+        # Instantiate the data class for parameters, in this case we choose editconf as an example.
+        # Doing this brings with it full validation for parameters based on the specific functionality.
+        EditconfParameters = DataFactory('gromacs.editconf')
+
+        # Now you can provide the commandline flags you would normally give to the gromacs executables.
+        parameters = EditconfParameters({'center': '0',
+                                        'd': '1.0',
+                                        'bt': 'cubic',
+                                        'o': '1AKI_newbox.gro'
+                                        })
 
 Please note, you do not need to provide input files to this parameters dictionary, since they have to be given special treatment so that provenance is properly tracked.
 
@@ -69,15 +75,17 @@ A main dictionary containing all of the input parameters to successfully run a c
 #. parameters - this is an AiiDA parameters object
 #. metadata - this is dictionary containing metadata information
 
-You should create this as a dictionary, for example::
+You should create this as a dictionary, for example:
 
-    inputs = {
-        'code': gromacs_code,
-        'parameters': parameters,
-        'metadata': {
-            'description': 'this is a test example for documentation purposes',
-        },
-    }
+    .. code-block:: python
+
+        inputs = {
+            'code': gromacs_code,
+            'parameters': parameters,
+            'metadata': {
+                'description': 'this is a test example for documentation purposes',
+            },
+        }
 
 Where the parameters 'gromacs_code' and 'parameters' are described above.
 
@@ -86,20 +94,26 @@ For each different gromacs executable that this plugin supports, there will then
 Submit vs run
 +++++++++++++
 
-AiiDA has two main methods of execution in its engine that you can call for running your simulations. You should always make sure you are importing the engine from AiiDA to use these::
+AiiDA has two main methods of execution in its engine that you can call for running your simulations. You should always make sure you are importing the engine from AiiDA to use these:
 
-    from aiida import engine
-    from aiida.plugins import CalculationFactory
+    .. code-block:: python
 
-The first method you can use to execute workloads is the run method::
+        from aiida import engine
+        from aiida.plugins import CalculationFactory
 
-    result = engine.run(CalculationFactory('gromacs.pdb2gmx'), **inputs)
+The first method you can use to execute workloads is the run method:
+
+    .. code-block:: python
+
+        result = engine.run(CalculationFactory('gromacs.pdb2gmx'), **inputs)
 
 This method is blocking, this means your script/program will be blocked from proceeding to the next step before the actual work done by the calculation is completed and any called programs or scripts have completed and exited. This is useful if your workflow is sequential and each step requires the previous step to have completed fully.
 
-The second method you can use to execute is the submit method::
+The second method you can use to execute is the submit method:
 
-    result = engine.submit(CalculationFactory('gromacs.pdb2gmx'), **inputs)
+    .. code-block:: python
+
+        result = engine.submit(CalculationFactory('gromacs.pdb2gmx'), **inputs)
 
 This method is not blocking, which means that your workload is submitted to a running (you need to have started verdi daemons) daemon to execute and monitor and then your script is able to proceed forward without being blocked or waiting. This can be problematic if future steps rely on information from previous steps. You can monitor the progress of your submitted workloads via the verdi process commandline tools.
 
@@ -108,9 +122,9 @@ You should carefully consider which of the two execution methodologies are more 
 genericMD
 +++++++++
 
-The genericMD class is flexible, with no set required inputs or outputs, instead any number of inputs and outputs can be dynamically defined. Below is an example of using the genericMD class to run the equivalent of the ``gmx pdb2gmx`` command:
+The ``genericMD`` class is flexible, with no set required inputs or outputs, instead any number of inputs and outputs can be dynamically defined. Below is an example of using the ``genericMD`` class to run the equivalent of the ``gmx pdb2gmx`` command:
 
-.. code-block:: bash
+.. code-block:: python
 
     import os
 
@@ -171,7 +185,7 @@ The genericMD class is flexible, with no set required inputs or outputs, instead
 editconf
 ++++++++
 
-The editconf calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-editconf.html>`__. Here is an example of how to script calling the editconf class with examples from the Lemkul lysozyme tutorial.
+The ``editconf`` calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-editconf.html>`__. Here is an example of how to script calling the ``editconf`` class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
@@ -184,7 +198,7 @@ Required parameters:
 * bt - box type
 * o - output file name
 
-.. code-block:: bash
+.. code-block:: python
 
     from os import path
     from aiida import engine
@@ -223,11 +237,11 @@ Required parameters:
 genion
 ++++++
 
-The genion calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-genion.html>`__
+The ``genion`` calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-genion.html>`__
 
-The genion class is slightly different in the way that the application being called underneath is bash and not gromacs directly, this is to satisfy the fact that gmx genion requires piped input for some parameters that cannot be given on the commandline.
+The ``genion`` class is slightly different in the way that the application being called underneath is bash and not gromacs directly, this is to satisfy the fact that ``gmx genion`` requires piped input for some parameters that cannot be given on the commandline.
 
-Here is an example of how to script calling the genion class with examples from the Lemkul lysozyme tutorial.
+Here is an example of how to script calling the ``genion`` class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
@@ -241,7 +255,7 @@ Required parameters:
 * nname - negative ion
 * neutral - neutralise charge
 
-.. code-block:: bash
+.. code-block:: python
 
     from os import path
     from aiida import engine
@@ -283,7 +297,7 @@ Required parameters:
 grompp
 ++++++
 
-The grompp calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html>`__. Here is an example of how to script calling the grompp class with examples from the Lemkul lysozyme tutorial.
+The ``grompp`` calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html>`__. Here is an example of how to script calling the ``grompp`` class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
@@ -295,7 +309,7 @@ Required parameters:
 
 * o - output tpr file name
 
-.. code-block:: bash
+.. code-block:: python
 
     from os import path
     from aiida import engine
@@ -336,7 +350,7 @@ Required parameters:
 mdrun
 +++++
 
-The mdrun calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-mdrun.html>`__. Here is an example of how to script calling the mdrun class with examples from the Lemkul lysozyme tutorial.
+The ``mdrun`` calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-mdrun.html>`__. Here is an example of how to script calling the ``mdrun`` class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
@@ -349,7 +363,7 @@ Required parameters:
 * g - output log file name
 * o - output trajectory file name
 
-.. code-block:: bash
+.. code-block:: python
 
     from os import path
     from aiida import engine
@@ -390,7 +404,7 @@ Required parameters:
 pdb2gmx
 +++++++
 
-The pdb2gmx calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-pdb2gmx.html>`__. Here is an example of how to script calling the pdb2gmx class with examples from the Lemkul lysozyme tutorial.
+The ``pdb2gmx`` calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-pdb2gmx.html>`__. Here is an example of how to script calling the ``pdb2gmx`` class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
@@ -404,7 +418,7 @@ Required parameters:
 * p - topology file name
 * i - itp file name
 
-.. code-block:: bash
+.. code-block:: python
 
     from os import path
     from aiida import engine
@@ -445,7 +459,7 @@ Required parameters:
 solvate
 +++++++
 
-The solvate calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-solvate.html>`__. Here is an example of how to script calling the solvate class with examples from the Lemkul lysozyme tutorial.
+The ``solvate`` calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-solvate.html>`__. Here is an example of how to script calling the ``solvate`` class with examples from the Lemkul lysozyme tutorial.
 
 Required input files:
 
@@ -457,7 +471,7 @@ Required parameters:
 * cs - water model
 * o - output file name
 
-.. code-block:: bash
+.. code-block:: python
 
     from os import path
     from aiida import engine
@@ -493,3 +507,42 @@ Required parameters:
 
     # Run the calculation step in blocking mode.
     result = engine.run(CalculationFactory('gromacs.solvate'), **inputs)
+
+make_ndx
+++++++++
+
+The ``make_ndx`` calculation class supports all parameters that the native gromacs application would use, you can find those `here <https://manual.gromacs.org/current/onlinehelp/gmx-make_ndx.html>`__. Here is an example of how to script calling the ``make_ndx`` class.
+
+.. code-block:: python
+
+    import os
+    from aiida import cmdline, engine
+    from aiida.plugins import CalculationFactory, DataFactory
+    from aiida_gromacs import helpers
+
+    # Get the GROMACS code object set up.
+    computer = helpers.get_computer()
+    gromacs_code = helpers.get_code(entry_point='gromacs',
+                                    computer=computer)
+
+    # Prepare input parameters these are generally any CLI flags and output files
+    Make_ndxParameters = DataFactory("gromacs.make_ndx")
+    parameters = Make_ndxParameters({'o': 'index.ndx'
+                                    })
+
+    # Define input files as AiiDA SinglefileData.
+    SinglefileData = DataFactory('core.singlefile')
+    grofile = SinglefileData(file=path.join(os.getcwd(), '1AKI_minimised.gro'))
+
+    # Set up calculation dictionary
+    inputs = {
+        'code': gromacs_code,
+        'parameters': parameters,
+        'grofile': grofile,
+        'metadata': {
+            'description': 'make_ndx job submission with the aiida_gromacs plugin',
+        },
+    }
+
+    # Run the calculation step in blocking mode.
+    result = engine.run(CalculationFactory('gromacs.make_ndx'), **inputs)

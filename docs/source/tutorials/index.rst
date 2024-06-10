@@ -9,3 +9,4 @@ Here are some commonly available tutorial examples that you would adapt to run w
 
     lysozyme
     genericMD
+    PTH2R_CGMD

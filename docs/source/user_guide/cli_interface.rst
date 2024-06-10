@@ -13,7 +13,7 @@ The following utilities are available and have the following features.
 gmx_editconf
 ++++++++++++
 
-Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original editconf executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-editconf.html>`__
+Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original ``editconf`` executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-editconf.html>`__
 
 If the original command is used like this::
 
@@ -35,7 +35,7 @@ An example specifying gromacs on the local PC is below::
 gmx_genion
 ++++++++++
 
-Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original editconf executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-genion.html>`__
+Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original ``genion`` executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-genion.html>`__
 
 If the original command is used like this::
 
@@ -57,7 +57,7 @@ An example specifying gromacs on the local PC is below::
 gmx_grompp
 ++++++++++
 
-Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original editconf executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html>`__
+Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original grompp executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html>`__
 
 If the original command is used like this::
 
@@ -79,7 +79,7 @@ An example specifying gromacs on the local PC is below::
 gmx_mdrun
 +++++++++
 
-Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original editconf executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-mdrun.html>`__
+Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original ``mdrun`` executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-mdrun.html>`__
 
 If the original command is used like this::
 
@@ -101,7 +101,7 @@ An example specifying gromacs on the local PC is below::
 gmx_pdb2gmx
 +++++++++++
 
-Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original editconf executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-pdb2gmx.html>`__
+Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original ``pdb2gmx`` executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-pdb2gmx.html>`__
 
 If the original command is used like this::
 
@@ -123,7 +123,7 @@ An example specifying gromacs on the local PC is below::
 gmx_solvate
 +++++++++++
 
-Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original editconf executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-solvate.html>`__
+Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original ``solvate`` executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-solvate.html>`__
 
 If the original command is used like this::
 
@@ -141,3 +141,27 @@ This utility has extra functionality, such as if you run the command with --help
 An example specifying gromacs on the local PC is below::
 
     gmx_solvate --code gmx@localhost -cp 1AKI_newbox.gro -cs spc216.gro -p 1AKI_topology.top -o 1AKI_solvated.gro
+
+
+gmx_make_ndx
+++++++++++++
+
+Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original ``make_ndx`` executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-make_ndx.html>`__
+
+If the original command is used like this::
+
+    gmx make_ndx -f 1AKI_minimised.gro -o index.ndx
+
+Then in our plugin, you would use it like this::
+
+    gmx_make_ndx -f 1AKI_minimised.gro -o index.ndx --instructions inputs.txt
+
+This utility has extra functionality, such as if you run the command with --help then it will print out comprehensive documentation for usage. There are also three commandline flags for controlling AiiDA parameters that are not native to gromacs. These are:
+
+* --code  -  This allows you to specify different gromacs installs, either local or remote or different versions
+* --description  -  This allows you to specify a short description of the command operation for metadata, you should provide this in quotes on the commandline.
+* --instructions - This allows you to specify a file that contains the instructions for the make_ndx command. This is a file that contains the commands that you would normally type into the make_ndx commandline. This is a file that is read in by the plugin and executed as if you had typed it into the commandline.
+
+An example specifying gromacs on the local PC is below::
+
+    gmx_make_ndx --code gmx@localhost -f 1AKI_minimised.gro -o index.ndx --instructions inputs.txt

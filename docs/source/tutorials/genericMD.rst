@@ -9,7 +9,9 @@ GROMACS specific vs genericMD CLI process submissions
 
 First let's take a look at what a process submitted using a gromacs specific CLI command compares with submitting the job with the genericMD CLI:
 
-Submitting a ``pdb2gmx`` process using ``gmx_pdb2gmx``::
+Submitting a ``pdb2gmx`` process using ``gmx_pdb2gmx``:
+
+.. code-block:: bash
 
     gmx_pdb2gmx -f 1AKI_clean.pdb -ff oplsaa -water spce -o 1AKI_forcefield.gro -p 1AKI_topology.top -i 1AKI_restraints.itp
 
@@ -41,7 +43,9 @@ To submit an AiiDA process for tracking input and output files of a generic comm
 #. what are the input file names you're using in the command,
 #. and what are the output file names outputted from your command.
 
-Once you know this information, you can build a genericMD process submission. Let's take a look at the example below for a submission for tracking the inputs and outputs of a ``diff`` command::
+Once you know this information, you can build a genericMD process submission. Let's take a look at the example below for a submission for tracking the inputs and outputs of a ``diff`` command:
+
+.. code-block:: bash
 
     genericMD --code bash@localhost --command "diff file1.txt file2.txt > out.txt" --inputs file1.txt --inputs file2.txt --outputs out.txt
 
@@ -64,7 +68,9 @@ Another example to submit a process with genericMD
 
 The example above for tracking the ``diff`` command may be useful for tracking changes to files made on non-command line based programs, for example when using a GUI to add or delete atoms in a ``.pdb`` file. Here's another example for tracking a command outside of GROMACS using `Packmol <https://m3g.github.io/packmol/userguide.shtml>`_ to create the initial system geometry for MD simulations.
 
-First, we add the packmol code::
+First, we add the packmol code:
+
+.. code-block:: bash
 
     verdi code create core.code.installed --label packmol --computer localhost --filepath-executable ~/packmol-20.14.2/packmol
         Report: enter ? for help.
@@ -80,7 +86,9 @@ This assumes that Packmol is already installed on your computer in the path ``~/
 #.  Expand the files with ``tar -xvzf packmol-20.13.0.tar.gz``
 #.  Build the executable with ``cd packmol; make``
 
-You can check the Packmol code is added with::
+You can check the Packmol code is added with:
+
+.. code-block:: bash
 
     verdi code list
         Full label           Pk  Entry point
@@ -89,7 +97,9 @@ You can check the Packmol code is added with::
         bash@localhost        2  core.code
         packmol@localhost     3  core.code.installed
 
-Once the Packmol is added as a code, we can track a Packmol code with the ``genericMD`` calculation with::
+Once the Packmol is added as a code, we can track a Packmol code with the ``genericMD`` calculation with:
+
+.. code-block:: bash
 
     genericMD --code packmol@localhost --command "< packmol.inp" \
     --inputs path/to/packmol.inp --inputs path/to/input.pdb \
