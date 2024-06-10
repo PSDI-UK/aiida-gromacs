@@ -1,5 +1,5 @@
 .. figure:: images/AiiDA_transparent_logo.png
-    :width: 250px
+    :height: 250px
     :align: left
 
 The aiida-gromacs plugin for `AiiDA`_
@@ -8,8 +8,9 @@ The aiida-gromacs plugin for `AiiDA`_
 ``aiida-gromacs`` is available at http://github.com/PSDI-UK/aiida-gromacs
 
 .. figure:: images/gromacs-BioSimDB-logo.png
-    :width: 250px
+    :height: 250px
     :align: left
+    :target: https://github.com/PSDI-UK/aiida-gromacs
 
 
 .. toctree::
@@ -35,6 +36,22 @@ If you use AiiDA for your research, please cite the following work:
 
 Please contact James Gebbie-Rayet james.gebbie@stfc.ac.uk or Jas Kalayan jas.kalayan@stfc.ac.uk for information concerning aiida-gromacs and the `AiiDA mailing list <http://www.aiida.net/mailing-list/>`_ for questions concerning aiida.
 
+Funding
+=======
+
+Contributors to aiida-gromacs were supported by
+
+.. image::  images/PSDI_Logo_CMYK-01.svg
+   :height: 100px
+   :target: https://www.psdi.ac.uk/
+
+.. image:: images/ccpbiosim-logo-white-background.png
+   :height: 100px
+   :target: https://www.ccpbiosim.ac.uk/
+
+.. image:: images/cosec-logo.png
+   :height: 100px
+   :target: https://www.scd.stfc.ac.uk/Pages/CoSeC.aspx
 
 Indices and tables
 ==================
