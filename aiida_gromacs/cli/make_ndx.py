@@ -5,12 +5,9 @@ Usage: gmx_make_ndx --help
 """
 
 import os
-
 import click
-
-from aiida import cmdline, engine, orm
+from aiida import cmdline, engine
 from aiida.plugins import CalculationFactory, DataFactory
-
 from aiida_gromacs import helpers
 from aiida_gromacs.utils import searchprevious
 

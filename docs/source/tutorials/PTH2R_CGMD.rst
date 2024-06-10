@@ -6,6 +6,10 @@ Introduction
 ------------
 In this tutorial, we will go through how to set-up a coarse-grained molecular system of a PTH2R (Parathyroid hormone receptor type 2) protein embedded in a lipid bilayer membrane along with water and counter-ions. We will use the command-line tools provided in aiida-gromacs to track each step performed on the terminal.
 
+.. image:: ../images/gpcr_membrane.png
+   :width: 600
+   :align: center
+
 Software and environment requirements
 -------------------------------------
 * `martinize2 <https://pypi.org/project/vermouth/>`__ is used to convert from atomistic to coarse-grained structures.
