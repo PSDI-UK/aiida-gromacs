@@ -61,3 +61,44 @@ When you are ready to share data, the AiiDA database and accompanying files inpu
 where the ``--all`` flag saves all the data in the AiiDA profile. To import an existing AiiDA archive file to a loaded profile::
 
     verdi archive import archive_name.aiida
+
+
+Plugin Specfic AiiDA Commands
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following commands are only available with the aiida-gromacs plugin.
+
+Show Provenance on CLI
+++++++++++++++++++++++
+
+Show a list of the commands run and the connected inputs/outputs associated with any processes that have been run using::
+
+    verdi provenance show
+
+An example output on the command line will look like this:
+
+    .. code-block :: bash
+
+        Step 1.
+            command: curl https://gpcrdb.org/structure/homology_models/pth2r_human_active_full/download_pdb -o ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.zip
+            executable: bash
+            input files:
+
+            output files:
+                ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.zip
+
+        Step 2.
+            command: unzip ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.zip
+            executable: bash
+            input files:
+                ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.zip <-- from Step 1.
+            output files:
+                ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.pdb
+
+        Step 3.
+            command: sed -i -e '1,217d;3502,4387d' ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.pdb
+            executable: bash
+            input files:
+                ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.pdb <-- from Step 2.
+            output files:
+                ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.pdb

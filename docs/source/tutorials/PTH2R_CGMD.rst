@@ -1,5 +1,5 @@
 =====================================================================
-Advanced Data Provenance - Coarse-grained Simulation of embedded GPCR
+Advanced Data Provenance - Coarse-grained simulation of embedded GPCR
 =====================================================================
 
 Introduction

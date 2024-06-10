@@ -43,6 +43,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinxcontrib.contentui",
+    "sphinx_copybutton",
     "aiida.sphinxext",
 ]
 
