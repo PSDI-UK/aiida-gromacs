@@ -2,6 +2,8 @@
     :width: 250px
     :align: left
 
+|
+
 The aiida-gromacs plugin for `AiiDA`_
 =====================================================
 
@@ -12,6 +14,7 @@ The aiida-gromacs plugin for `AiiDA`_
     :align: left
     :target: https://github.com/PSDI-UK/aiida-gromacs
 
+|
 
 .. toctree::
    :maxdepth: 2
