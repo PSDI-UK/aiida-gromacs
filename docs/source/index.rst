@@ -1,5 +1,5 @@
-.. figure:: images/AiiDA_transparent_logo.png
-    :height: 250px
+.. image:: images/AiiDA_transparent_logo.png
+    :width: 250px
     :align: left
 
 The aiida-gromacs plugin for `AiiDA`_
@@ -7,8 +7,8 @@ The aiida-gromacs plugin for `AiiDA`_
 
 ``aiida-gromacs`` is available at http://github.com/PSDI-UK/aiida-gromacs
 
-.. figure:: images/gromacs-BioSimDB-logo.png
-    :height: 250px
+.. image:: images/gromacs-BioSimDB-logo.png
+    :width: 250px
     :align: left
     :target: https://github.com/PSDI-UK/aiida-gromacs
 
@@ -41,7 +41,7 @@ Funding
 
 Contributors to aiida-gromacs were supported by
 
-.. image::  images/PSDI_Logo_CMYK-01.svg
+.. image::  images/psdi-logo.png
    :height: 100px
    :target: https://www.psdi.ac.uk/
 
