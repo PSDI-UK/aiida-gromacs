@@ -48,6 +48,7 @@ docs = [
     "sphinx_rtd_theme",
     "sphinxcontrib-contentui",
     "sphinxcontrib-details-directive",
+    "sphinx_copybutton",
     "furo",
     "markupsafe<2.1"
 ]

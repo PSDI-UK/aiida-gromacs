@@ -1,6 +1,5 @@
 .. figure:: images/AiiDA_transparent_logo.png
     :width: 250px
-    :align: center
 
 The aiida-gromacs plugin for `AiiDA`_
 =====================================================
@@ -9,7 +8,6 @@ The aiida-gromacs plugin for `AiiDA`_
 
 .. figure:: images/gromacs-BioSimDB-logo.png
     :width: 250px
-    :align: center
 
 
 .. toctree::
@@ -33,7 +31,7 @@ If you use AiiDA for your research, please cite the following work:
 
 ``aiida-gromacs`` is released under the MIT license.
 
-Please contact James Gebbie-Rayet james.gebbie@stfc.ac.uk or Jas Kalayan jas.kalayan@stfc.ac.uk for information concerning ``aiida-gromacs`` and the `AiiDA mailing list <http://www.aiida.net/mailing-list/>`_ for questions concerning ``aiida``.
+Please contact James Gebbie-Rayet james.gebbie@stfc.ac.uk or Jas Kalayan jas.kalayan@stfc.ac.uk for information concerning aiida-gromacs and the `AiiDA mailing list <http://www.aiida.net/mailing-list/>`_ for questions concerning aiida.
 
 
 Indices and tables
@@ -41,6 +39,5 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
 
 .. _AiiDA: http://www.aiida.net

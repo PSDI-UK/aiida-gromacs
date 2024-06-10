@@ -49,6 +49,7 @@ This utility has extra functionality, such as if you run the command with --help
 
 * --code  -  This allows you to specify different gromacs installs, either local or remote or different versions
 * --description  -  This allows you to specify a short description of the command operation for metadata, you should provide this in quotes on the commandline.
+* --instructions  -  This allows you to specify a file that contains the instructions for the ``genion`` command. This is a file that contains the commands that you would normally type into the ``genion`` commandline. This is a file that is read in by the plugin and executed as if you had typed it into the commandline.
 
 An example specifying gromacs on the local PC is below::
 
@@ -57,7 +58,7 @@ An example specifying gromacs on the local PC is below::
 gmx_grompp
 ++++++++++
 
-Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original grompp executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html>`__
+Our plugin introduces a new CLI program utility that supports all of the commandline functionality of the original ``grompp`` executable listed `here <https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html>`__
 
 If the original command is used like this::
 
@@ -160,7 +161,7 @@ This utility has extra functionality, such as if you run the command with --help
 
 * --code  -  This allows you to specify different gromacs installs, either local or remote or different versions
 * --description  -  This allows you to specify a short description of the command operation for metadata, you should provide this in quotes on the commandline.
-* --instructions - This allows you to specify a file that contains the instructions for the make_ndx command. This is a file that contains the commands that you would normally type into the make_ndx commandline. This is a file that is read in by the plugin and executed as if you had typed it into the commandline.
+* --instructions  -  This allows you to specify a file that contains the instructions for the ``make_ndx`` command. This is a file that contains the commands that you would normally type into the ``make_ndx`` commandline. This is a file that is read in by the plugin and executed as if you had typed it into the commandline.
 
 An example specifying gromacs on the local PC is below::
 

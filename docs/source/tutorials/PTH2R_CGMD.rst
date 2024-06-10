@@ -123,7 +123,8 @@ Preparing the system for simulation
         sed_command1='sed -i -e "1 s/^/#include \\"toppar\/martini_v3.0.0.itp\\"\\n#include \\"toppar\/martini_v3.0.0_ions_v1.itp\\"\\n#include \\"toppar\/martini_v3.0.0_solvents_v1.itp\\"\\n#include \\"toppar\/martini_v3.0.0_phospholipids_v1.itp\\"\\n#include \\"martini_v3.0_sterols_v1.0.itp\\"\\n#include \\"POP2.itp\\"\\n#include \\"molecule_0.itp\\"\\n#include \\"gm3_final.itp\\"\\n/" '\
         '-e "s/Protein/molecule_0/" '\
         '-e "s/#include \\"martini.itp\\"/\\n/" system.top'
-        ! genericMD --code bash@localhost \
+
+        genericMD --code bash@localhost \
         --command '{sed_command1}' \
         --inputs system.top \
         --outputs system.top
@@ -135,6 +136,7 @@ Preparing the system for simulation
             sed_command2='sed -i -e "s/1000 1000 1000/POSRES_FC    POSRES_FC    POSRES_FC/g" '\
             '-e "s/#ifdef POSRES/#ifdef POSRES\\n#ifndef POSRES_FC\\n#define POSRES_FC 1000.00\\n#endif/" '\
             'molecule_0.itp'
+
             genericMD --code bash@localhost \
             --command '{sed_command2}' \
             --inputs molecule_0.itp \
