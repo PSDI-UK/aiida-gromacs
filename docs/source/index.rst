@@ -1,5 +1,6 @@
 .. figure:: images/AiiDA_transparent_logo.png
     :width: 250px
+    :align: left
 
 The aiida-gromacs plugin for `AiiDA`_
 =====================================================
@@ -8,6 +9,7 @@ The aiida-gromacs plugin for `AiiDA`_
 
 .. figure:: images/gromacs-BioSimDB-logo.png
     :width: 250px
+    :align: left
 
 
 .. toctree::
