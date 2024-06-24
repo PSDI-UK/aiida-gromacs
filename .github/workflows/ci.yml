@@ -32,7 +32,7 @@ jobs:
 
     - name: Start AiiDA with a test profile
       shell: bash
-      run: ./aiida-start
+      run: /home/aiida/aiida-start
 
     - name: Install aiida-gromacs and its testing dependencies
       shell: bash
