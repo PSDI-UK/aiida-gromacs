@@ -94,6 +94,7 @@ def test_previous_input_retrieval(gromacs_code):
 
     # check if previous processes have run and add previous outputs
     # as inputs for new process if file names match
+    process_inputs_new = {}
     if qb.count() > 0:
         process_inputs_new = searchprevious.append_prev_nodes(
             qb, inputs, process_inputs.copy(), output_dir
