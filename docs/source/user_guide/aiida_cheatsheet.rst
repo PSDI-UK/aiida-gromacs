@@ -7,7 +7,9 @@ Here we will list some useful commands for working with AiiDA. Have a look `here
 Monitoring Submitted Processes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-List all submitted processes::
+List all submitted processes:
+
+.. code-block:: bash
 
     verdi process list -a
 
@@ -29,6 +31,38 @@ View attributes of a process node (such as retrieved files and find the path on 
 
 From the node attributes output dictionary, you can find where the input and output files are temporarily stored for a process in the "remote_workdir" value.
 
+Debugging
+^^^^^^^^^
+
+Any aiida errors are logged in ``.aiida/daemon/log/``.
+
+If any changes to the plugin code are made, after an update for example, restart the daemon if it is already running to implement the code changes::
+
+    verdi daemon restart --reset
+
+To view details of a submitted process, such as the inputs, state, log messages, etc., use the following command::
+
+    verdi process show <PK>
+
+To view where in the source code an exception has occured if a calculation has failed::
+
+        verdi process report <PK>
+
+Sharing Data
+^^^^^^^^^^^^
+
+When you are ready to share data, the AiiDA database and accompanying files inputted and outputted in each process can be `archived <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/share_data.html>`_ into a single file:
+
+.. code-block:: bash
+
+    verdi archive create --all archive_name.aiida
+
+where the ``--all`` flag saves all the data in the AiiDA profile. To import an existing AiiDA archive file to a loaded profile:
+
+.. code-block:: bash
+
+    verdi archive import archive_name.aiida
+
 Visualise Data Provenance
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -42,26 +76,6 @@ An example provenance graph for the first eight steps of the :ref:`lysozyme tuto
    :width: 600
    :align: center
 
-Debugging
-^^^^^^^^^
-
-Any aiida errors are logged in ``.aiida/daemon/log/``.
-
-If any changes to the plugin code are made, after an update for example, restart the daemon if it is already running to implement the code changes::
-
-    verdi daemon restart --reset
-
-Sharing Data
-^^^^^^^^^^^^
-
-When you are ready to share data, the AiiDA database and accompanying files inputted and outputted in each process can be `archived <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/share_data.html>`_ into a single file::
-
-    verdi archive create --all archive_name.aiida
-
-where the ``--all`` flag saves all the data in the AiiDA profile. To import an existing AiiDA archive file to a loaded profile::
-
-    verdi archive import archive_name.aiida
-
 
 Plugin Specfic AiiDA Commands
 +++++++++++++++++++++++++++++
@@ -73,7 +87,7 @@ Show Provenance on CLI
 
 Show a list of the commands run and the connected inputs/outputs associated with any processes that have been run using::
 
-    verdi provenance show
+    verdi data provenance show
 
 An example output on the command line will look like this:
 
