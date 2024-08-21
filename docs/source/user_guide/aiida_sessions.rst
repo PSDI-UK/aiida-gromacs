@@ -2,7 +2,7 @@
 Start/Stop AiiDA
 ================
 
-Regardless of whether you have switched off AiiDA or restarted your computer. To start recording provenance with this plugin, you will need to start up your AiiDA instance. Likewise, once you have finished using AiiDA, it is best practice to shut things down gracefully. These steps also assume you have already followed the steps within :doc:`installation` and have already a fully working install of the toolchain.
+Regardless of whether you have switched off AiiDA or restarted your computer. To start recording provenance with this plugin, you will need to start up your AiiDA instance. Likewise, once you have finished using AiiDA, it is best practice to shut things down gracefully. These steps also assume you have already followed the steps within `installation <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/installation.html>`_ and have already a fully working install of the toolchain.
 
 The first step in starting AiiDA is to activate your conda environment, for example:
 
@@ -31,13 +31,16 @@ To start using AiiDA-gromacs to track the inputs and outputs of GROMACS commands
 .. code-block:: bash
 
     verdi quicksetup
-        Info: enter "?" for help
-        Info: enter "!" to ignore the default and set no value
-        Profile name: username
-        Email Address (for sharing data): your@email.com
-        First name: Your
-        Last name: Name
-        Institution: where-you-work
+
+.. code-block:: console
+
+    Info: enter "?" for help
+    Info: enter "!" to ignore the default and set no value
+    Profile name: username
+    Email Address (for sharing data): your@email.com
+    First name: Your
+    Last name: Name
+    Institution: where-you-work
 
 
 That is it, you are now free to use your AiiDA toolchain.

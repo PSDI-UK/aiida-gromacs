@@ -8,11 +8,15 @@ Python Virtual Environment
 ++++++++++++++++++++++++++
 
 We recommend setting up a Python virtual environment via Conda, which can be installed by downloading the relevant installer `here <https://docs.conda.io/en/latest/miniconda.html>`_.
-If you're using Linux, install conda via the terminal with::
+If you're using Linux, install conda via the terminal with:
+
+.. code-block:: bash
 
     bash Miniconda3-latest-Linux-x86_64.sh
 
-Then add the conda path to the bash environment by appending the following to your ``.bashrc`` file::
+Then add the conda path to the bash environment by appending the following to your ``.bashrc`` file:
+
+.. code-block:: bash
 
     export PATH="~/miniconda3/bin:$PATH"
 
@@ -39,11 +43,15 @@ To install the AiiDA-gromacs plugin, activate the conda environment created prev
 GROMACS Installation
 ++++++++++++++++++++
 
-If GROMACS is not already installed, here's a quick installation guide. Our plugin has been tested with GROMACS ``v22.4``, ``v23.4`` and ``v24.2``, we suggest installation of one of these versions. GROMACS requires the latest version of cmake, you can download the relevant `cmake installer <https://cmake.org/download/>`_ and install this via the terminal with::
+If GROMACS is not already installed, here's a quick installation guide. Our plugin has been tested with GROMACS ``v22.4``, ``v23.4`` and ``v24.2``, we suggest installation of one of these versions. GROMACS requires the latest version of cmake, you can download the relevant `cmake installer <https://cmake.org/download/>`_ and install this via the terminal with:
+
+.. code-block:: bash
 
     bash cmake-3.30.2-linux-x86_64.sh
 
-And include the path to cmake in the ``.bashrc`` file::
+And include the path to cmake in the ``.bashrc`` file:
+
+.. code-block:: bash
 
     export PATH="~/cmake-3.30.2-linux-x86_64.sh/bin:$PATH"
 
@@ -61,11 +69,15 @@ Download the relevant `GROMACS installer <https://manual.gromacs.org/documentati
     sudo make install
     source /usr/local/gromacs/bin/GMXRC
 
-Add the GROMACS path to the ``.bashrc`` file::
+Add the GROMACS path to the ``.bashrc`` file:
+
+.. code-block:: bash
 
     export PATH=/usr/local/gromacs/bin:$PATH
 
-To implement the changes to the ``.bashrc`` file, execute the following in the terminal::
+To implement the changes to the ``.bashrc`` file, execute the following in the terminal:
+
+.. code-block:: bash
 
     source ~/.bashrc
 

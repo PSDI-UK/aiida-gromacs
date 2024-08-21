@@ -6,7 +6,7 @@ This tutorial follows Justin Lemkul's `lysozyme <http://www.mdtutorials.com/gmx/
 
 Please also note the slight differences in commands between the tutorial and that by Justin Lemkul is simply down to the way we are recording provenance requires non-interactive input into the gromacs tools.
 
-Also at each of the below steps you should run verdi to view the status of the submitted process before moving onto the next step, you do this by running:
+Also at each of the below steps you should run ``verdi`` to view the status of the submitted process before moving onto the next step, you do this by running:
 
 .. code-block:: bash
 
@@ -14,7 +14,12 @@ Also at each of the below steps you should run verdi to view the status of the s
 
 A successfully finished process will exit with code ``[0]``.
 
-#. We will start from the `pbd2gmx <http://www.mdtutorials.com/gmx/lysozyme/01_pdb2gmx.html>`_ step of Justin's tutorial:
+For this tutorial, pre-installation of AiiDA, the aiida-gromacs plugin and dependent tools is required, please follow the instructions in :doc:`../user_guide/installation`. Here is a brief description of the software used:
+* AiiDA uses a [PostgreSQL](https://www.postgresql.org) database to store all data produced and the links between input and output files for each command run. Each submitted command is termed a process in AiiDA.
+* Communication between submitted processes are handled with [RabbitMQ](https://www.rabbitmq.com/) and submitted processes are handled with a deamon process that runs in the background.
+* ``aiida-gromacs`` requires an installation of [GROMACS](https://www.gromacs.org/) and the path to where it is installed.
+
+#. We will start from the `pdb2gmx <http://www.mdtutorials.com/gmx/lysozyme/01_pdb2gmx.html>`_ step of Justin's tutorial:
 
 .. code-block:: bash
 

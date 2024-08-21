@@ -13,19 +13,27 @@ List all submitted processes:
 
     verdi process list -a
 
-Delete a process node, identified by its primary key value ``<PK>``::
+Delete a process node, identified by its primary key value ``<PK>``:
+
+.. code-block:: bash
 
     verdi node delete <PK>
 
-Delete multiple process nodes between primary key values ``<PK_1>`` and ``<PK_n>``::
+Delete multiple process nodes between primary key values ``<PK_1>`` and ``<PK_n>``:
+
+.. code-block:: bash
 
     verdi node delete {<PK_1>..<PK_n>}
 
-View all the nodes associated with a process node::
+View all the nodes associated with a process node:
+
+.. code-block:: bash
 
     verdi node show <PK>
 
-View attributes of a process node (such as retrieved files and find the path on disk where outputs are stored temporarily)::
+View attributes of a process node (such as retrieved files and find the path on disk where outputs are stored temporarily):
+
+.. code-block:: bash
 
     verdi node attributes <PK>
 
@@ -36,15 +44,21 @@ Debugging
 
 Any aiida errors are logged in ``.aiida/daemon/log/``.
 
-If any changes to the plugin code are made, after an update for example, restart the daemon if it is already running to implement the code changes::
+If any changes to the plugin code are made, after an update for example, restart the daemon if it is already running to implement the code changes:
+
+.. code-block:: bash
 
     verdi daemon restart --reset
 
-To view details of a submitted process, such as the inputs, state, log messages, etc., use the following command::
+To view details of a submitted process, such as the inputs, state, log messages, etc., use the following command:
+
+.. code-block:: bash
 
     verdi process show <PK>
 
-To view where in the source code an exception has occured if a calculation has failed::
+To view where in the source code an exception has occured if a calculation has failed:
+
+.. code-block:: bash
 
         verdi process report <PK>
 
@@ -57,7 +71,9 @@ When you are ready to share data, the AiiDA database and accompanying files inpu
 
     verdi archive create --all archive_name.aiida
 
-where the ``--all`` flag saves all the data in the AiiDA profile. To import an existing AiiDA archive file to a loaded profile:
+where the ``--all`` flag saves all the data in the AiiDA profile.
+
+To import an existing AiiDA archive file to a loaded profile:
 
 .. code-block:: bash
 
@@ -66,7 +82,9 @@ where the ``--all`` flag saves all the data in the AiiDA profile. To import an e
 Visualise Data Provenance
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Visualise your submitted jobs as a provenance graph outputted in a ``.pdf`` file. Select the latest ``<PK>`` to include all previous nodes in the graph::
+Visualise your submitted jobs as a provenance graph outputted in a ``.pdf`` file. Select the latest ``<PK>`` to include all previous nodes in the graph:
+
+.. code-block:: bash
 
     verdi node graph generate <PK>
 
@@ -85,13 +103,15 @@ The following commands are only available with the aiida-gromacs plugin.
 Show Provenance on CLI
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Show a list of the commands run and the connected inputs/outputs associated with any processes that have been run using::
+Show a list of the commands run and the connected inputs/outputs associated with any processes that have been run using:
+
+.. code-block:: bash
 
     verdi data provenance show
 
 An example output on the command line will look like this:
 
-    .. code-block :: bash
+    .. code-block :: console
 
         Step 1.
             command: curl https://gpcrdb.org/structure/homology_models/pth2r_human_active_full/download_pdb -o ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.zip
