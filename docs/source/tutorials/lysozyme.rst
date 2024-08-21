@@ -135,6 +135,15 @@ This tutorial also assumes yo have the AiiDA tools running in the background, if
 
 That is it! You've ran your first GROMACS simulation with AiiDA.
 
+.. note::
+    The majority of the commands used in Justin's tutorial have an equivalent in the ``aiida-gromacs`` plugin. To view all ``gmx`` commands available in the plugin, run:
+
+    .. code-block:: bash
+
+        verdi plugin list aiida.calculations
+
+    Anything starting with ``gromacs.`` is available in the plugin. To use other commands not available in the plugin, you can use the ``genericMD`` CLI, which allows you to track any command you want to keep track of with AiiDA.
+
 
 Viewing and sharing data
 ------------------------
