@@ -5,7 +5,7 @@ genericMD CLI
 Sometimes, you may want to track commands outside of GROMACS. The genericMD CLI allows you to keep track of these commands directly from the aiida-gromacs plugin installation.
 
 GROMACS specific vs genericMD CLI process submissions
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+-----------------------------------------------------
 
 First let's take a look at what a process submitted using a gromacs specific CLI command compares with submitting the job with the genericMD CLI:
 
@@ -30,11 +30,11 @@ As you can see, using the genericMD CLI is more verbose, but it does allow for s
     The quoted command text for the ``--command`` flag does not need to include the path to the input files, instead you include the paths to files in the ``--inputs`` flag.
 
 .. note::
-    By default, the outputs produced from the command are saved in a ``output_dir`` in the current working directory. To change where the output files are saved, set the path with the ``--output_dir`` flag.
+    By default, the outputs produced from the command are returned to the current working directory. To change where the output files are returned, set the full path with the ``--output_dir`` flag.
 
 
 How to submit a process with genericMD
-++++++++++++++++++++++++++++++++++++++
+--------------------------------------
 
 To submit an AiiDA process for tracking input and output files of a generic command, there are several things you need to know beforehand:
 
@@ -59,12 +59,12 @@ Here,
 A few things to consider when using genericMD, firstly the inputs and ouputs of a command need to be known before submitting the process.
 
 .. warning::
-    Any inputs/outputs not included in the genericMD submission with ``--inputs`` and ``--outputs`` flags repectively, will not be included as a node in the provenance graph!!
+    Any inputs/outputs not included in the genericMD submission with ``--inputs`` and ``--outputs`` flags repectively, will not be included as a node in the provenance graph!
 
 
 
 Another example to submit a process with genericMD
-++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------
 
 The example above for tracking the ``diff`` command may be useful for tracking changes to files made on non-command line based programs, for example when using a GUI to add or delete atoms in a ``.pdb`` file. Here's another example for tracking a command outside of GROMACS using `Packmol <https://m3g.github.io/packmol/userguide.shtml>`_ to create the initial system geometry for MD simulations.
 
@@ -73,6 +73,9 @@ First, we add the packmol code:
 .. code-block:: bash
 
     verdi code create core.code.installed --label packmol --computer localhost --filepath-executable ~/packmol-20.14.2/packmol
+
+.. code-block:: console
+
         Report: enter ? for help.
         Report: enter ! to ignore the default and set no value.
         Description: Initial configurations for Molecular Dynamics Simulations by packing optimization
@@ -91,6 +94,9 @@ You can check the Packmol code is added with:
 .. code-block:: bash
 
     verdi code list
+
+.. code-block:: console
+
         Full label           Pk  Entry point
         -----------------  ----  -------------------
         gmx@localhost         1  core.code
