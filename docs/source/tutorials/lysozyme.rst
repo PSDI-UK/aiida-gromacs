@@ -1,32 +1,46 @@
-==========================
-Lysozyme in Water Tutorial
-==========================
+====================================
+Lysozyme in Water with aiida-gromacs
+====================================
 
 This tutorial follows Justin Lemkul's `lysozyme <http://www.mdtutorials.com/gmx/lysozyme/>`_ tutorial. We will not explain each individual step as this can be found on Justin's webpage, but we will link to each page and show the AiiDA equivalant command.
 
-Please note the slight differences in commands between the tutorial and that by Justin Lemkul is simply down to the way we are recording provenance requires non-interactive input into the gromacs tools.
+.. note::
+    The tutorial is written with the assumption that you have a working knowledge of GROMACS. If you are new to GROMACS, we recommend following Justin's tutorial first to understand the commands and what they do.
 
-Please also note that all the files required for this version of the tutorial should be downloaded from
-`our tutorial files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/lysozyme_files/inputs/>`_ and **not** from the links provided in Justin's tutorial as, again, slight alterations to these files have been made, and those available via Justin's tutorial will cause errors if used here.
+Software requirements
+---------------------
 
-Also at each of the below steps you should run ``verdi`` to view the status of the submitted process before moving onto the next step, you do this by running:
+For this tutorial, pre-installation of AiiDA, the aiida-gromacs plugin and dependent tools is required, please follow the instructions in the `installation <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/installation.html>`_ section. Here is a brief description of the software used:
+* AiiDA uses a `PostgreSQL <https://www.postgresql.org>`_ database to store all data produced and the links between input and output files for each command run. Each submitted command is termed a process in AiiDA.
+* Communication between submitted processes are handled with `RabbitMQ <https://www.rabbitmq.com/>`_ and submitted processes are handled with a deamon process that runs in the background.
+* ``aiida-gromacs`` requires an installation of `GROMACS <https://www.gromacs.org/>`_ and the path to where it is installed.
 
-.. code-block:: bash
+This tutorial also assumes yo have the AiiDA tools running in the background, if not please follow the steps `here <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html>`_.
 
-    verdi process list -a
+.. note::
+    All the files required for this version of the tutorial should be downloaded from `our tutorial files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/lysozyme_files/inputs/>`_ and **not** from the links provided in Justin's tutorial as slight alterations to these files have been made, and those available via Justin's tutorial will cause errors if used here.
 
-A successfully finished process will exit with code ``[0]``.
 
-For this tutorial, pre-installation of AiiDA, the aiida-gromacs plugin and dependent tools is required, please follow the instructions in :doc:`../user_guide/installation`. Here is a brief description of the software used:
-* AiiDA uses a [PostgreSQL](https://www.postgresql.org) database to store all data produced and the links between input and output files for each command run. Each submitted command is termed a process in AiiDA.
-* Communication between submitted processes are handled with [RabbitMQ](https://www.rabbitmq.com/) and submitted processes are handled with a deamon process that runs in the background.
-* ``aiida-gromacs`` requires an installation of [GROMACS](https://www.gromacs.org/) and the path to where it is installed.
+"AiiDA-fying" Lemkul's tutorial
+-------------------------------
 
 #. We will start from the `pdb2gmx <http://www.mdtutorials.com/gmx/lysozyme/01_pdb2gmx.html>`_ step of Justin's tutorial:
 
 .. code-block:: bash
 
     gmx_pdb2gmx -f 1AKI_clean.pdb -ff oplsaa -water spce -o 1AKI_forcefield.gro -p 1AKI_topology.top -i 1AKI_restraints.itp
+
+.. note::
+    There may be slight differences in commands between the tutorial and that by Justin Lemkul, this is simply down to the way we are recording provenance, which requires non-interactive input into the GROMACS tools.
+
+.. note::
+    At each of the below steps you should run ``verdi`` to view the status of the submitted process before moving onto the next step, you do this by running:
+
+    .. code-block:: bash
+
+        verdi process list -a
+
+    A successfully finished process will exit with code ``[0]``.
 
 #. Next we will `create the box and solvate <http://www.mdtutorials.com/gmx/lysozyme/03_solvate.html>`_
 
@@ -55,6 +69,7 @@ For this tutorial, pre-installation of AiiDA, the aiida-gromacs plugin and depen
     .. code-block:: bash
 
         gmx_genion -s 1AKI_ions.tpr -p 1AKI_topology.top -pname NA -nname CL -neutral true -o 1AKI_solvated_ions.gro
+
 
 #. Then `minimise <http://www.mdtutorials.com/gmx/lysozyme/05_EM.html>`_ the structure
 
@@ -118,4 +133,33 @@ For this tutorial, pre-installation of AiiDA, the aiida-gromacs plugin and depen
 
         gmx_mdrun -s 1AKI_prod.tpr -c 1AKI_production.gro -e 1AKI_production.edr -g 1AKI_production.log -o 1AKI_production.trr -bonded gpu -nb gpu -pme gpu -ntmpi 1 -ntomp 5 -pin on
 
-That is it!
+That is it! You've ran your first GROMACS simulation with AiiDA.
+
+
+Viewing and sharing data
+------------------------
+
+You can now view the provenance graph of the simulation by running:
+
+.. code-block:: bash
+
+    verdi node graph generate <PK>
+
+Where ``<PK>`` is the process ID of the last process you ran.
+
+.. note::
+    The provenance graph will show all the steps you've taken in the simulation, and the connections between the input and output files for each step. This is a great way to visualise and keep track of your simulations.
+
+The simulation steps can also be viewed on the terminal by running:
+
+.. code-block:: bash
+
+    verdi data provenance show
+
+The provenance can also be archived for sharing with others, to do this run:
+
+.. code-block:: bash
+
+    verdi archive create --all archive_name.aiida
+
+Where ``--all`` saves all the data in the AiiDA profile.
