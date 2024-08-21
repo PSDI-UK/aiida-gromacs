@@ -236,6 +236,7 @@ htmlhelp_basename = "aiida-gromacs-doc"
 # We should ignore any python built-in exception, for instance
 nitpick_ignore = [
     ("py:class", "Logger"),
+    ("py:class", "QbFields"),
 ]
 
 # -- Options for LaTeX output ---------------------------------------------

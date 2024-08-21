@@ -10,45 +10,38 @@ jobs:
   tests:
     strategy:
       matrix:
-        container: [py3.11.0]
-        aiida: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2]
-        gmx: [2023.4=nompi_h76c6bb2_103,
-              2022.4=nompi_hca75aac_100]
+        container: [2024-07-17-aiida2.4.0-py3.11.0-gromacs2022.4,
+                    2024-07-17-aiida2.4.1-py3.11.0-gromacs2022.4,
+                    2024-07-17-aiida2.4.2-py3.11.0-gromacs2022.4,
+                    2024-07-17-aiida2.5.0-py3.11.0-gromacs2022.4,
+                    2024-07-17-aiida2.5.1-py3.11.0-gromacs2022.4,
+                    2024-07-17-aiida2.5.2-py3.11.0-gromacs2022.4,
+                    2024-07-17-aiida2.6.1-py3.11.0-gromacs2022.4,
+                    2024-07-17-aiida2.4.0-py3.11.0-gromacs2023.4,
+                    2024-07-17-aiida2.4.1-py3.11.0-gromacs2023.4,
+                    2024-07-17-aiida2.4.2-py3.11.0-gromacs2023.4,
+                    2024-07-17-aiida2.5.0-py3.11.0-gromacs2023.4,
+                    2024-07-17-aiida2.5.1-py3.11.0-gromacs2023.4,
+                    2024-07-17-aiida2.5.2-py3.11.0-gromacs2023.4,
+                    2024-07-17-aiida2.6.1-py3.11.0-gromacs2023.4,
+                    2024-07-17-aiida2.4.0-py3.11.0-gromacs2024.2,
+                    2024-07-17-aiida2.4.1-py3.11.0-gromacs2024.2,
+                    2024-07-17-aiida2.4.2-py3.11.0-gromacs2024.2,
+                    2024-07-17-aiida2.5.0-py3.11.0-gromacs2024.2,
+                    2024-07-17-aiida2.5.1-py3.11.0-gromacs2024.2,
+                    2024-07-17-aiida2.5.2-py3.11.0-gromacs2024.2,
+                    2024-07-17-aiida2.6.1-py3.11.0-gromacs2024.2]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
         image: harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:${{ matrix.container }}
-    name: container = ${{ matrix.container }}, aiida = ${{ matrix.aiida }}, gmx = ${{ matrix.gmx }}
+    name: ${{ matrix.container }}
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install conda packages
+    - name: Start AiiDA with a test profile
       shell: bash
-      run: mamba install gromacs=${{ matrix.gmx }} aiida-core=${{ matrix.aiida }} aiida-core.services=${{ matrix.aiida }} -c conda-forge -yq
-
-    - name: Initialise PostGRES DB
-      shell: bash
-      run: initdb -D /home/aiida/.aiida/aiida_db
-
-    - name: Start PostGRES DB
-      shell: bash
-      run: pg_ctl -D /home/aiida/.aiida/aiida_db -l /home/aiida/.aiida/logfile start
-
-    - name: Start RabbitMQ
-      shell: bash
-      run: rabbitmq-server -detached
-
-    - name: Setup AiiDA profile
-      shell: bash
-      run: printf '%s\n' testing test@test.com testy tester testorg | verdi quicksetup
-
-    - name: Start AiiDA Daemon set
-      shell: bash
-      run: verdi daemon start 2
-
-    - name: Check Daemons are running
-      shell: bash
-      run: verdi status
+      run: /home/aiida/aiida-start
 
     - name: Install aiida-gromacs and its testing dependencies
       shell: bash
@@ -67,7 +60,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.11
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: 3.11
     - name: Install python dependencies
@@ -83,7 +76,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.11
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: 3.11
     - name: Install python dependencies

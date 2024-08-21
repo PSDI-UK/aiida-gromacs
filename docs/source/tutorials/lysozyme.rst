@@ -4,7 +4,10 @@ Lysozyme in Water Tutorial
 
 This tutorial follows Justin Lemkul's `lysozyme <http://www.mdtutorials.com/gmx/lysozyme/>`_ tutorial. We will not explain each individual step as this can be found on Justin's webpage, but we will link to each page and show the AiiDA equivalant command.
 
-Please also note the slight differences in commands between the tutorial and that by Justin Lemkul is simply down to the way we are recording provenance requires non-interactive input into the gromacs tools.
+Please note the slight differences in commands between the tutorial and that by Justin Lemkul is simply down to the way we are recording provenance requires non-interactive input into the gromacs tools.
+
+Please also note that all the files required for this version of the tutorial should be downloaded from
+`our tutorial files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/lysozyme_files/inputs/>`_ and **not** from the links provided in Justin's tutorial as, again, slight alterations to these files have been made, and those available via Justin's tutorial will cause errors if used here.
 
 Also at each of the below steps you should run ``verdi`` to view the status of the submitted process before moving onto the next step, you do this by running:
 
@@ -101,7 +104,7 @@ For this tutorial, pre-installation of AiiDA, the aiida-gromacs plugin and depen
 
     .. code-block:: bash
 
-        gmx_grompp -f md.mdp -c 1AKI_npt.gro -t 1AKI_npt.cpt -p 1AKI_topology.top -o 1AKI_prod.tpr
+        gmx_grompp -f prod.mdp -c 1AKI_npt.gro -t 1AKI_npt.cpt -p 1AKI_topology.top -o 1AKI_prod.tpr
 
     Then mdrun for production run:
 
