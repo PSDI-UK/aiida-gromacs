@@ -11,7 +11,7 @@ The first step in starting AiiDA is to activate your conda environment, for exam
     conda activate aiida-2.4.0
 
 Initialising the AiiDA database
-+++++++++++++++++++++++++++++++
+-------------------------------
 
 If this is the first time you are using AiiDA, then initialise your AiiDA database:
 
@@ -24,7 +24,7 @@ This creates a directory called ``~/.aiida``, where data created via AiiDA is st
 .. _create-profile-label:
 
 Creating an AiiDA Database Profile
-++++++++++++++++++++++++++++++++++
+----------------------------------
 
 To start using AiiDA-gromacs to track the inputs and outputs of GROMACS commands, AiiDA first requires for a profile to be set up for each project via verdi. Verdi is the command line tool in AiiDA used to interact with the AiiDA database. All commands run via the AiiDA-GROMACS plugin are tracked and stored in the AiiDA database. `Create a profile <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/installation.html?highlight=quicksetup#creating-profiles>`_  within the AiiDA database:
 
@@ -46,7 +46,7 @@ To start using AiiDA-gromacs to track the inputs and outputs of GROMACS commands
 That is it, you are now free to use your AiiDA toolchain.
 
 Starting AiiDA
-++++++++++++++
+--------------
 
 The next step is to start the AiiDA database:
 
@@ -70,7 +70,7 @@ You can then confirm all is well by checking the status of verdi:
 Now, you are ready to start using AiiDA to track your GROMACS simulations.
 
 Stopping AiiDA
-++++++++++++++
+--------------
 
 It is best to stop your AiiDA instance gracefully than to simply close your VM or shutdown your computer, this protects against any issues that might corrupt your database.
 
@@ -97,7 +97,7 @@ That is it, you now have fully disabled the AiiDA toolchain.
 
 
 Switching AiiDA Database Profile
-++++++++++++++++++++++++++++++++
+--------------------------------
 
 If you are working on multiple projects, you can create a :ref:`new profile <create-profile-label>` as before and view all created profiles:
 

@@ -5,7 +5,7 @@ AiiDA CLI Cheatsheet
 Here we will list some useful commands for working with AiiDA. Have a look `here <https://aiida.readthedocs.io/projects/aiida-core/en/latest/reference/command_line.html?highlight=verdi%20process%20list>`_ to explore all available AiiDA command line subcommands.
 
 Monitoring Submitted Processes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------
 
 List all submitted processes:
 
@@ -40,7 +40,7 @@ View attributes of a process node (such as retrieved files and find the path on 
 From the node attributes output dictionary, you can find where the input and output files are temporarily stored for a process in the "remote_workdir" value.
 
 Debugging
-^^^^^^^^^
+---------
 
 Any aiida errors are logged in ``.aiida/daemon/log/``.
 
@@ -63,7 +63,7 @@ To view where in the source code an exception has occured if a calculation has f
         verdi process report <PK>
 
 Sharing Data
-^^^^^^^^^^^^
+------------
 
 When you are ready to share data, the AiiDA database and accompanying files inputted and outputted in each process can be `archived <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/share_data.html>`_ into a single file:
 
@@ -80,7 +80,7 @@ To import an existing AiiDA archive file to a loaded profile:
     verdi archive import archive_name.aiida
 
 Visualise Data Provenance
-^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------
 
 Visualise your submitted jobs as a provenance graph outputted in a ``.pdf`` file. Select the latest ``<PK>`` to include all previous nodes in the graph:
 
@@ -96,7 +96,7 @@ An example provenance graph for the first eight steps of the :ref:`lysozyme tuto
 
 
 Plugin Specfic AiiDA Commands
-+++++++++++++++++++++++++++++
+-----------------------------
 
 The following commands are only available with the aiida-gromacs plugin.
 

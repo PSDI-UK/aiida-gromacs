@@ -5,7 +5,7 @@ genericMD CLI
 Sometimes, you may want to track commands outside of GROMACS. The genericMD CLI allows you to keep track of these commands directly from the aiida-gromacs plugin installation.
 
 GROMACS specific vs genericMD CLI process submissions
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+-----------------------------------------------------
 
 First let's take a look at what a process submitted using a gromacs specific CLI command compares with submitting the job with the genericMD CLI:
 
@@ -34,7 +34,7 @@ As you can see, using the genericMD CLI is more verbose, but it does allow for s
 
 
 How to submit a process with genericMD
-++++++++++++++++++++++++++++++++++++++
+--------------------------------------
 
 To submit an AiiDA process for tracking input and output files of a generic command, there are several things you need to know beforehand:
 
@@ -64,7 +64,7 @@ A few things to consider when using genericMD, firstly the inputs and ouputs of 
 
 
 Another example to submit a process with genericMD
-++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------
 
 The example above for tracking the ``diff`` command may be useful for tracking changes to files made on non-command line based programs, for example when using a GUI to add or delete atoms in a ``.pdb`` file. Here's another example for tracking a command outside of GROMACS using `Packmol <https://m3g.github.io/packmol/userguide.shtml>`_ to create the initial system geometry for MD simulations.
 
