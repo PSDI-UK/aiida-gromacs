@@ -114,25 +114,32 @@ An example output on the command line will look like this:
     .. code-block :: console
 
         Step 1.
-            command: curl https://gpcrdb.org/structure/homology_models/pth2r_human_active_full/download_pdb -o ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.zip
-            executable: bash
-            input files:
-
-            output files:
-                ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.zip
+                command: gmx pdb2gmx -f 1AKI_clean.pdb -ff oplsaa -water spce -o 1AKI_forcefield.gro -p 1AKI_topology.top -i 1AKI_restraints.itp
+                executable: gmx
+                input files:
+                        1AKI_clean.pdb
+                output files:
+                        pdb2gmx.out
+                        1AKI_forcefield.gro
+                        1AKI_topology.top
+                        1AKI_restraints.itp
 
         Step 2.
-            command: unzip ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.zip
-            executable: bash
-            input files:
-                ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.zip <-- from Step 1.
-            output files:
-                ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.pdb
+                command: gmx editconf -f 1AKI_forcefield.gro -center 0 -d 1.0 -bt cubic -o 1AKI_newbox.gro
+                executable: gmx
+                input files:
+                        1AKI_forcefield.gro <-- from Step 1.
+                output files:
+                        editconf.out
+                        1AKI_newbox.gro
 
         Step 3.
-            command: sed -i -e '1,217d;3502,4387d' ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.pdb
-            executable: bash
-            input files:
-                ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.pdb <-- from Step 2.
-            output files:
-                ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb.pdb
+                command: gmx solvate -cp 1AKI_newbox.gro -cs spc216.gro -p 1AKI_topology.top -o 1AKI_solvated.gro
+                executable: gmx
+                input files:
+                        1AKI_newbox.gro <-- from Step 2.
+                        1AKI_topology.top <-- from Step 1.
+                output files:
+                        solvate.out
+                        1AKI_solvated.gro
+                        1AKI_topology.top
