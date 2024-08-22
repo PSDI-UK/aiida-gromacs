@@ -4,6 +4,10 @@ Lysozyme in Water with aiida-gromacs
 
 This tutorial follows Justin Lemkul's `lysozyme <http://www.mdtutorials.com/gmx/lysozyme/>`_ tutorial. We will not explain each individual step as this can be found on Justin's webpage, but we will link to each page and show the AiiDA equivalant command.
 
+.. image:: ../images/lemkul.png
+   :width: 600
+   :align: center
+
 .. note::
     The tutorial is written with the assumption that you have a working knowledge of GROMACS. If you are new to GROMACS, we recommend following Justin's tutorial first to understand the commands and what they do.
 
@@ -11,8 +15,11 @@ Software requirements
 ---------------------
 
 For this tutorial, pre-installation of AiiDA, the aiida-gromacs plugin and dependent tools is required, please follow the instructions in the `installation <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/installation.html>`_ section. Here is a brief description of the software used:
+
 * AiiDA uses a `PostgreSQL <https://www.postgresql.org>`_ database to store all data produced and the links between input and output files for each command run. Each submitted command is termed a process in AiiDA.
+
 * Communication between submitted processes are handled with `RabbitMQ <https://www.rabbitmq.com/>`_ and submitted processes are handled with a deamon process that runs in the background.
+
 * ``aiida-gromacs`` requires an installation of `GROMACS <https://www.gromacs.org/>`_ and the path to where it is installed.
 
 This tutorial also assumes yo have the AiiDA tools running in the background, if not please follow the steps `here <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html>`_.
@@ -34,7 +41,7 @@ This tutorial also assumes yo have the AiiDA tools running in the background, if
     There may be slight differences in commands between the tutorial and that by Justin Lemkul, this is simply down to the way we are recording provenance, which requires non-interactive input into the GROMACS tools.
 
 .. note::
-    At each of the below steps you should run ``verdi`` to view the status of the submitted process before moving onto the next step, you do this by running:
+    After each of the steps you should run ``verdi`` to view the status of the submitted process before moving onto the next step, you do this by running:
 
     .. code-block:: bash
 
@@ -142,7 +149,7 @@ That is it! You've ran your first GROMACS simulation with AiiDA.
 
         verdi plugin list aiida.calculations
 
-    Anything starting with ``gromacs.`` is available in the plugin. To use other commands not available in the plugin, you can use the ``genericMD`` CLI, which allows you to track any command you want to keep track of with AiiDA.
+    Anything starting with ``gromacs.`` is available in the plugin. To use other commands not available in the plugin, you can use the ``genericMD`` CLI, which allows you to save any command you want to keep track of with AiiDA.
 
 
 Viewing and sharing data
