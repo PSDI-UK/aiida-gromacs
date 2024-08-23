@@ -131,28 +131,30 @@ Preparing the system for simulation
 
 10. We also need to edit the ``molecule_0.itp`` file generated from the Martinize2 step to include positional restraints on the coarse-grained beads.
 
-        .. code-block:: bash
+    .. code-block:: bash
 
-            sed_command2='sed -i -e "s/1000 1000 1000/POSRES_FC    POSRES_FC    POSRES_FC/g" '\
-            '-e "s/#ifdef POSRES/#ifdef POSRES\\n#ifndef POSRES_FC\\n#define POSRES_FC 1000.00\\n#endif/" '\
-            'molecule_0.itp'
+        sed_command2='sed -i -e "s/1000 1000 1000/POSRES_FC    POSRES_FC    POSRES_FC/g" '\
+        '-e "s/#ifdef POSRES/#ifdef POSRES\\n#ifndef POSRES_FC\\n#define POSRES_FC 1000.00\\n#endif/" '\
+        'molecule_0.itp'
 
-            genericMD --code bash@localhost \
-            --command '{sed_command2}' \
-            --inputs molecule_0.itp \
-            --outputs molecule_0.itp
+    .. code-block:: bash
+
+        genericMD --code bash@localhost \
+        --command '{sed_command2}' \
+        --inputs molecule_0.itp \
+        --outputs molecule_0.itp
 
 11. Ions need to be added to neutralise the system and we can construct the GROMACS ``.tpr`` binary file containing the system configuration, topology and input parameters for the next step. We use the ``gmx_grompp`` command (note the underscore), which is wrapper command to run ``gmx`` via aiida-gromacs. We have included the most popular ``gmx`` commands in aiida-gromacs, the list of these are provided `here <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/cli_interface.html>`_.
 
-        .. code-block:: bash
+    .. code-block:: bash
 
-            gmx_grompp -f ions.mdp -c solvated.gro -p system.top -o ions.tpr
+        gmx_grompp -f ions.mdp -c solvated.gro -p system.top -o ions.tpr
 
 12. The ``gmx_genion`` command is then used to add the ions to reach a particular salt concentration and neutralise the system. As the ``genion`` command requires interactive user inputs, we can provide these in as an additional text file via the ``--instructions`` argument. Each interactive response can be provided on a new line in the input text file. In this example, we replace solvent ``W`` with ions,
 
-        .. code-block:: bash
+    .. code-block:: bash
 
-            gmx_genion -s ions.tpr -o solvated_ions.gro -p system.top -pname NA -nname CL -conc 0.15 -neutral true --instructions inputs_genion.txt
+        gmx_genion -s ions.tpr -o solvated_ions.gro -p system.top -pname NA -nname CL -conc 0.15 -neutral true --instructions inputs_genion.txt
 
     where `inputs_genion.txt <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/gromacs/inputs_genion.txt>`_ contains the following lines:
 
@@ -195,7 +197,7 @@ Visualisation tools
 
 Your starting configuration should look something like the image below:
 
-.. image:: ../images/initial.png
+.. image:: ../images/gpcr_initial.png
    :width: 350
    :align: center
 
@@ -208,16 +210,18 @@ Minimisation and equilibration steps
 There are multiple stepds involved in minimising and equilibrating the simulation, the first of which is provided below.
 
 .. note::
-    Input files for the minimisation steps can be found in this `bash script <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`_.
+    Use the `input files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`_ on GitHub for the minimisation steps.
 
-.. code-block:: bash
-    gmx_grompp -f MDstep_1.0_minimization.mdp -c solvated_insane.gro -r solvated_insane.gro -p system.top -o MDstep_1.0_minimization.tpr -n index.ndx -maxwarn 1
+    .. code-block:: bash
 
-.. code-block:: bash
-    gmx_mdrun -s MDstep_1.0_minimization.tpr -c MDstep_1.0_minimization.gro -e MDstep_1.0_minimization.edr -g MDstep_1.0_minimization.log -o MDstep_1.0_minimization.trr
+        gmx_grompp -f MDstep_1.0_minimization.mdp -c solvated_insane.gro -r solvated_insane.gro -p system.top -o MDstep_1.0_minimization.tpr -n index.ndx -maxwarn 1
+
+    .. code-block:: bash
+
+        gmx_mdrun -s MDstep_1.0_minimization.tpr -c MDstep_1.0_minimization.gro -e MDstep_1.0_minimization.edr -g MDstep_1.0_minimization.log -o MDstep_1.0_minimization.trr
 
 
-There are several more steps to perform, can you complete the rest of the simulation? If you need help, the full list of steps can be found `here <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`_. Good luck!
+There are several more steps to perform, can you complete the rest of the simulation? If you need help, the full list of steps can be found in this `bash script <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`_. Good luck!
 
 
 Acknowledgements
