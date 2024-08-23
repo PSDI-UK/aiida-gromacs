@@ -166,7 +166,7 @@ Preparing the system for simulation
 
             gmx_make_ndx -f solvated_ions.gro -o index.ndx --instructions inputs_index.txt
 
-    where `inputs_index.txt <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/gromacs/inputs_genion.txt>`__ contains the following lines:
+    where `inputs_index.txt <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/gromacs/inputs_genion.txt>`_ contains the following lines:
 
             .. code-block:: bash
 
@@ -208,7 +208,7 @@ Minimisation and equilibration steps
 There are multiple stepds involved in minimising and equilibrating the simulation, the first of which is provided below.
 
 .. note::
-    Input files for the minimisation steps can be found in the bash script `here <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`_.
+    Input files for the minimisation steps can be found in this `bash script <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`_.
 
 .. code-block:: bash
     gmx_grompp -f MDstep_1.0_minimization.mdp -c solvated_insane.gro -r solvated_insane.gro -p system.top -o MDstep_1.0_minimization.tpr -n index.ndx -maxwarn 1
