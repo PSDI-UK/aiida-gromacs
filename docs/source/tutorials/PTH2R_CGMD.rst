@@ -177,3 +177,50 @@ Preparing the system for simulation
                 q
 
 We have built our starting configuration of an embedded protein in a lipid bilayer, hurray!
+
+
+Continuing on to the MD simulation
+----------------------------------
+
+Now that the intial system is prepared, it is sensible to first visualise the system to ensure the protein is correctly oreintated and embedded in the membrane. Use your favourite visualisation tool to view the ``solvated_ions.gro`` file. Some recommendations and tutorials for visualisation are provided below.
+
+Visualisation tools
+^^^^^^^^^^^^^^^^^^^
+
+* `VMD <http://www.ks.uiuc.edu/Training/Tutorials/vmd-index.html>`_
+
+* `PyMol <https://pymolwiki.org/index.php/Category:Tutorials>`_
+
+* `Chimera <https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/frametut.html>`_
+
+Your starting configuration should look something like the image below:
+
+.. image:: ../images/initial.png
+   :width: 350
+   :align: center
+
+
+As you can see, the system is very ordered and will need to be relaxed before running a simulation. The next steps are to minimise the energy of the initial configuration and then equilibrate the system to the correct temperature and pressure. As there are many components in this system, restraints should be used to slowly relax the system without causing large structural changes.
+
+Minimisation and equilibration steps
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There are multiple stepds involved in minimising and equilibrating the simulation, the first of which is provided below.
+
+.. note::
+    Input files for the minimisation steps can be found in the bash script `here <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`_.
+
+.. code-block:: bash
+    gmx_grompp -f MDstep_1.0_minimization.mdp -c solvated_insane.gro -r solvated_insane.gro -p system.top -o MDstep_1.0_minimization.tpr -n index.ndx -maxwarn 1
+
+.. code-block:: bash
+    gmx_mdrun -s MDstep_1.0_minimization.tpr -c MDstep_1.0_minimization.gro -e MDstep_1.0_minimization.edr -g MDstep_1.0_minimization.log -o MDstep_1.0_minimization.trr
+
+
+There are several more steps to perform, can you complete the rest of the simulation? If you need help, the full list of steps can be found `here <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`_. Good luck!
+
+
+Acknowledgements
+----------------
+
+Thanks to Kin Chao for providing the intial raw files for setting up the coarse-grained system and the input files for the GROMACS simulation.
