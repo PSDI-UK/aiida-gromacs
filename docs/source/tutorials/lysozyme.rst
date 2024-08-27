@@ -5,7 +5,7 @@ Lysozyme in Water with aiida-gromacs
 This tutorial follows Justin Lemkul's `lysozyme <http://www.mdtutorials.com/gmx/lysozyme/>`_ tutorial. We will not explain each individual step as this can be found on Justin's webpage, but we will link to each page and show the AiiDA equivalant command.
 
 .. image:: ../images/lemkul.png
-   :width: 600
+   :width: 400
    :align: center
 
 .. note::
