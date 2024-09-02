@@ -179,3 +179,5 @@ The provenance can also be archived for sharing with others, to do this run:
     verdi archive create --all archive_name.aiida
 
 Where ``--all`` saves all the data in the AiiDA profile.
+
+Now, have a go at exploring the AiiDA archive file on a demo database application called  `BioSimDB <https://github.com/PSDI-UK/biosimdb-app>`_. This is a web-based application that allows you to view and store your simulation data provenance in a local database.
