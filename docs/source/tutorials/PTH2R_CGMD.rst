@@ -37,25 +37,25 @@ Our starting point is the PTH2R `structure <https://gpcrdb.org/protein/pth2r_hum
         PTH2R="ClassB1_pth2r_human_Active_AF_2022-08-16_GPCRdb"
 
         genericMD --code bash@localhost \
-        --command "curl https://gpcrdb.org/structure/homology_models/pth2r_human_active_full/download_pdb -o {PTH2R}.zip " \
-        --outputs {PTH2R}.zip
+        --command "curl https://gpcrdb.org/structure/homology_models/pth2r_human_active_full/download_pdb -o $PTH2R.zip " \
+        --outputs $PTH2R.zip
 
 2. We then need to ``unzip`` the downloaded file:
 
     .. code-block:: bash
 
         genericMD --code bash@localhost \
-        --command "unzip {PTH2R}.zip" \
-        --inputs {PTH2R}.zip --outputs {PTH2R}.pdb
+        --command "unzip $PTH2R.zip" \
+        --inputs $PTH2R.zip --outputs $PTH2R.pdb
 
 3. Now that we have the pdb file, we can remove regions of low confidence at the start and end of the receptor chain. We use the ``sed`` command to programmatically delete lines that correspond to low confidence regions between residues 1-31 and 435-550 inclusive.
 
     .. code-block:: bash
 
         genericMD --code bash@localhost \
-        --command "sed -i -e '1,217d;3502,4387d' {PTH2R}.pdb" \
-        --inputs {PTH2R}.pdb \
-        --outputs {PTH2R}.pdb
+        --command "sed -i -e '1,217d;3502,4387d' $PTH2R.pdb" \
+        --inputs $PTH2R.pdb \
+        --outputs $PTH2R.pdb
 
 Aligning PTH2R to a correctly orientated structure
 --------------------------------------------------
@@ -84,8 +84,8 @@ The final step for preparing the PTH2R protein is to position the structure in t
     .. code-block:: bash
 
         genericMD --code bash@localhost \
-        --command "echo -e '0 | 0 \n q' | gmx confrms -f1 PTH2R_opm.pdb -f2 {PTH2R}.pdb -name -one -o PTH2R_fit.pdb" \
-        --inputs PTH2R_opm.pdb --inputs {PTH2R}.pdb \
+        --command "echo -e '0 | 0 \n q' | gmx confrms -f1 PTH2R_opm.pdb -f2 $PTH2R.pdb -name -one -o PTH2R_fit.pdb" \
+        --inputs PTH2R_opm.pdb --inputs $PTH2R.pdb \
         --outputs PTH2R_fit.pdb
 
 Building a coarse-grained system from an atomic structure
