@@ -28,7 +28,7 @@ Our AiiDA plugin has been tested with AiiDA ``v2.4.0`` to ``v2.6.1``, we recomme
 .. code-block:: bash
 
     conda install -c conda-forge mamba
-    mamba create --name aiida-2.4.0 -c conda-forge aiida-core=2.4.0 aiida-core.services=2.4.0
+    mamba create --name aiida-2.4.0 -c conda-forge aiida-core=2.4.0 aiida-core.services=2.4.0 python=3.11.0
 
 Plugin Installation
 -------------------
