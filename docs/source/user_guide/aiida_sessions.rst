@@ -23,28 +23,6 @@ This creates a directory called ``~/.aiida``, where data created via AiiDA is st
 
 .. _create-profile-label:
 
-Creating an AiiDA Database Profile
-----------------------------------
-
-To start using AiiDA-gromacs to track the inputs and outputs of GROMACS commands, AiiDA first requires for a profile to be set up for each project via verdi. Verdi is the command line tool in AiiDA used to interact with the AiiDA database. All commands run via the AiiDA-GROMACS plugin are tracked and stored in the AiiDA database. `Create a profile <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/installation.html?highlight=quicksetup#creating-profiles>`_  within the AiiDA database:
-
-.. code-block:: bash
-
-    verdi quicksetup
-
-.. code-block:: console
-
-    Info: enter "?" for help
-    Info: enter "!" to ignore the default and set no value
-    Profile name: username
-    Email Address (for sharing data): your@email.com
-    First name: Your
-    Last name: Name
-    Institution: where-you-work
-
-
-That is it, you are now free to use your AiiDA toolchain.
-
 Starting AiiDA
 --------------
 
@@ -68,6 +46,29 @@ You can then confirm all is well by checking the status of verdi:
     verdi status
 
 Now, you are ready to start using AiiDA to track your GROMACS simulations.
+
+
+Creating an AiiDA Database Profile
+----------------------------------
+
+To start using AiiDA-gromacs to track the inputs and outputs of GROMACS commands, AiiDA first requires for a profile to be set up for each project via verdi. Verdi is the command line tool in AiiDA used to interact with the AiiDA database. All commands run via the AiiDA-GROMACS plugin are tracked and stored in the AiiDA database. `Create a profile <https://aiida.readthedocs.io/projects/aiida-core/en/latest/howto/installation.html?highlight=quicksetup#creating-profiles>`_  within the AiiDA database:
+
+.. code-block:: bash
+
+    verdi quicksetup
+
+.. code-block:: console
+
+    Info: enter "?" for help
+    Info: enter "!" to ignore the default and set no value
+    Profile name: username
+    Email Address (for sharing data): your@email.com
+    First name: Your
+    Last name: Name
+    Institution: where-you-work
+
+
+That is it, you are now free to use your AiiDA toolchain.
 
 Stopping AiiDA
 --------------
