@@ -97,7 +97,7 @@ Now that we have the correct starting structure of the receptor, we move onto co
 
     .. code-block:: bash
 
-        genericMD --code martinize2@localhost --command "-f PTH2R_fit.pdb -o PTH2R_opm.top -x PTH2R_opm.cg.pdb -ff martini3001 -nt -dssp mkdssp -elastic -p backbone -maxwarn 1 -mutate HSD:HIS -mutate HSP:HIH -ignh -cys auto -scfix" \
+        genericMD --code martinize2@localhost --command "-f PTH2R_fit.pdb -o PTH2R_opm.top -x PTH2R_opm.cg.pdb -ff martini3001 -nt -dssp mkdssp -elastic -p backbone -maxwarn 2 -mutate HSD:HIS -mutate HSP:HIH -ignh -cys auto -scfix" \
         --inputs PTH2R_fit.pdb \
         --outputs PTH2R_opm.top --outputs PTH2R_opm.cg.pdb --outputs molecule_0.itp
 
