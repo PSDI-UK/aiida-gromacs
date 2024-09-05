@@ -135,7 +135,7 @@ Now that we have the correct starting structure of the receptor, we move onto co
 Adding the membrane and solution around the protein with ``insane``
 -------------------------------------------------------------------
 
-8. Next, we use our custom insane.py python script, which can be downloaded `here <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/insane/insane_custom.py>`__,to embed the protein into a lipid bilayer and solvate the system. Our insane script is modified from `the Melo lab <https://github.com/MeloLab/PhosphoinositideParameters/blob/main/martini3/insane.py>`_, it has been updated to python3 and contains additional parameters for the GM3 carbohydrate.
+8. Next, we use our custom insane.py python script, which can be downloaded `here <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/insane/insane_custom.py>`__, to embed the protein into a lipid bilayer and solvate the system. Our insane script is modified from `the Melo lab <https://github.com/MeloLab/PhosphoinositideParameters/blob/main/martini3/insane.py>`_, it has been updated to python3 and contains additional parameters for the GM3 carbohydrate.
 
     .. code-block:: bash
 
@@ -146,7 +146,7 @@ Adding the membrane and solution around the protein with ``insane``
 Preparing the system for simulation
 ------------------------------------
 
-9. Once the topology file is created, we need to include all the itp files containing the force field parameters used to describe interactions between beads.Download the "toppar" directory containing these files `here <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs/toppar>`__ (make sure to download this into the working directory,PTH2R_Tutorial,or alternatively adjust the address of the toppar directory to the appropriate location in the commands given below)
+9. Once the topology file is created, we need to include all the itp files containing the force field parameters used to describe interactions between beads. Download the "toppar" directory containing these files `here <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs/toppar>`__ (make sure to download this into the working directory, PTH2R_Tutorial, or alternatively adjust the address of the toppar directory to the appropriate location in the commands given below).
 
 We use the ``sed`` command again to edit the ``system.top`` file directly on the command-line and we submit this command via ``genericMD`` as with the previous commands.
 
