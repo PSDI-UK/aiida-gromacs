@@ -14,16 +14,38 @@ Software and environment requirements
 -------------------------------------
 * `martinize2 <https://pypi.org/project/vermouth/>`__ is used to convert from atomistic to coarse-grained structures.
 
-* `dssp <https://anaconda.org/salilab/dssp>`__ is used by ``martinize2`` to find secondary structures in the protein.
-
 * A modified `insane <https://github.com/Tsjerk/Insane>`__ script is used to build the coarse-grained system.
 
 * A local installation of `GROMACS <https://www.gromacs.org/>`__ is required to perform molecular dynamics simulations.
 
 * `aiida-gromacs <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/installation.html#plugin-installation>`__ is used to keep track of all the commands used to setup and perform the simulation.
 
-Activate the conda environment that aiida-gromacs and AiiDA are installed in for this tutorial. We then need to start the AiiDA database and daemon using the first three steps from our `user guide <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html#start-stop-aiida>`__.
+* `dssp <https://anaconda.org/salilab/dssp>`__ is used by ``martinize2`` to find secondary structures in the protein.
 
+.. note::
+    For an installation compatible with aiida-gromacs, please install dssp via the following commands if using **Linux**: 
+ 
+.. code-block:: bash
+
+    mamba install anaconda::libboost=1.73.0
+
+.. code-block:: bash
+
+    mamba install -c salilab dssp
+
+And if using **MacOS**:
+
+.. code-block:: bash
+
+     mamba install anaconda::libboost=1.73.0
+
+.. code-block:: bash
+
+     mamba install -c salilab dssp/osx-64::dssp
+
+Preparing the environment
+----------------------------
+Activate the conda environment that aiida-gromacs and AiiDA are installed in for this tutorial. We then need to start the AiiDA database and daemon using the first three steps from our `user guide <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html#start-stop-aiida>`__.
 
 Aquiring and tidying up the receptor protein structure
 ------------------------------------------------------
