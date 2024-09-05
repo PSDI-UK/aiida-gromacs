@@ -53,7 +53,9 @@ Make a new directory called PTH2R_Tutorial and navigate to it using these comman
    mkdir PTH2R_Tutorial
 
 .. code-block:: bash
+
    cd PTH2R_Tutorial
+
 
 Aquiring and tidying up the receptor protein structure
 ------------------------------------------------------
