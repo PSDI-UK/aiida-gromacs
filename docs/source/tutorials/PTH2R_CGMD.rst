@@ -154,11 +154,13 @@ We use the ``sed`` command again to edit the ``system.top`` file directly on the
 
     .. code-block:: bash
 
-        sed_command1='sed -i -e "1 s/^/#include \\"toppar\/martini_v3.0.0.itp\\"\\n#include \\"toppar\/martini_v3.0.0_ions_v1.itp\\"\\n#include \\"toppar\/martini_v3.0.0_solvents_v1.itp\\"\\n#include \\"toppar\/martini_v3.0.0_phospholipids_v1.itp\\"\\n#include \\"martini_v3.0_sterols_v1.0.itp\\"\\n#include \\"POP2.itp\\"\\n#include \\"molecule_0.itp\\"\\n#include \\"gm3_final.itp\\"\\n/" '\
+       sed_command1='sed -i -e "1 s/^/#include \\"toppar\/martini_v3.0.0.itp\\"\\n#include \\"toppar\/martini_v3.0.0_ions_v1.itp\\"\\n#include \\"toppar\/martini_v3.0.0_solvents_v1.itp\\"\\n#include \\"toppar\/martini_v3.0.0_phospholipids_v1.itp\\"\\n#include \\"martini_v3.0_sterols_v1.0.itp\\"\\n#include \\"POP2.itp\\"\\n#include \\"molecule_0.itp\\"\\n#include \\"gm3_final.itp\\"\\n/" '\
         '-e "s/Protein/molecule_0/" '\
         '-e "s/#include \\"martini.itp\\"/\\n/" system.top'
 
-        genericMD --code bash@localhost \
+    .. code-block:: bash
+
+        ggenericMD --code bash@localhost \
         --command '{sed_command1}' \
         --inputs system.top \
         --outputs system.top
