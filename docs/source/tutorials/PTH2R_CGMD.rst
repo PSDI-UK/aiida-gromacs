@@ -160,7 +160,7 @@ We use the ``sed`` command again to edit the ``system.top`` file directly on the
 
     .. code-block:: bash
 
-        ggenericMD --code bash@localhost \
+        genericMD --code bash@localhost \
         --command '{sed_command1}' \
         --inputs system.top \
         --outputs system.top
