@@ -15,13 +15,13 @@ Preparing the environment
 For this tutorial, some additional software is required as well as the local installation of GROMACS and the aiida-gromacs plugin that we used in the previous tutorial. This software is best installed into the environment that aiida-gromacs and AiiDA were installed in, so begin by activating this environment. We then need to start the AiiDA database and daemon using the first three steps from our `user guide <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html#start-stop-aiida>`__.
 Make a new directory called PTH2R_Tutorial and navigate to it using these commands:
 
-.. code-block:: bash
+   .. code-block:: bash
 
-   mkdir PTH2R_Tutorial
+         mkdir PTH2R_Tutorial
 
-.. code-block:: bash
+   .. code-block:: bash
 
-   cd PTH2R_Tutorial
+         cd PTH2R_Tutorial
 
 Into this directory, download all the `required tutorial files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`__, including the "toppar" directory. A python script is needed to build the coarse-grained system, `download this <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/insane/insane_custom.py>`__ into the folder also.   
 
@@ -40,23 +40,24 @@ Software and environment requirements
 .. note::
     martinize2 can be installed via the link above, but **please install dssp via the following commands** if using **Linux**: 
  
-.. code-block:: bash
+     .. code-block:: bash
 
-    mamba install anaconda::libboost=1.73.0
+         mamba install anaconda::libboost=1.73.0
 
-.. code-block:: bash
+     .. code-block:: bash
 
-    mamba install -c salilab dssp
+         mamba install -c salilab dssp
 
 And if using **MacOS**:
 
-.. code-block:: bash
+   .. code-block:: bash
 
-     mamba install anaconda::libboost=1.73.0
+        mamba install anaconda::libboost=1.73.0
 
-.. code-block:: bash
 
-     mamba install -c salilab dssp/osx-64::dssp
+    .. code-block:: bash
+
+        mamba install -c salilab dssp/osx-64::dssp
 
 This is to ensure compatibility with aiida-gromacs; issues may occur if dssp is installed using alternative methods. 
 
