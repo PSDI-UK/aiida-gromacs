@@ -38,7 +38,7 @@ Software and environment requirements
 * `dssp <https://anaconda.org/salilab/dssp>`__ is used by ``martinize2`` to find secondary structures in the protein.
 
 .. note::
-    martinize2 can be installed via the link above; the insane.py script is provided in the tutorial files. For an installation compatible with aiida-gromacs, please install dssp via the following commands if using **Linux**: 
+    martinize2 can be installed via the link above; the insane.py script is provided in the tutorial files. For an installation compatible with aiida-gromacs, **please install dssp via the following commands** if using **Linux**: 
  
 .. code-block:: bash
 
