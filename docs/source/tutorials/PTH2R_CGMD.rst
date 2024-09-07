@@ -23,7 +23,7 @@ Make a new directory called PTH2R_Tutorial and navigate to it using these comman
 
    cd PTH2R_Tutorial
 
-Into this directory, download all the `required tutorial files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`__, including the "toppar" directory.  
+Into this directory, download all the `required tutorial files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`__, including the "toppar" directory. A python script is needed to build the coarse-grained system, `download this <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/insane/insane_custom.py>`__ into the folder also.   
 
 Software and environment requirements
 -------------------------------------
@@ -38,7 +38,10 @@ Software and environment requirements
 * `dssp <https://anaconda.org/salilab/dssp>`__ is used by ``martinize2`` to find secondary structures in the protein.
 
 .. note::
-    martinize2 can be installed via the link above; the insane.py script is provided in the tutorial files. For an installation compatible with aiida-gromacs, **please install dssp via the following commands** if using **Linux**: 
+    martinize2 can be installed via the link above; 
+
+
+. For an installation compatible with aiida-gromacs, **please install dssp via the following commands** if using **Linux**: 
  
 .. code-block:: bash
 
