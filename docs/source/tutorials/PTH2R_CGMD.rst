@@ -248,8 +248,6 @@ Minimisation and equilibration steps
 
 There are multiple stepds involved in minimising and equilibrating the simulation, the first of which is provided below.
 
-.. note::
-    Use the `input files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`_ on GitHub for the minimisation steps.
 
     .. code-block:: bash
 
@@ -260,7 +258,7 @@ There are multiple stepds involved in minimising and equilibrating the simulatio
         gmx_mdrun -s MDstep_1.0_minimization.tpr -c MDstep_1.0_minimization.gro -e MDstep_1.0_minimization.edr -g MDstep_1.0_minimization.log -o MDstep_1.0_minimization.trr
 
 
-There are several more steps to perform, can you complete the rest of the simulation? If you need help, the full list of steps can be found in this `bash script <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`_. Good luck!
+There are several more steps to perform, can you complete the rest of the simulation? If you need help, the full list of steps can be found in this `bash script <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/gromacs/aiida-example-gmx.sh>`_. Good luck!
 
 
 Acknowledgements
