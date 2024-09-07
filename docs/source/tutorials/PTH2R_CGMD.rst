@@ -12,7 +12,7 @@ In this tutorial, we will go through how to set-up a coarse-grained molecular sy
 
 Preparing the environment
 ----------------------------
-For this tutorial, some additional software is required as well as the local installation of GROMACS and the aiida-gromac plugin that we used in the previous tutorial. This software is best installed into the conda environment that aiida-gromacs and AiiDA were installed in, so begin by activating this environment. We then need to start the AiiDA database and daemon using the first three steps from our `user guide <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html#start-stop-aiida>`__.
+For this tutorial, some additional software is required as well as the local installation of GROMACS and the aiida-gromacs plugin that we used in the previous tutorial. This software is best installed into the conda environment that aiida-gromacs and AiiDA were installed in, so begin by activating this environment. We then need to start the AiiDA database and daemon using the first three steps from our `user guide <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html#start-stop-aiida>`__.
 Make a new directory called PTH2R_Tutorial and navigate to it using these commands:
 
 .. code-block:: bash
@@ -24,15 +24,6 @@ Make a new directory called PTH2R_Tutorial and navigate to it using these comman
    cd PTH2R_Tutorial
 
 Into this directory, download all the `required tutorial files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`__, including the "toppar" directory.  
-
-
-
-
-
-
-
-
-
 
 Software and environment requirements
 -------------------------------------
@@ -47,7 +38,7 @@ Software and environment requirements
 * `dssp <https://anaconda.org/salilab/dssp>`__ is used by ``martinize2`` to find secondary structures in the protein.
 
 .. note::
-    For an installation compatible with aiida-gromacs, please install dssp via the following commands if using **Linux**: 
+    martinize2 can be installed via the link above; the insane.py script is provided in the tutorial files. For an installation compatible with aiida-gromacs, please install dssp via the following commands if using **Linux**: 
  
 .. code-block:: bash
 
@@ -262,7 +253,7 @@ There are multiple stepds involved in minimising and equilibrating the simulatio
 
     .. code-block:: bash
 
-        gmx_grompp -f MDstep_1.0_minimization.mdp -c solvated_insane.gro -r solvated_insane.gro -p system.top -o MDstep_1.0_minimization.tpr -n index.ndx -maxwarn 1
+        gmx_grompp -f MDstep_1.0_minimization.mdp -c solvated_ions.gro -r solvated_ions.gro -p system.top -o MDstep_1.0_minimization.tpr -n index.ndx -maxwarn 1
 
     .. code-block:: bash
 
