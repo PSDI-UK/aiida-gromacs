@@ -148,7 +148,7 @@ Now that we have the correct starting structure of the receptor, we move onto co
 Adding the membrane and solution around the protein with ``insane``
 -------------------------------------------------------------------
 
-8. Next, we use our custom insane.py python script, which can be downloaded `here <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/insane/insane_custom.py>`__, to embed the protein into a lipid bilayer and solvate the system. Our insane script is modified from `the Melo lab <https://github.com/MeloLab/PhosphoinositideParameters/blob/main/martini3/insane.py>`_, it has been updated to python3 and contains additional parameters for the GM3 carbohydrate.
+8. Next, we use our custom insane.py python script to embed the protein into a lipid bilayer and solvate the system. Our insane script is modified from `the Melo lab <https://github.com/MeloLab/PhosphoinositideParameters/blob/main/martini3/insane.py>`_, it has been updated to python3 and contains additional parameters for the GM3 carbohydrate.
 
     .. code-block:: bash
 
