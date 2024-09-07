@@ -75,6 +75,17 @@ Our starting point is the PTH2R `structure <https://gpcrdb.org/protein/pth2r_hum
         --command "curl https://gpcrdb.org/structure/homology_models/pth2r_human_active_full/download_pdb -o $PTH2R.zip " \
         --outputs $PTH2R.zip
 
+Remember to check on the success of each command using:
+
+.. code-block:: bash
+
+        verdi process list -a 
+
+Any number 
+
+
+
+
 2. We then need to ``unzip`` the downloaded file:
 
     .. code-block:: bash
