@@ -12,7 +12,7 @@ In this tutorial, we will go through how to set-up a coarse-grained molecular sy
 
 Preparing the environment
 ----------------------------
-For this tutorial, some additional software is required as well as the local installation of GROMACS and the aiida-gromacs plugin that we used in the previous tutorial. This software is best installed into the conda environment that aiida-gromacs and AiiDA were installed in, so begin by activating this environment. We then need to start the AiiDA database and daemon using the first three steps from our `user guide <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html#start-stop-aiida>`__.
+For this tutorial, some additional software is required as well as the local installation of GROMACS and the aiida-gromacs plugin that we used in the previous tutorial. This software is best installed into the environment that aiida-gromacs and AiiDA were installed in, so begin by activating this environment. We then need to start the AiiDA database and daemon using the first three steps from our `user guide <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html#start-stop-aiida>`__.
 Make a new directory called PTH2R_Tutorial and navigate to it using these commands:
 
 .. code-block:: bash
@@ -38,10 +38,7 @@ Software and environment requirements
 * `dssp <https://anaconda.org/salilab/dssp>`__ is used by ``martinize2`` to find secondary structures in the protein.
 
 .. note::
-    martinize2 can be installed via the link above; 
-
-
-. For an installation compatible with aiida-gromacs, **please install dssp via the following commands** if using **Linux**: 
+    martinize2 can be installed via the link above, but **please install dssp via the following commands** if using **Linux**: 
  
 .. code-block:: bash
 
@@ -61,7 +58,7 @@ And if using **MacOS**:
 
      mamba install -c salilab dssp/osx-64::dssp
 
-
+This is to ensure compatibility with aiida-gromacs; issues may occur if dssp is installed using alternative methods. 
 
 Aquiring and tidying up the receptor protein structure
 ------------------------------------------------------
