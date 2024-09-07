@@ -10,6 +10,30 @@ In this tutorial, we will go through how to set-up a coarse-grained molecular sy
    :width: 600
    :align: center
 
+Preparing the environment
+----------------------------
+For this tutorial, some additional software is required as well as the local installation of GROMACS and the aiida-gromac plugin that we used in the previous tutorial. This software is best installed into the conda environment that aiida-gromacs and AiiDA were installed in, so begin by activating this environment. We then need to start the AiiDA database and daemon using the first three steps from our `user guide <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html#start-stop-aiida>`__.
+Make a new directory called PTH2R_Tutorial and navigate to it using these commands:
+
+.. code-block:: bash
+
+   mkdir PTH2R_Tutorial
+
+.. code-block:: bash
+
+   cd PTH2R_Tutorial
+
+Into this directory, download all the `required tutorial files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`__, including the "toppar" directory.  
+
+
+
+
+
+
+
+
+
+
 Software and environment requirements
 -------------------------------------
 * `martinize2 <https://pypi.org/project/vermouth/>`__ is used to convert from atomistic to coarse-grained structures.
@@ -43,18 +67,6 @@ And if using **MacOS**:
 
      mamba install -c salilab dssp/osx-64::dssp
 
-Preparing the environment
-----------------------------
-Activate the conda environment that aiida-gromacs and AiiDA are installed in for this tutorial. We then need to start the AiiDA database and daemon using the first three steps from our `user guide <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html#start-stop-aiida>`__.
-Make a new directory called PTH2R_Tutorial and navigate to it using these commands:
-
-.. code-block:: bash
-
-   mkdir PTH2R_Tutorial
-
-.. code-block:: bash
-
-   cd PTH2R_Tutorial
 
 
 Aquiring and tidying up the receptor protein structure
