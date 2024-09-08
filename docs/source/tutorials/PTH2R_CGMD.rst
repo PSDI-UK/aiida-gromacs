@@ -183,9 +183,12 @@ We also need to rename "Protein" in this file to "molecule_0" to match the infor
 
     .. code-block:: bash
 
-        sed_command2='sed -i -e "s/1000 1000 1000/POSRES_FC    POSRES_FC    POSRES_FC/g" '\
-        '-e "s/#ifdef POSRES/#ifdef POSRES\\n#ifndef POSRES_FC\\n#define POSRES_FC 1000.00\\n#endif/" '\
-        'molecule_0.itp'
+        genericMD --code bash@localhost \
+        --command "sed -i -e 's/1000 1000 1000/ POSRES_FC    POSRES_FC    POSRES_FC /g' \
+        -e 's/#ifdef POSRES/#ifdef POSRES\\n#ifndef POSRES_FC\\n#define POSRES_FC 1000.00\\n#endif/' molecule_0.itp" \
+        --inputs molecule_0.itp \
+      --outputs molecule_0.itp
+
 
     .. code-block:: bash
 
