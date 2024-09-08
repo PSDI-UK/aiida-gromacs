@@ -23,7 +23,7 @@ Make a new directory called PTH2R_Tutorial and navigate to it using these comman
 
          cd PTH2R_Tutorial
 
-Into this directory, download all the `required tutorial files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`__, including the "toppar" directory. A python script is needed to build the coarse-grained system, `download this <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/insane/insane_custom.py>`__ into the folder also.   
+Into this directory, download all the `required tutorial files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`__, including the "toppar" directory. A python script is needed to build the coarse-grained system, `download this <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/insane/insane_custom.py>`__ into the directory also.   
 
 Software and environment requirements
 -------------------------------------
@@ -55,7 +55,7 @@ And if using **MacOS**:
         mamba install anaconda::libboost=1.73.0
 
 
-    .. code-block:: bash
+   .. code-block:: bash
 
         mamba install -c salilab dssp/osx-64::dssp
 
