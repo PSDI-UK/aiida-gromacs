@@ -187,14 +187,6 @@ We also need to rename "Protein" in this file to "molecule_0" to match the infor
         --command "sed -i -e 's/1000 1000 1000/ POSRES_FC    POSRES_FC    POSRES_FC /g' \
         -e 's/#ifdef POSRES/#ifdef POSRES\\n#ifndef POSRES_FC\\n#define POSRES_FC 1000.00\\n#endif/' molecule_0.itp" \
         --inputs molecule_0.itp \
-      --outputs molecule_0.itp
-
-
-    .. code-block:: bash
-
-        genericMD --code bash@localhost \
-        --command '{sed_command2}' \
-        --inputs molecule_0.itp \
         --outputs molecule_0.itp
 
 11. Ions need to be added to neutralise the system and we can construct the GROMACS ``.tpr`` binary file containing the system configuration, topology and input parameters for the next step. We use the ``gmx_grompp`` command (note the underscore), which is wrapper command to run ``gmx`` via aiida-gromacs. We have included the most popular ``gmx`` commands in aiida-gromacs, the list of these are provided `here <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/cli_interface.html>`_.
