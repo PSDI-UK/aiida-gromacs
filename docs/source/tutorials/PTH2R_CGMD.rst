@@ -170,18 +170,17 @@ Preparing the system for simulation
          --outputs system.top
 
 We also need to rename "Protein" in this file to "molecule_0" to match the information in the other files, and remove the line "#include martini.itp" as this will clash with the martini_v3.0.0.itp file that we wish to use. To do this, we will use the sed command again: 
-
       
-    .. code-block:: bash
+      .. code-block:: bash
 
-       genericMD --code bash@localhost \
-       --command "sed -i -e 's/Protein/molecule_0/' -e 's/#include \\\"martini.itp\\\"/\\n/' system.top" \
-       --inputs system.top \
-       --outputs system.top
+           genericMD --code bash@localhost \
+           --command "sed -i -e 's/Protein/molecule_0/' -e 's/#include \\\"martini.itp\\\"/\\n/' system.top" \
+           --inputs system.top \
+           --outputs system.top
 
 10. We also need to edit the ``molecule_0.itp`` file generated from the Martinize2 step to include positional restraints on the coarse-grained beads.
 
-    .. code-block:: bash
+      .. code-block:: bash
 
         genericMD --code bash@localhost \
         --command "sed -i -e 's/1000 1000 1000/ POSRES_FC    POSRES_FC    POSRES_FC /g' \
@@ -191,15 +190,15 @@ We also need to rename "Protein" in this file to "molecule_0" to match the infor
 
 11. Ions need to be added to neutralise the system and we can construct the GROMACS ``.tpr`` binary file containing the system configuration, topology and input parameters for the next step. We use the ``gmx_grompp`` command (note the underscore), which is wrapper command to run ``gmx`` via aiida-gromacs. We have included the most popular ``gmx`` commands in aiida-gromacs, the list of these are provided `here <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/cli_interface.html>`_.
 
-    .. code-block:: bash
+      .. code-block:: bash
 
-        gmx_grompp -f ions.mdp -c solvated.gro -p system.top -o ions.tpr
+          gmx_grompp -f ions.mdp -c solvated.gro -p system.top -o ions.tpr
 
 12. The ``gmx_genion`` command is then used to add the ions to reach a particular salt concentration and neutralise the system. As the ``genion`` command requires interactive user inputs, we can provide these in as an additional text file via the ``--instructions`` argument. Each interactive response can be provided on a new line in the input text file. In this example, we replace solvent ``W`` with ions,
 
-    .. code-block:: bash
+     .. code-block:: bash
 
-        gmx_genion -s ions.tpr -o solvated_ions.gro -p system.top -pname NA -nname CL -conc 0.15 -neutral true --instructions inputs_genion.txt
+          gmx_genion -s ions.tpr -o solvated_ions.gro -p system.top -pname NA -nname CL -conc 0.15 -neutral true --instructions inputs_genion.txt
 
     where `inputs_genion.txt <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/gromacs/inputs_genion.txt>`_ contains the following lines:
 
