@@ -66,7 +66,7 @@ Aquiring and tidying up the receptor protein structure
 
 Our starting point is the PTH2R `structure <https://gpcrdb.org/protein/pth2r_human/>`_ from the GPCRdb.
 
-1. First, we download the PTH2R protein from the GPCRdb using ``curl``. We will track our commands as we perform them using the ``genericMD`` command in aiida-gromacs:
+1. First, we download the PTH2R protein from the GPCRdb using ``curl``. We will track our commands as we perform them using the ``genericMD`` command in aiida-gromacs (note that this and all following commands use the **Linux** command line syntax; this will need to be adjusted appropriately if using MacOS) :
 
     .. code-block:: bash
 
