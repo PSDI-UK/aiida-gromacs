@@ -169,6 +169,10 @@ Preparing the system for simulation
          --inputs system.top \
          --outputs system.top
 
+We also need to rename "Protein" in this file to "molecule_0" to match the information in the other files, and remove the line "#include martini.itp" as this will clash with the martini_v3.0.0.itp file that we wish to use. TO do this, we will use the sed command again: 
+
+-e "s/Protein/molecule_0/" '\
+'-e "s/#include \\"martini.itp\\"/\\n/" system.top'
 
       
 
