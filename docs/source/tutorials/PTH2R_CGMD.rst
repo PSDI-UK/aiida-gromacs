@@ -160,7 +160,7 @@ Adding the membrane and solution around the protein with ``insane``
 Preparing the system for simulation
 ------------------------------------
 
-9. Once the topology file is created, we need to include all the itp files containing the force field parameters used to describe interactions between beads. Make sure that the "toppar" folder was downloaded into the working directory, PTH2R_Tutorial, or alternatively adjust the address of the toppar directory to the appropriate location in the commands given below). We use the ``sed`` command again to edit the ``system.top`` file directly on the command-line, to include all the itp files, and we submit this command via ``genericMD`` as with the previous commands.
+9. Once the topology file is created, we need to include all the itp files containing the force field parameters used to describe interactions between beads. Make sure that the "toppar" directory was downloaded into the working directory, PTH2R_Tutorial, or alternatively adjust the address of the toppar directory to the appropriate location in the commands given below. We use the ``sed`` command again to edit the ``system.top`` file directly on the command-line, to include all the itp files, and we submit this command via ``genericMD`` as with the previous commands.
 
     .. code-block:: bash
 
