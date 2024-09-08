@@ -160,15 +160,17 @@ Adding the membrane and solution around the protein with ``insane``
 Preparing the system for simulation
 ------------------------------------
 
-9. Once the topology file is created, we need to include all the itp files containing the force field parameters used to describe interactions between beads. Make sure that the "toppar" folder was downloaded into the working directory, PTH2R_Tutorial, or alternatively adjust the address of the toppar directory to the appropriate location in the commands given below).
-
-We use the ``sed`` command again to edit the ``system.top`` file directly on the command-line and we submit this command via ``genericMD`` as with the previous commands.
+9. Once the topology file is created, we need to include all the itp files containing the force field parameters used to describe interactions between beads. Make sure that the "toppar" folder was downloaded into the working directory, PTH2R_Tutorial, or alternatively adjust the address of the toppar directory to the appropriate location in the commands given below). We use the ``sed`` command again to edit the ``system.top`` file directly on the command-line, to include all the itp files, and we submit this command via ``genericMD`` as with the previous commands.
 
     .. code-block:: bash
 
-       sed_command1='sed -i -e "1 s/^/#include \\"toppar\/martini_v3.0.0.itp\\"\\n#include \\"toppar\/martini_v3.0.0_ions_v1.itp\\"\\n#include \\"toppar\/martini_v3.0.0_solvents_v1.itp\\"\\n#include \\"toppar\/martini_v3.0.0_phospholipids_v1.itp\\"\\n#include \\"martini_v3.0_sterols_v1.0.itp\\"\\n#include \\"POP2.itp\\"\\n#include \\"molecule_0.itp\\"\\n#include \\"gm3_final.itp\\"\\n/" '\
-        '-e "s/Protein/molecule_0/" '\
-        '-e "s/#include \\"martini.itp\\"/\\n/" system.top'
+        genericMD --code bash@localhost \
+        --command "sed -i '1i #include\ \"toppar/martini_v3.0.0.itp\"\\n#include\ \"toppar/martini_v3.0.0_ions_v1.itp\"\\n#include\ \"toppar/martini_v3.0.0_solvents_v1.itp\"\\n#include\ \"toppar/martini_v3.0.0_phospholipids_v1.itp\"\\n#include\ \"martini_v3.0_sterols_v1.0.itp\"\\n#include\ \"POP2.itp\"\\n#include\ \"molecule_0.itp\"\\n#include\ \"gm3_final.itp\"' system.top" \
+         --inputs system.top \
+         --outputs system.top
+
+
+      
 
     .. code-block:: bash
 
