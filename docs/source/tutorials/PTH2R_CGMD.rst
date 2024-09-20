@@ -12,7 +12,7 @@ In this tutorial, we will go through how to set-up a coarse-grained molecular sy
 
 Preparing the environment
 ----------------------------
-or this tutorial, some additional software is required as well as the local installation of GROMACS and the aiida-gromacs plugin that we used in the previous tutorial. This software is best installed into the environment that aiida-gromacs and AiiDA were installed in, so begin by activating this environment. We then need to start the AiiDA database and daemon using the first three steps from our `user guide <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html#start-stop-aiida>`__.
+For this tutorial, some additional software is required as well as the local installation of GROMACS and the aiida-gromacs plugin that we used in the previous tutorial. This software is best installed into the environment that aiida-gromacs and AiiDA were installed in, so begin by activating this environment. We then need to start the AiiDA database and daemon using the first three steps from our `user guide <https://aiida-gromacs.readthedocs.io/en/latest/user_guide/aiida_sessions.html#start-stop-aiida>`__.
 Make a new directory called PTH2R_Tutorial and navigate to it using these commands:
 
    .. code-block:: bash
