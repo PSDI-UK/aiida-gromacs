@@ -81,6 +81,9 @@ def launch(params):
     if "mn" in params:
         inputs["mn_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("mn")))
 
+    if "plumed" in params:
+        inputs["plumed_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("plumed")))
+
     MdrunParameters = DataFactory("gromacs.mdrun")
     inputs["parameters"] = MdrunParameters(params)
 
@@ -114,6 +117,7 @@ def launch(params):
 @click.option("-membed", type=str, help="Generic data file")
 @click.option("-mp", type=str, help="Topology file")
 @click.option("-mn", type=str, help="Index file")
+@click.option("-plumed", type=str, help="PLUMED input file")
 # Output file options
 @click.option("-o", default="topol.gro", type=str, help="Trajectory output file")
 @click.option("-x", type=str, help="Compressed trajectory (tng format or portable xdr format)")
