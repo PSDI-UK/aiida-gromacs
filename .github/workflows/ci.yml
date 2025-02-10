@@ -10,24 +10,9 @@ jobs:
   tests:
     strategy:
       matrix:
-        container: [2025-01-14-aiida2.5.0-py3.11.0-gromacs2022.4,
-                    2025-01-14-aiida2.5.1-py3.11.0-gromacs2022.4,
-                    2025-01-14-aiida2.5.2-py3.11.0-gromacs2022.4,
-                    2025-01-14-aiida2.6.1-py3.11.0-gromacs2022.4,
-                    2025-01-14-aiida2.6.2-py3.11.0-gromacs2022.4,
-                    2025-01-14-aiida2.6.3-py3.11.0-gromacs2022.4,
-                    2025-01-14-aiida2.5.0-py3.11.0-gromacs2023.4,
-                    2025-01-14-aiida2.5.1-py3.11.0-gromacs2023.4,
-                    2025-01-14-aiida2.5.2-py3.11.0-gromacs2023.4,
-                    2025-01-14-aiida2.6.1-py3.11.0-gromacs2023.4,
-                    2025-01-14-aiida2.6.2-py3.11.0-gromacs2023.4,
-                    2025-01-14-aiida2.6.3-py3.11.0-gromacs2023.4,
-                    2025-01-14-aiida2.5.0-py3.11.0-gromacs2024.2,
-                    2025-01-14-aiida2.5.1-py3.11.0-gromacs2024.2,
-                    2025-01-14-aiida2.5.2-py3.11.0-gromacs2024.2,
-                    2025-01-14-aiida2.6.1-py3.11.0-gromacs2024.2,
-                    2025-01-14-aiida2.6.2-py3.11.0-gromacs2024.2,
-                    2025-01-14-aiida2.6.3-py3.11.0-gromacs2024.2]
+        container: [2025-02-10-aiida2.6.1-py3.11.0-gromacs2024.3,
+                    2025-02-10-aiida2.6.2-py3.11.0-gromacs2024.3,
+                    2025-02-10-aiida2.6.3-py3.11.0-gromacs2024.3]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
