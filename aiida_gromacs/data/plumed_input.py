@@ -279,7 +279,7 @@ def add_calculation_inputs(subdirs, files):
                 sys.exit(f"Error: subdir {subdir} referenced in plumed file does not exist")
 
     # NOTE: this list is not used at the moment, might use for searchprevious
-    calc_inputs["input_list"] = List(input_list)
+    # calc_inputs["input_list"] = List(input_list)
 
     return calc_inputs
 

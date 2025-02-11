@@ -73,6 +73,10 @@ class MdrunParser(Parser):
 
         # Grab list of retrieved files.
         files_retrieved = self.retrieved.base.repository.list_object_names()
+        # check if there are any plumed output files and add these to files_expected
+        if "plumed_outfiles" in self.node.inputs:
+            for name in self.node.inputs.plumed_outfiles:
+                files_expected.extend([str(name)])
 
         # Grab list of files expected and remove the scheduler stdout and stderr files.
         files_expected = [files for files in self.node.get_option("retrieve_list") if files not in ["_scheduler-stdout.txt", "_scheduler-stderr.txt"]]

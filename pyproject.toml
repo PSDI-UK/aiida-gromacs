@@ -70,6 +70,7 @@ createarchive = "aiida_gromacs.cli.createarchive:cli"
 "gromacs.genion" = "aiida_gromacs.data.genion:GenionParameters"
 "gromacs.grompp" = "aiida_gromacs.data.grompp:GromppParameters"
 "gromacs.mdrun" = "aiida_gromacs.data.mdrun:MdrunParameters"
+"gromacs.plumed_input" = "aiida_gromacs.data.plumed_input:PlumedInputData"
 "gromacs.solvate" = "aiida_gromacs.data.solvate:SolvateParameters"
 "gromacs.make_ndx" = "aiida_gromacs.data.make_ndx:Make_ndxParameters"
 
