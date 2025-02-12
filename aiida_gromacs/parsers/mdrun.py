@@ -11,7 +11,7 @@ from aiida.engine import ExitCode
 from aiida.orm import SinglefileData, Dict
 from aiida.parsers.parser import Parser
 from aiida.plugins import CalculationFactory
-from aiida_gromacs.utils import fileparsers
+from aiida_gromacs.utils import fileparsers, inputFile_utils
 
 MdrunCalculation = CalculationFactory("gromacs.mdrun")
 
@@ -71,12 +71,14 @@ class MdrunParser(Parser):
             if item in self.node.inputs.parameters.keys():
                 outputs.append(output_template[item])
 
-        # Grab list of retrieved files.
-        files_retrieved = self.retrieved.base.repository.list_object_names()
-        # check if there are any plumed output files and add these to files_expected
+        # check if there are any plumed output files and add these to the outputs list
         if "plumed_outfiles" in self.node.inputs:
             for name in self.node.inputs.plumed_outfiles:
-                files_expected.extend([str(name)])
+                # make sure the node name is formatted correctly
+                outputs.extend([f"plumed_{inputFile_utils.format_link_label(str(name))}"])
+
+        # Grab list of retrieved files.
+        files_retrieved = self.retrieved.base.repository.list_object_names()
 
         # Grab list of files expected and remove the scheduler stdout and stderr files.
         files_expected = [files for files in self.node.get_option("retrieve_list") if files not in ["_scheduler-stdout.txt", "_scheduler-stderr.txt"]]
@@ -88,10 +90,10 @@ class MdrunParser(Parser):
         # Check if the expected files are a subset of retrieved.
         if not set(files_expected) <= set(files_retrieved):
             self.logger.error(
-                f"Found files '{files_retrieved}', expected to find '{files_expected}'"
+                f"Found files '{files_retrieved}', expected to find '{files_expected}'."
             )
             return self.exit_codes.ERROR_MISSING_OUTPUT_FILES
-
+        
         # Map retrieved files to data nodes.
         for i, f in enumerate(files_expected):
             self.logger.info(f"Parsing '{f}'")

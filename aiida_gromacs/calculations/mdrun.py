@@ -101,6 +101,13 @@ class MdrunCalculation(CalcJob):
         spec.output('logfile_metadata', valid_type=Dict, help='metadata extracted from gromacs logfile')
         #spec.output('test', valid_type=Dict)
 
+        # IMPORTANT:
+        # Use spec.outputs.dynamic = True to make the entire output namespace
+        # fully dynamic. This means any number of output files
+        # can be linked to a node.
+        spec.outputs.dynamic = True
+        spec.inputs['metadata']['options'].dynamic = True
+
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 
     def prepare_for_submission(self, folder):
@@ -167,6 +174,9 @@ class MdrunCalculation(CalcJob):
         for item in output_options:
             if item in self.inputs.parameters:
                 output_files.append(self.inputs.parameters[item])
+        if "plumed_outfiles" in self.inputs:  # check there are output files.
+            for name in self.inputs.plumed_outfiles:
+                output_files.append(str(name))  # save output filename to list
 
         # Form the commandline.
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(cmdline_input_files)

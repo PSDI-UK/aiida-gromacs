@@ -34,8 +34,8 @@ def test_launch_mdrun():
             "1AKI_minimised.trr",
             "-ntomp",
             "5",
-            "-ntmpi",
-            "1",
+            # "-ntmpi", # turn off omp and mpi for gmx patched with plumed
+            # "1",
         ]
     )
     # append run process to qb

@@ -23,7 +23,7 @@ def run_mdrun(gromacs_code):
             "o": "mdrun_1AKI_minimised.trr",
             "v": "true",
             "ntomp": "5",
-            "ntmpi": "1",
+            # "ntmpi": "1", # turn off omp and mpi for gmx patched with plumed
         }
     )
 
