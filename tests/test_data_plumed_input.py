@@ -18,7 +18,7 @@ def test_PlumedInputData():
 
     # Find the inputs and outputs referenced in the plumed script
     calc_inputs, calc_outputs = inputs["plumedscript"].calculation_inputs_outputs
-    print(calc_inputs["plumed_inpfiles"].keys(), calc_outputs["plumed_outfiles"])
+    # print(calc_inputs["plumed_inpfiles"].keys(), calc_outputs["plumed_outfiles"])
     # add input files and dirs referenced in plumed file into inputs
     inputs.update(calc_inputs)
     inputs.update(calc_outputs)

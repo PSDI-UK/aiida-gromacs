@@ -43,6 +43,8 @@ def launch(params):
 
     input_file_labels = {} # dict used for finding previous nodes
     input_file_labels[params["s"]] = "tprfile"
+    if "plumed" in params:
+        input_file_labels[params["plumed"]] = "plumed_file"
 
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
@@ -87,13 +89,11 @@ def launch(params):
         inputs["plumed_file"] = PlumedInputData(
             file=os.path.join(os.getcwd(), params.pop("plumed"))
         )
-        # inputs["plumed_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("plumed")))
         # Find the inputs and outputs referenced in the plumed script
         calc_inputs, calc_outputs = inputs["plumed_file"].calculation_inputs_outputs
         # add input files and dirs referenced in plumed file into inputs
         inputs.update(calc_inputs)
         inputs.update(calc_outputs)
-        print(inputs)
 
     MdrunParameters = DataFactory("gromacs.mdrun")
     inputs["parameters"] = MdrunParameters(params)
