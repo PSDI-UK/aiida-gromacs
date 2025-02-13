@@ -7,7 +7,7 @@ import os
 
 from aiida.common import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
-from aiida.orm import SinglefileData, Dict, Str
+from aiida.orm import SinglefileData, Dict, Str, FolderData, List
 from aiida.plugins import DataFactory
 
 MdrunParameters = DataFactory("gromacs.mdrun")
@@ -62,6 +62,11 @@ class MdrunCalculation(CalcJob):
         spec.input('membed_file', valid_type=SinglefileData, required=False, help='Generic data file')
         spec.input('mp_file', valid_type=SinglefileData, required=False, help='Topology file')
         spec.input('mn_file', valid_type=SinglefileData, required=False, help='Index file')
+        spec.input('plumed_file', valid_type=SinglefileData, required=False, help='Plumed file')
+        spec.input_namespace("plumed_inpfiles", valid_type=SinglefileData,
+                    required=False, dynamic=True, help="inputs referenced in plumed input file")
+        spec.input_namespace("plumed_dirs", valid_type=FolderData, required=False, dynamic=True,
+                   help="path to directory where inputs referenced in plumed input file are")
 
         # Required outputs.
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
@@ -87,10 +92,21 @@ class MdrunCalculation(CalcJob):
         spec.output('mtx_file', required=False, valid_type=SinglefileData, help='Hessian Matrix')
         spec.output('if_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
         spec.output('swap_file', required=False, valid_type=SinglefileData, help='xvgr/xmgr file')
+        # set the list of output file names from plumed as an input so that it can be
+        # iterated over in the parser later.
+        spec.input('plumed_outfiles', valid_type=List, required=False,
+                   help='List of plumed output file names.')
 
         # Outputs outside of gromacs
-        spec.output('logfile_metadata', valid_type=Dict, help='metadata exracted from gromacs logfile')
+        spec.output('logfile_metadata', valid_type=Dict, help='metadata extracted from gromacs logfile')
         #spec.output('test', valid_type=Dict)
+
+        # IMPORTANT:
+        # Use spec.outputs.dynamic = True to make the entire output namespace
+        # fully dynamic. This means any number of output files
+        # can be linked to a node.
+        spec.outputs.dynamic = True
+        spec.inputs['metadata']['options'].dynamic = True
 
         spec.exit_code(300, 'ERROR_MISSING_OUTPUT_FILES', message='Calculation did not produce all expected output files.')
 
@@ -105,27 +121,52 @@ class MdrunCalculation(CalcJob):
         codeinfo = CodeInfo()
 
         # Setup data structures for files.
-        input_options = ["tprfile", "cpi_file", "table_file", "tableb_file", "tablep_file", "rerun_file", "ei_file", "multidir_file", "awh_file", "membed_file", "mp_file", "mn_file"]
+        input_options = ["tprfile", "cpi_file", "table_file", "tableb_file", "tablep_file", "rerun_file", "ei_file", "multidir_file", "awh_file", "membed_file", "mp_file", "mn_file", "plumed_file", "plumed_inpfiles", "plumed_dirs"]
         output_options = ["c", "e", "g", "o", "x", "cpo", "dhdl", "field", "tpi", "tpid", "eo", "px", "pf", "ro", "ra", "rs", "rt", "mtx", "if", "swap", "logfile_metadata"]
         cmdline_input_files = {}
         input_files = []
         output_files = []
-
+                
         # Map input files to AiiDA plugin data types.
         for item in input_options:
             if item in self.inputs:
-                cmdline_input_files[item] = self.inputs[item].filename
-                input_files.append((
-                        self.inputs[item].uuid,
-                        self.inputs[item].filename,
-                        self.inputs[item].filename,
-                    ))
+                # If we have a dynamics data type then iterate the dict.
+                if item == "plumed_dirs":
+                    for directory, obj in self.inputs[item].items():
+                        input_files.append(
+                            (
+                                obj.uuid,
+                                ".",
+                                directory,
+                            )
+                        )
+                elif item == "plumed_inpfiles":
+                    for _, obj in self.inputs[item].items():
+                        input_files.append(
+                            (
+                                obj.uuid,
+                                obj.filename,
+                                obj.filename,
+                            )
+                        )
+                else:
+                    cmdline_input_files[item] = self.inputs[item].filename
+                    input_files.append(
+                        (
+                            self.inputs[item].uuid,
+                            self.inputs[item].filename,
+                            self.inputs[item].filename,
+                        )
+                    )
 
         # Add output files to retrieve list.
         output_files.append(self.metadata.options.output_filename)
         for item in output_options:
             if item in self.inputs.parameters:
                 output_files.append(self.inputs.parameters[item])
+        if "plumed_outfiles" in self.inputs:  # check there are plumed output files.
+            for name in self.inputs.plumed_outfiles:
+                output_files.append(str(name))  # save plumed output filename to list
 
         # Form the commandline.
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(cmdline_input_files)

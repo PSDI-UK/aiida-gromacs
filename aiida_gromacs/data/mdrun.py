@@ -123,7 +123,7 @@ class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
         parameters.append("mdrun")
         parameters.extend(["-s", input_files["tprfile"]])
         if "cpi_file" in input_files: parameters.extend(["-cpi", input_files["cpi_file"]])
-        if "table_file" in input_files: parameters.extend(["-table", input_files["cpi_file"]])
+        if "table_file" in input_files: parameters.extend(["-table", input_files["table_file"]])
         if "tableb_file" in input_files: parameters.extend(["-tableb", input_files["tableb_file"]])
         if "tablep_file" in input_files: parameters.extend(["-tablep", input_files["tablep_file"]])
         if "rerun_file" in input_files: parameters.extend(["-rerun", input_files["rerun_file"]])
@@ -133,6 +133,7 @@ class MdrunParameters(Dict):  # pylint: disable=too-many-ancestors
         if "membed_file" in input_files: parameters.extend(["-membed", input_files["membed_file"]])
         if "mp_file" in input_files: parameters.extend(["-mp", input_files["mp_file"]])
         if "mn_file" in input_files: parameters.extend(["-mn", input_files["mn_file"]])
+        if "plumed_file" in input_files: parameters.extend(["-plumed", input_files["plumed_file"]])
 
         parm_dict = self.get_dict()
 

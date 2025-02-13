@@ -5,7 +5,6 @@ Usage: gmx_mdrun --help
 """
 
 import os
-
 import click
 
 from aiida import cmdline, engine, orm
@@ -13,6 +12,7 @@ from aiida.plugins import CalculationFactory, DataFactory
 
 from aiida_gromacs import helpers
 from aiida_gromacs.utils import searchprevious
+from aiida_gromacs.data.plumed_input import populate_plumed_files_to_inputs
 
 
 def launch(params):
@@ -43,6 +43,8 @@ def launch(params):
 
     input_file_labels = {} # dict used for finding previous nodes
     input_file_labels[params["s"]] = "tprfile"
+    if "plumed" in params:
+        input_file_labels[params["plumed"]] = "plumed_file"
 
     # Prepare input parameters in AiiDA formats.
     SinglefileData = DataFactory("core.singlefile")
@@ -81,6 +83,9 @@ def launch(params):
     if "mn" in params:
         inputs["mn_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("mn")))
 
+    if "plumed" in params:
+        inputs = populate_plumed_files_to_inputs(inputs, params.pop("plumed"))
+
     MdrunParameters = DataFactory("gromacs.mdrun")
     inputs["parameters"] = MdrunParameters(params)
 
@@ -114,6 +119,7 @@ def launch(params):
 @click.option("-membed", type=str, help="Generic data file")
 @click.option("-mp", type=str, help="Topology file")
 @click.option("-mn", type=str, help="Index file")
+@click.option("-plumed", type=str, help="PLUMED input file")
 # Output file options
 @click.option("-o", default="topol.gro", type=str, help="Trajectory output file")
 @click.option("-x", type=str, help="Compressed trajectory (tng format or portable xdr format)")
