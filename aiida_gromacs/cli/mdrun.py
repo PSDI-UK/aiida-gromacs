@@ -12,7 +12,7 @@ from aiida.plugins import CalculationFactory, DataFactory
 
 from aiida_gromacs import helpers
 from aiida_gromacs.utils import searchprevious
-from aiida_gromacs.data.plumed_input import PlumedInputData
+from aiida_gromacs.data.plumed_input import populate_plumed_files_to_inputs
 
 
 def launch(params):
@@ -84,16 +84,7 @@ def launch(params):
         inputs["mn_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("mn")))
 
     if "plumed" in params:
-        # Prepare input parameters in AiiDA formats.
-        # Set the plumed script as a PlumedInputData type node
-        inputs["plumed_file"] = PlumedInputData(
-            file=os.path.join(os.getcwd(), params.pop("plumed"))
-        )
-        # Find the inputs and outputs referenced in the plumed script
-        calc_inputs, calc_outputs = inputs["plumed_file"].calculation_inputs_outputs
-        # add input files and dirs referenced in plumed file into inputs
-        inputs.update(calc_inputs)
-        inputs.update(calc_outputs)
+        inputs = populate_plumed_files_to_inputs(inputs, params.pop("plumed"))
 
     MdrunParameters = DataFactory("gromacs.mdrun")
     inputs["parameters"] = MdrunParameters(params)

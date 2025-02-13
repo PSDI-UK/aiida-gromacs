@@ -75,7 +75,7 @@ def test_launch_mdrun_plumed():
             plumed_file,
             "-ntomp",
             "5",
-            # "-ntmpi", # turn off omp and mpi for gmx patched with plumed
+            # "-ntmpi", # turn off mpi for gmx patched with plumed
             # "1",
         ]
     )

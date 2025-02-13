@@ -298,4 +298,20 @@ def add_calculation_outputs(files):
             output_list.append(file)
         calc_outputs["plumed_outfiles"] = List(output_list)
     return calc_outputs
+
+
+def populate_plumed_files_to_inputs(inputs, plumed_filename):
+    """Populate the plumed input files and directories into the inputs
+    """
+    # Prepare input parameters in AiiDA formats.
+    # Set the plumed script as a PlumedInputData type node
+    inputs["plumed_file"] = PlumedInputData(
+        file=os.path.join(os.getcwd(), plumed_filename)
+    )
+    # Find the inputs and outputs referenced in the plumed script
+    calc_inputs, calc_outputs = inputs["plumed_file"].calculation_inputs_outputs
+    # add input files and dirs referenced in plumed file into inputs
+    inputs.update(calc_inputs)
+    inputs.update(calc_outputs)
+    return inputs
                   

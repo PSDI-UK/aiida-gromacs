@@ -7,7 +7,7 @@ from aiida.engine import run
 from aiida.orm import Dict
 from aiida.plugins import CalculationFactory, DataFactory
 
-from aiida_gromacs.data.plumed_input import PlumedInputData
+from aiida_gromacs.data.plumed_input import populate_plumed_files_to_inputs
 
 from . import TEST_DIR
 
@@ -25,7 +25,7 @@ def run_mdrun(gromacs_code):
             "o": "mdrun_1AKI_minimised.trr",
             "v": "true",
             "ntomp": "5",
-            # "ntmpi": "1", # turn off omp and mpi for gmx patched with plumed
+            # "ntmpi": "1", # turn off mpi for gmx patched with plumed
         }
     )
 
@@ -121,15 +121,9 @@ def run_mdrun_plumed(gromacs_code):
         },
     }
 
-    # Set the plumed script as a PlumedInputData type node
-    inputs["plumed_file"] = PlumedInputData(
-        file=os.path.join(TEST_DIR, "input_files", "plumed_mdrun_prod.dat")
+    inputs = populate_plumed_files_to_inputs(
+        inputs, os.path.join(TEST_DIR, "input_files", "plumed_mdrun_prod.dat")
     )
-    # Find the inputs and outputs referenced in the plumed script
-    calc_inputs, calc_outputs = inputs["plumed_file"].calculation_inputs_outputs
-    # add input files and dirs referenced in plumed file into inputs
-    inputs.update(calc_inputs)
-    inputs.update(calc_outputs)
 
     result = run(CalculationFactory("gromacs.mdrun"), **inputs)
 
