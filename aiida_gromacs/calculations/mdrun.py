@@ -126,16 +126,6 @@ class MdrunCalculation(CalcJob):
         cmdline_input_files = {}
         input_files = []
         output_files = []
-
-        # Map input files to AiiDA plugin data types.
-        # for item in input_options:
-        #     if item in self.inputs:
-        #         cmdline_input_files[item] = self.inputs[item].filename
-        #         input_files.append((
-        #                 self.inputs[item].uuid,
-        #                 self.inputs[item].filename,
-        #                 self.inputs[item].filename,
-        #             ))
                 
         # Map input files to AiiDA plugin data types.
         for item in input_options:
@@ -174,9 +164,9 @@ class MdrunCalculation(CalcJob):
         for item in output_options:
             if item in self.inputs.parameters:
                 output_files.append(self.inputs.parameters[item])
-        if "plumed_outfiles" in self.inputs:  # check there are output files.
+        if "plumed_outfiles" in self.inputs:  # check there are plumed output files.
             for name in self.inputs.plumed_outfiles:
-                output_files.append(str(name))  # save output filename to list
+                output_files.append(str(name))  # save plumed output filename to list
 
         # Form the commandline.
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(cmdline_input_files)

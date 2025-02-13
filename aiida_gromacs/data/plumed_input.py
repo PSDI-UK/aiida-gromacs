@@ -1,37 +1,5 @@
 """Sub class of `Data` to handle inputs used and outputs that will be produced
 from commands in the plumed input file.
-
-
-Keywords for input files:
-READ_DISSIMILARITY_MATRIX FILE=
-EXTERNAL FILE=
-METAD GRID_RFILE= ACCELERATION_RFILE=
-PBMETAD GRID_WFILES=
-
-
-Keywords for output files:
-COMMITTOR FILE=
-DUMPATOMS FILE=
-DUMPCUBE FILE=
-DUMPDERIVATIVES FILE=
-DUMPFORCES FILE=
-DUMPGRID FILE=
-DUMPMASSCHARGE FILE=
-DUMPMULTICOLVAR FILE=
-DUMPPROJECTIONS FILE=
-PRINT FILE=
-GRID_TO_XYZ FILE= default=density
-FIND_CONTOUR FILE=
-PRINT_DISSIMILARITY_MATRIX FILE=
-OUTPUT_PCA_PROJECTION FILE=
-OUTPUT_ANALYSIS_DATA_TO_COLVAR FILE=
-OUTPUT_ANALYSIS_DATA_TO_PDB FILE=
-MAXENT FILE= default=label name followed by the string .LAGMULT
-METAD FILE= default=HILLS GRID_WFILE=
-PBMETAD FILE= GRID_WFILES=
-
-
-
 """
 import re
 import os
@@ -57,13 +25,13 @@ OUTPUT_KEYWORDS={
         "DUMPMULTICOLVAR": ["FILE"], 
         "DUMPPROJECTIONS": ["FILE"], 
         "PRINT": ["FILE"], 
-        "GRID_TO_XYZ": ["FILE"], 
+        "GRID_TO_XYZ": ["FILE"], # default=density
         "FIND_CONTOUR": ["FILE"], 
         "PRINT_DISSIMILARITY_MATRIX": ["FILE"], 
         "OUTPUT_PCA_PROJECTION": ["FILE"], 
         "OUTPUT_ANALYSIS_DATA_TO_COLVAR": ["FILE"], 
         "OUTPUT_ANALYSIS_DATA_TO_PDB": ["FILE"], 
-        "MAXENT": ["FILE"], 
+        "MAXENT": ["FILE"], # default=label name followed by the string .LAGMULT
         "METAD": ["FILE", "GRID_WFILE"], 
         "PBMETAD": ["FILE", "GRID_WFILES"],
 }
@@ -217,6 +185,9 @@ def parse_plumed_input_file(lines):
 def add_calculation_inputs(subdirs, files):
     """If they exist, add input files for plumed and dirs into the calcjob 
     inputs directory
+
+    :param subdirs: list of subdirectories that contain input files
+    :param files: list of input files
     """
     calc_inputs = {}
     input_list = []
@@ -286,6 +257,8 @@ def add_calculation_inputs(subdirs, files):
 
 def add_calculation_outputs(files):
     """Add outputs from plumed script
+
+    :param files: list of output files
     """
     calc_outputs = {}
     # If we have plumed output files then tag them.
@@ -302,6 +275,9 @@ def add_calculation_outputs(files):
 
 def populate_plumed_files_to_inputs(inputs, plumed_filename):
     """Populate the plumed input files and directories into the inputs
+
+    :param inputs: dictionary of inputs for the calculation
+    :param plumed_filename: name of the plumed input file
     """
     # Prepare input parameters in AiiDA formats.
     # Set the plumed script as a PlumedInputData type node
