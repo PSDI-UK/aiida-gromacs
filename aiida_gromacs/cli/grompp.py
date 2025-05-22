@@ -85,7 +85,8 @@ def launch(params):
 
             # Now fill it with files referenced in the topology.
             inputs["itp_dirs"][itp_file.split("/")[0]].put_object_from_file(
-                os.path.join(os.getcwd(), itp_file), path=itp_file.split("/")[-1])
+                os.path.join(os.getcwd(), itp_file), path=itp_file) #.split("/")[-1])
+
 
     if "r" in params:
         inputs["r_file"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("r")))
