@@ -19,7 +19,7 @@ jobs:
         image: harbor.stfc.ac.uk/psdi-pathfinder4/aiida-testbase:${{ matrix.container }}
     name: ${{ matrix.container }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.2
 
     - name: Start AiiDA with a test profile
       shell: bash
@@ -34,17 +34,17 @@ jobs:
       run: pytest --cov aiida_gromacs --cov-report term-missing --cov-append .
 
     - name: Report Coverage
-      uses: coverallsapp/github-action@v2
+      uses: coverallsapp/github-action@v2.3.6
 
   docs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.2
     - name: Set up Python 3.11
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v5.6.0
       with:
-        python-version: 3.11
+        python-version: 3.12
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
@@ -56,11 +56,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v5
+    - uses: actions/checkout@v4.2.2
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5.6.0
       with:
-        python-version: 3.11
+        python-version: 3.12
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
