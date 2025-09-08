@@ -40,21 +40,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-
-    - uses: actions/checkout@v5.0.0
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v5.6.0
-
     - uses: actions/checkout@v5.0.0
 
     - name: Set up Python 3.13
       uses: actions/setup-python@v6.0.0
       with:
         python-version: 3.13
+
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
         pip install -e .[docs]
+
     - name: Build docs
       run: cd docs && make
 
@@ -62,17 +59,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-
     - uses: actions/checkout@v5.0.0
 
     - name: Set up Python 3.13
       uses: actions/setup-python@v6.0.0
       with:
         python-version: 3.13
+
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
         pip install -e .[pre-commit,docs,testing]
+
     - name: Run pre-commit
       run: |
         pre-commit install
