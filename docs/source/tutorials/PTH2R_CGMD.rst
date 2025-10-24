@@ -23,7 +23,7 @@ Make a new directory called PTH2R_Tutorial and navigate to it using these comman
 
          cd PTH2R_Tutorial
 
-Into this directory, download all the `required tutorial files <https://github.com/PSDI-UK/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`__, including the "toppar" directory. A python script is needed to build the coarse-grained system, `download this <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/insane/insane_custom.py>`__ into the directory also.
+Into this directory, download all the `required tutorial files <https://github.com/CCPBioSim/aiida-gromacs/tree/master/examples/PTH2R_coarse-grained_files/gromacs>`__, including the "toppar" directory. A python script is needed to build the coarse-grained system, `download this <https://github.com/CCPBioSim/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/insane/insane_custom.py>`__ into the directory also.
 
 Software and environment requirements
 -------------------------------------
@@ -200,7 +200,7 @@ Preparing the system for simulation
 
           gmx_genion -s ions.tpr -o solvated_ions.gro -p system.top -pname NA -nname CL -conc 0.15 -neutral true --instructions inputs_genion.txt
 
-    where `inputs_genion.txt <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/gromacs/inputs_genion.txt>`_ contains the following lines:
+    where `inputs_genion.txt <https://github.com/CCPBioSim/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/gromacs/inputs_genion.txt>`_ contains the following lines:
 
         .. code-block:: bash
 
@@ -212,7 +212,7 @@ Preparing the system for simulation
 
             gmx_make_ndx -f solvated_ions.gro -o index.ndx --instructions inputs_index.txt
 
-    where `inputs_index.txt <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/gromacs/inputs_genion.txt>`_ contains the following lines:
+    where `inputs_index.txt <https://github.com/CCPBioSim/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/gromacs/inputs_genion.txt>`_ contains the following lines:
 
             .. code-block:: bash
 
@@ -263,7 +263,7 @@ There are multiple stepds involved in minimising and equilibrating the simulatio
         gmx_mdrun -s MDstep_1.0_minimization.tpr -c MDstep_1.0_minimization.gro -e MDstep_1.0_minimization.edr -g MDstep_1.0_minimization.log -o MDstep_1.0_minimization.trr
 
 
-There are several more steps to perform, can you complete the rest of the simulation? If you need help, the full list of steps can be found in this `bash script <https://github.com/PSDI-UK/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/gromacs/aiida-example-gmx.sh>`_. Good luck!
+There are several more steps to perform, can you complete the rest of the simulation? If you need help, the full list of steps can be found in this `bash script <https://github.com/CCPBioSim/aiida-gromacs/blob/master/examples/PTH2R_coarse-grained_files/gromacs/aiida-example-gmx.sh>`_. Good luck!
 
 
 Acknowledgements
