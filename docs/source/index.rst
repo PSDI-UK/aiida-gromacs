@@ -6,12 +6,12 @@
 The aiida-gromacs plugin for `AiiDA`_
 =====================================================
 
-``aiida-gromacs`` is available at http://github.com/PSDI-UK/aiida-gromacs
+``aiida-gromacs`` is available at http://github.com/CCPBioSim/aiida-gromacs
 
 .. image:: images/gromacs-BioSimDB-logo.png
     :width: 250px
     :align: center
-    :target: https://github.com/PSDI-UK/aiida-gromacs
+    :target: https://github.com/CCPBioSim/aiida-gromacs
 
 .. toctree::
    :maxdepth: 2
