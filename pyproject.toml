@@ -99,7 +99,7 @@ createarchive = "aiida_gromacs.cli.createarchive:cli"
 "gromacs.setup" = "aiida_gromacs.workflows.simsetup:SetupWorkChain"
 
 [project.entry-points."aiida.cmdline.data"]
-"provenance" = "aiida_gromacs.commands.provenance:provenance"
+"gromacs.provenance" = "aiida_gromacs.commands.provenance:provenance"
 
 [tool.flit.module]
 name = "aiida_gromacs"
