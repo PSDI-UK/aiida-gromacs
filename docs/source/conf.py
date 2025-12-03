@@ -237,6 +237,15 @@ htmlhelp_basename = "aiida-gromacs-doc"
 nitpick_ignore = [
     ("py:class", "Logger"),
     ("py:class", "QbFields"),
+    # ignore warnings for `py:class reference target not found` for aiida classes
+    ("py:class", "aiida.engine.processes.calcjobs.calcjob.CalcJob"),
+    ("py:class", "aiida.orm.nodes.data.dict.Dict"),
+    ("py:class", "aiida.parsers.parser.Parser"),
+    ("py:class", "aiida.orm.nodes.data.code.installed.InstalledCode"),
+    ("py:class", "aiida.orm.computers.Computer"),
+    ("py:class", "aiida.orm.nodes.process.process.ProcessNode"),
+    ("py:class", "aiida.orm.nodes.data.singlefile.SinglefileData"),
+    ("py:class", "aiida.engine.processes.workchains.workchain.WorkChain"),
 ]
 
 # -- Options for LaTeX output ---------------------------------------------
