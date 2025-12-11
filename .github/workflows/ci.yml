@@ -10,9 +10,9 @@ jobs:
   tests:
     strategy:
       matrix:
-        container: [2025-12-07-py3.11-aiida2.6.1-gromacs2025.4,
-                    2025-12-07-py3.11-aiida2.6.2-gromacs2025.4,
-                    2025-12-07-py3.11-aiida2.6.3-gromacs2025.4]
+        container: [2025-12-11-py3.11-aiida2.6.1-gromacs2025.4,
+                    2025-12-11-py3.11-aiida2.6.2-gromacs2025.4,
+                    2025-12-11-py3.11-aiida2.6.3-gromacs2025.4]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     container:
