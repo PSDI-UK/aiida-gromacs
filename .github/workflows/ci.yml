@@ -19,7 +19,6 @@ jobs:
         image: ghcr.io/ccpbiosim/aiida-gromacs-testenv:${{ matrix.container }}
     name: ${{ matrix.container }}
     steps:
-    
     - name: checkout
       uses: actions/checkout@v6.0.0
 
@@ -30,11 +29,11 @@ jobs:
           verdi status
 
     - name: Install aiida-gromacs and its testing dependencies
-      shell: bash
+      shell: _entrypoint.sh /bin/bash --noprofile --norc -eo pipefail {0}
       run: pip install -e .[testing]
 
     - name: Run test suite
-      shell: bash
+      shell: _entrypoint.sh /bin/bash --noprofile --norc -eo pipefail {0}
       run: pytest --cov aiida_gromacs --cov-report term-missing --cov-append .
 
     - name: Report Coverage
