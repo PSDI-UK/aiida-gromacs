@@ -236,7 +236,7 @@ htmlhelp_basename = "aiida-gromacs-doc"
 # We should ignore any python built-in exception, for instance
 nitpick_ignore = [
     ("py:class", "Logger"),
-    ("py:class", "QbFields"),
+    ("py:class", "aiida.orm.fields.QbFields"),
     # ignore warnings for `py:class reference target not found` for aiida classes
     ("py:class", "aiida.engine.processes.calcjobs.calcjob.CalcJob"),
     ("py:class", "aiida.orm.nodes.data.dict.Dict"),
