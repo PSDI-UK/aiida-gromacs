@@ -2,7 +2,7 @@
 # Visit https://bit.ly/cffinit to generate yours today!
 
 cff-version: 1.2.0
-title: aiida-amber
+title: aiida-gromacs
 message: >-
   If you use this software, please cite it using the
   metadata from this file.
@@ -23,10 +23,10 @@ authors:
     email: harry.swift@stfc.ac.uk
     affiliation: 'STFC, Scientific Computing'
     orcid: 'https://orcid.org/0009-0007-3323-753X'
-repository-code: 'https://github.com/CCPBioSim/aiida-amber'
-url: 'https://aiida-amber.readthedocs.io/en/latest/'
+repository-code: 'https://github.com/CCPBioSim/aiida-gromacs'
+url: 'https://aiida-gromacs.readthedocs.io/en/latest/'
 abstract: >-
-  The Amber plugin for AiiDA aims to enable the capture and
+  The GROMACS plugin for AiiDA aims to enable the capture and
   sharing of the full provenance of data when parameterising
   and running molecular dynamics simulations. This plugin is
   being developed as part of the Physical Sciences Data
