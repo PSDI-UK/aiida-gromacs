@@ -26,7 +26,7 @@ jobs:
       shell: bash
       run: |
           which micromamba
-    
+
     - name: checkout
       uses: actions/checkout@v6.0.1
 
