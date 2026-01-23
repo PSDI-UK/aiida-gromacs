@@ -33,7 +33,6 @@ jobs:
     - name: Start AiiDA with a test profile
       shell: bash
       run: |
-          export PLUMED_KERNEL=/opt/conda/lib/libplumedKernel.so
           rabbitmq-server -detached
           verdi presto
           verdi status
