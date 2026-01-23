@@ -22,7 +22,13 @@ jobs:
         image: ghcr.io/ccpbiosim/aiida-gromacs-testenv:${{ matrix.container }}
     name: ${{ matrix.container }}
     steps:
-    - uses: actions/checkout@v6.0.1
+    - name: env checks
+      shell: bash
+      run: |
+          which micromamba
+    
+    - name: checkout
+      uses: actions/checkout@v6.0.1
 
     - name: Start AiiDA with a test profile
       shell: bash
