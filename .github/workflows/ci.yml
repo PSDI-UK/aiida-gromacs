@@ -25,7 +25,7 @@ jobs:
     - uses: actions/checkout@v6.0.1
 
     - name: Start AiiDA with a test profile
-      shell: _entrypoint.sh /bin/bash --noprofile --norc -eo pipefail {0}
+      shell: bash
       run: |
           export PLUMED_KERNEL=/opt/conda/lib/libplumedKernel.so
           rabbitmq-server -detached
@@ -33,11 +33,11 @@ jobs:
           verdi status
 
     - name: Install aiida-gromacs and its testing dependencies
-      shell: _entrypoint.sh /bin/bash --noprofile --norc -eo pipefail {0}
+      shell: bash
       run: pip install -e .[testing]
 
     - name: Run test suite
-      shell: _entrypoint.sh /bin/bash --noprofile --norc -eo pipefail {0}
+      shell: bash
       run: pytest --cov aiida_gromacs --cov-report term-missing --cov-append .
 
     - name: Report Coverage
