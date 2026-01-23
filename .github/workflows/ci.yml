@@ -4,6 +4,9 @@ on:
   push:
     branches: [master]
   pull_request:
+  schedule:
+    - cron: '0 8 * * 1-5'
+  workflow_dispatch:
 
 jobs:
 
@@ -19,8 +22,7 @@ jobs:
         image: ghcr.io/ccpbiosim/aiida-gromacs-testenv:${{ matrix.container }}
     name: ${{ matrix.container }}
     steps:
-    - name: checkout
-      uses: actions/checkout@v6.0.0
+    - uses: actions/checkout@v6.0.1
 
     - name: Start AiiDA with a test profile
       shell: _entrypoint.sh /bin/bash --noprofile --norc -eo pipefail {0}
@@ -40,15 +42,28 @@ jobs:
 
     - name: Report Coverage
       uses: coverallsapp/github-action@v2.3.7
+      with:
+          flag-name: run-${{ join(matrix.*, '-') }}
+          parallel: true
+
+  finish:
+    needs: tests
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@v2.3.7
+      with:
+        parallel-finished: true
 
   docs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v6.0.0
+    - uses: actions/checkout@v6.0.1
 
     - name: Set up Python 3.13
-      uses: actions/setup-python@v6.1.0
+      uses: actions/setup-python@v6.2.0
       with:
         python-version: 3.13
 
@@ -64,17 +79,17 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v6.0.0
+    - uses: actions/checkout@v6.0.1
 
     - name: Set up Python 3.13
-      uses: actions/setup-python@v6.1.0
+      uses: actions/setup-python@v6.2.0
       with:
         python-version: 3.13
 
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
-        pip install -e .[pre-commit,docs,testing]
+        pip install -e .[pre-commit]
 
     - name: Run pre-commit
       run: |

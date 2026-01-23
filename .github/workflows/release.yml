@@ -19,10 +19,10 @@ jobs:
     steps:
     - name: checkout repository
       id: repo
-      uses: actions/checkout@v6.0.0
+      uses: actions/checkout@v6.0.1
 
     - name: get python 3.13
-      uses: actions/setup-python@v6.1.0
+      uses: actions/setup-python@v6.2.0
       with:
         python-version: 3.13
 
@@ -47,14 +47,22 @@ jobs:
     steps:
 
       - name: checkout
-        uses: actions/checkout@v6.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: Change version in repo
-        run: sed -i "s/__version__ =.*/__version__ = \"${{ github.event.inputs.version }}\"/g" aiida_gromacs/__init__.py
+        run: |
+          # Update Python package version
+          sed -i "s/__version__ =.*/__version__ = \"${{ github.event.inputs.version }}\"/g" aiida_gromacs/__init__.py
+
+          # Update CITATION.cff version and date-released
+          if [ -f CITATION.cff ]; then
+            sed -i -E "s/^(version:\s*).*/\1${{ github.event.inputs.version }}/" CITATION.cff
+            sed -i -E "s/^(date-released:\s*).*/\1'$(date -u +%F)'/" CITATION.cff
+          fi
 
       - name: send PR
         id: pr_id
-        uses: peter-evans/create-pull-request@v7.0.9
+        uses: peter-evans/create-pull-request@v8.1.0
         with:
           commit-message: Update version to ${{ github.event.inputs.version }}
           branch: version-update
@@ -78,7 +86,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.0
+        uses: actions/checkout@v6.0.1
         with:
           ref: master
 
@@ -109,12 +117,12 @@ jobs:
     steps:
 
     - name: checkout
-      uses: actions/checkout@v6.0.0
+      uses: actions/checkout@v6.0.1
       with:
         ref: master
 
     - name: get python 3.13
-      uses: actions/setup-python@v6.1.0
+      uses: actions/setup-python@v6.2.0
       with:
         python-version: 3.13
 

@@ -1,9 +1,10 @@
-[![Build Status](https://github.com/CCPBioSim/aiida-gromacs/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/CCPBioSim/aiida-gromacs/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/CCPBioSim/aiida-gromacs/badge.svg?branch=master)](https://coveralls.io/github/CCPBioSim/aiida-gromacs?branch=master)
-[![Docs status](https://readthedocs.org/projects/aiida-gromacs/badge)](http://aiida-gromacs.readthedocs.io/)
-[![PyPI version](https://badge.fury.io/py/aiida-gromacs.svg)](https://badge.fury.io/py/aiida-gromacs)
-
 # aiida-gromacs
+| Category       | Badges |
+|----------------|--------|
+| **Build**      | [![Build Status](https://github.com/CCPBioSim/aiida-gromacs/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/CCPBioSim/aiida-gromacs/actions/workflows/ci.yml) |
+| **Documentation** | [![Docs status](https://readthedocs.org/projects/aiida-gromacs/badge)](http://aiida-gromacs.readthedocs.io/) |
+| **PyPI**       | ![PyPI - Status](https://img.shields.io/pypi/status/aiida-gromacs?logo=pypi&logoColor=white) [![PyPI version](https://badge.fury.io/py/aiida-gromacs.svg)](https://badge.fury.io/py/aiida-gromacs)  ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/aiida-gromacs) ![PyPI - Total Downloads](https://img.shields.io/pepy/dt/aiida-gromacs?logo=pypi&logoColor=white&color=blue) ![PyPI - Monthly Downloads](https://img.shields.io/pypi/dm/aiida-gromacs?logo=pypi&logoColor=white&color=blue)|
+| **Quality**    | [![Coverage Status](https://coveralls.io/repos/github/CCPBioSim/aiida-gromacs/badge.svg?branch=master)](https://coveralls.io/github/CCPBioSim/aiida-gromacs?branch=master) |
 
 The GROMACS plugin for AiiDA aims to enable the capture and sharing of the full
 provenance of data when parameterising and running molecular dynamics
