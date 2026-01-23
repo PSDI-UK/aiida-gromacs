@@ -29,6 +29,7 @@ jobs:
       shell: bash
       run: |
           rabbitmq-server -detached
+          sleep 5
           verdi presto
           verdi status
 
