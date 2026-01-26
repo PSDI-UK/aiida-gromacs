@@ -13,17 +13,22 @@ jobs:
   tests:
     strategy:
       matrix:
-        container: [2026-01-23-py3.11-aiida2.6.1-gromacs2025.4,
-                    2026-01-23-py3.11-aiida2.6.2-gromacs2025.4,
-                    2026-01-23-py3.11-aiida2.6.3-gromacs2025.4]
+        python: [3.11]
+        aiida: [2.6.1, 2.6.2, 2.6.3, 2.7.0, 2.7.1, 2.7.2, 2.7.3]
+        container: [2026-01-26-gromacs2025.4-plumed2.9.2]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     container:
         image: ghcr.io/ccpbiosim/aiida-gromacs-testenv:${{ matrix.container }}
-    name: ${{ matrix.container }}
+    name: py${{ matrix.python }}-${{ matrix.aiida }}-${{ matrix.container }}
     steps:
     - name: checkout
       uses: actions/checkout@v6.0.1
+
+    - name: Add mamba packages
+      shell: bash
+      run: |
+          mamba install -c conda-forge mamba python=${{ matrix.python }} aiida-core=${{ matrix.aiida }} aiida-core.services=${{ matrix.aiida }}
 
     - name: Start AiiDA with a test profile
       shell: bash
