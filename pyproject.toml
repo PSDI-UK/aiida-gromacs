@@ -24,7 +24,7 @@ classifiers = [
 keywords = ["aiida", "plugin", "gromacs", "aiida-gromacs"]
 requires-python = ">=3.8"
 dependencies = [
-    "aiida-core>=2.7.3,<=2.7.3",
+    "aiida-core>=2.6.1,<=2.6.3",
     "voluptuous"
 ]
 
